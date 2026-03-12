@@ -353,7 +353,7 @@ void RouteTable::showRouteInDB(const string &prefix)
                     vector<string_view> ASPath;
                     for (const auto &element : ASPathView)
                     {
-                        ASPath.push_back(element.get_string().value);
+                        ASPath.push_back(std::string(element.get_string().value));
                     }
                     for (auto it = ASPath.rbegin(); it != ASPath.rend(); ++it)
                     {
@@ -766,19 +766,19 @@ void RouteTable::fetchFromDB(const vector<string> &prefixes)
             bsoncxx::document::element routes = view["route"];
             bsoncxx::array::view routesView = routes.get_array().value;
 
-            rt->prefix = view["prefix"].get_string().value;
+            rt->prefix = std::string(view["prefix"].get_string().value);
 
             for (const bsoncxx::array::element &route : routesView)
             {
                 bsoncxx::document::view routeView = route.get_document().value;
-                rt->origin = routeView["origin"].get_string().value;
+                rt->origin = std::string(routeView["origin"].get_string().value);
                 rt->localPref = routeView["localPref"].get_int32().value;
                 auto ASPathView = routeView["ASPath"].get_array().value;
 
                 vector<string_view> ASPath;
                 for (const auto &element : ASPathView)
                 {
-                    ASPath.push_back(element.get_string().value);
+                    ASPath.push_back(std::string(element.get_string().value));
                 }
 
                 for (auto it = ASPath.rbegin(); it != ASPath.rend(); ++it)
