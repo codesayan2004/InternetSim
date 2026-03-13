@@ -1,5 +1,13 @@
 import json
+from libcpp.unordered_set cimport unordered_set
+cdef unordered_set[int] affected_ASes_cpp = unordered_set[int]()
 cdef public long BGP_UPDATE_COUNTER = 0
+
+def get_affected_ASes_count():
+    return affected_ASes_cpp.size()
+
+def reset_affected_ASes():
+    affected_ASes_cpp.clear()
 
 def get_BGP_UPDATE_COUNTER():
     return BGP_UPDATE_COUNTER
@@ -818,6 +826,9 @@ cdef class AS:
     @staticmethod
     cdef void receive(int ASN, shared_ptr[Message] msg, Processor processor) noexcept nogil:
         global BGP_UPDATE_COUNTER
+        global affected_ASes_cpp
+        with gil:
+            affected_ASes_cpp.insert(ASN)
         cdef:
             shared_ptr[Route] route 
             bool flag = False

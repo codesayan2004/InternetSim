@@ -10,6 +10,7 @@ from Interpreter import Interpreter
 from Extension import Extension
 import time
 from AS import get_BGP_UPDATE_COUNTER, reset_BGP_UPDATE_COUNTER
+from AS import get_affected_ASes_count, reset_affected_ASes
 #from AS import BGP_UPDATE_COUNTER
 
 
@@ -184,6 +185,7 @@ class Engine:
     def simulate(self, topology, type=None, args=None):
 
         reset_BGP_UPDATE_COUNTER()
+        reset_affected_ASes()
         print("Simulation start")
         start_time = time.time()
         if (type == "change"):
@@ -377,6 +379,7 @@ class Engine:
         print("Simulation complete")
         print(f"Convergence time: {end_time - start_time:.6f} seconds")
         print("BGP updates:", get_BGP_UPDATE_COUNTER())
+        print("Affected ASes:", get_affected_ASes_count())
 
     def run(self, config, topology):
         self.parseDescriptionFile(config["Path"]["descriptionFilePath"], topology)
