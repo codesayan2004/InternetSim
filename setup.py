@@ -6,10 +6,13 @@ from Cython.Distutils import build_ext
 common_compile_args = ["-std=c++17"]
 common_link_args = ["-lmongocxx", "-lbsoncxx", "-lpthread"]
 common_include_dirs = [
-    "/usr/local/include/mongocxx/v_noabi",
-    "/usr/local/include/bsoncxx/v_noabi",
+    "/opt/homebrew/include",
+    "/opt/homebrew/include/mongocxx/v_noabi",
+    "/opt/homebrew/include/bsoncxx/v_noabi",
     "./parallel_hashmap"
 ]
+
+common_library_dirs = ["/opt/homebrew/lib"]
 
 cython_dirs = "cython"
 shared_cpp_sources = ["cpp/MongoManager.cpp", "cpp/Trie.cpp", "cpp/TrieNode.cpp"]
@@ -25,6 +28,7 @@ ext_modules = [
         name="RouteTable",
         sources=[f"{cython_dirs}/RouteTable.pyx"] + shared_cpp_sources,
         include_dirs=common_include_dirs,
+        library_dirs=common_library_dirs,
         extra_compile_args=common_compile_args,
         extra_link_args=common_link_args,
         language="c++",
@@ -45,6 +49,7 @@ ext_modules = [
         name="AS",
         sources=[f"{cython_dirs}/AS.pyx"] + shared_cpp_sources,
         include_dirs=common_include_dirs,
+        library_dirs=common_library_dirs,
         extra_compile_args=common_compile_args,
         extra_link_args=common_link_args,
         language="c++",
@@ -53,6 +58,7 @@ ext_modules = [
         name="Topology",
         sources=[f"{cython_dirs}/Topology.pyx"] + shared_cpp_sources,
         include_dirs=common_include_dirs,
+        library_dirs=common_library_dirs,
         extra_compile_args=common_compile_args,
         extra_link_args=common_link_args,
         language="c++",
@@ -61,6 +67,7 @@ ext_modules = [
         name="Processor",
         sources=[f"{cython_dirs}/Processor.pyx"] + shared_cpp_sources,
         include_dirs=common_include_dirs,
+        library_dirs=common_library_dirs,
         extra_compile_args=common_compile_args,
         extra_link_args=common_link_args,
         language="c++",
@@ -69,6 +76,7 @@ ext_modules = [
         name="Scheduler",
         sources=[f"{cython_dirs}/Scheduler.pyx"] + shared_cpp_sources,
         include_dirs=common_include_dirs,
+        library_dirs=common_library_dirs,
         extra_compile_args=common_compile_args,
         extra_link_args=common_link_args,
         language="c++",

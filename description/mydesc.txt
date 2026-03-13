@@ -1,0 +1,7 @@
+AS 286 announce 29.214.0.0/16;
+AS 174 announce 29.214.0.0/16;
+
+Simulate;
+
+# AS 34549 show routes 29.214.0.0/16;
+# AS 58057 show routes 29.214.0.0/16;

@@ -25,11 +25,15 @@
         ],
         "include_dirs": [
             "cython",
-            "/usr/local/include/mongocxx/v_noabi",
-            "/usr/local/include/bsoncxx/v_noabi",
+            "/opt/homebrew/include",
+            "/opt/homebrew/include/mongocxx/v_noabi",
+            "/opt/homebrew/include/bsoncxx/v_noabi",
             "./parallel_hashmap"
         ],
         "language": "c++",
+        "library_dirs": [
+            "/opt/homebrew/lib"
+        ],
         "name": "AS",
         "sources": [
             "cython/AS.pyx",
@@ -1728,9 +1732,9 @@ struct __pyx_vtabstruct_9Scheduler_Scheduler {
 static struct __pyx_vtabstruct_9Scheduler_Scheduler *__pyx_vtabptr_9Scheduler_Scheduler;
 
 
-/* "AS.pyx":3
- * import json
- * 
+/* "AS.pyx":9
+ *     global BGP_UPDATE_COUNTER
+ *     BGP_UPDATE_COUNTER = value
  * cdef class AS:             # <<<<<<<<<<<<<<
  *     def __cinit__(self, ASN):
  *         self.ASN = ASN
@@ -2401,6 +2405,17 @@ static void __Pyx_WriteUnraisable(const char *name, int clineno,
                                   int lineno, const char *filename,
                                   int full_traceback, int nogil);
 
+/* SetStringIndexingError.proto (used by GetItemIntBytes) */
+static void __Pyx_SetStringIndexingError(const char* message, int has_gil);
+
+/* GetItemIntBytes.proto */
+#define __Pyx_GetItemInt_Bytes(o, i, type, is_signed, to_py_func, is_list, wraparound, boundscheck, has_gil, unsafe_shared)\
+    (__Pyx_fits_Py_ssize_t(i, type, is_signed) ?\
+    __Pyx_GetItemInt_Bytes_Fast(o, (Py_ssize_t)i, wraparound, boundscheck, has_gil) :\
+    (__Pyx_SetStringIndexingError("string index out of range", has_gil), -1))
+static CYTHON_INLINE int __Pyx_GetItemInt_Bytes_Fast(PyObject* bytes, Py_ssize_t index,
+                                                     int wraparound, int boundscheck, int has_gil);
+
 /* PyTypeError_Check.proto */
 #define __Pyx_PyExc_TypeError_Check(obj)  __Pyx_TypeCheck(obj, PyExc_TypeError)
 
@@ -2717,12 +2732,6 @@ static void __Pyx_CppExn2PyErr() {
 }
 #endif
 
-/* CIntFromPy.proto */
-static CYTHON_INLINE int __Pyx_PyLong_As_int(PyObject *);
-
-/* CIntFromPy.proto */
-static CYTHON_INLINE char __Pyx_PyLong_As_char(PyObject *);
-
 /* PyObjectVectorCallKwBuilder.proto (used by CIntToPy) */
 CYTHON_UNUSED static int __Pyx_VectorcallBuilder_AddArg_Check(PyObject *key, PyObject *value, PyObject *builder, PyObject **args, int n);
 #if CYTHON_VECTORCALL
@@ -2744,14 +2753,20 @@ static int __Pyx_VectorcallBuilder_AddArgStr(const char *key, PyObject *value, P
 /* CIntToPy.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyLong_From_long(long value);
 
+/* CIntFromPy.proto */
+static CYTHON_INLINE long __Pyx_PyLong_As_long(PyObject *);
+
+/* CIntFromPy.proto */
+static CYTHON_INLINE int __Pyx_PyLong_As_int(PyObject *);
+
+/* CIntFromPy.proto */
+static CYTHON_INLINE char __Pyx_PyLong_As_char(PyObject *);
+
 /* CIntToPy.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyLong_From_int(int value);
 
 /* CIntToPy.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyLong_From_char(char value);
-
-/* CIntFromPy.proto */
-static CYTHON_INLINE long __Pyx_PyLong_As_long(PyObject *);
 
 /* CIntToPy.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyLong_From_unsigned_PY_LONG_LONG(unsigned PY_LONG_LONG value);
@@ -2940,6 +2955,7 @@ static std::unordered_map<std::pair<int,int> ,Filter,PairHash>  __pyx_v_2AS_filt
 static std::unordered_map<std::pair<int,int> ,Filter,PairHash>  __pyx_v_2AS_filterOut;
 static std::unordered_map<int,std::mutex *>  __pyx_v_2AS_locks;
 static std::unordered_map<std::string,std::set<int> >  __pyx_v_2AS_ASSet;
+__PYX_EXTERN_C DL_EXPORT(long) BGP_UPDATE_COUNTER;
 static std::pair<int,char>  __pyx_convert_pair_from_py_int__and_char(PyObject *); /*proto*/
 static std::string __pyx_convert_string_from_py_6libcpp_6string_std__in_string(PyObject *); /*proto*/
 static std::pair<int,int>  __pyx_convert_pair_from_py_int__and_int(PyObject *); /*proto*/
@@ -2977,6 +2993,8 @@ static const char __pyx_k_error_filterIn_action_not_found[] = "error: filterIn a
 static const char __pyx_k_error_filterOut_match_not_found[] = "error: filterOut match not found!\n";
 static const char __pyx_k_error_filterOut_action_not_found[] = "error: filterOut action not found!\n";
 /* #### Code section: decls ### */
+static PyObject *__pyx_pf_2AS_get_BGP_UPDATE_COUNTER(CYTHON_UNUSED PyObject *__pyx_self); /* proto */
+static PyObject *__pyx_pf_2AS_2reset_BGP_UPDATE_COUNTER(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_value); /* proto */
 static int __pyx_pf_2AS_2AS___cinit__(struct __pyx_obj_2AS_AS *__pyx_v_self, PyObject *__pyx_v_ASN); /* proto */
 static PyObject *__pyx_pf_2AS_2AS_2loadASSet(PyObject *__pyx_v_filePath); /* proto */
 static PyObject *__pyx_pf_2AS_2AS_4addPeer(struct __pyx_obj_2AS_AS *__pyx_v_self, PyObject *__pyx_v_peer); /* proto */
@@ -2991,8 +3009,9 @@ static PyObject *__pyx_pf_2AS_2AS_20showBestRoute(struct __pyx_obj_2AS_AS *__pyx
 static PyObject *__pyx_pf_2AS_2AS_22deleteRouteByPeerAS(struct __pyx_obj_2AS_AS *__pyx_v_self, PyObject *__pyx_v_peerAS); /* proto */
 static PyObject *__pyx_pf_2AS_2AS_24countRoute(struct __pyx_obj_2AS_AS *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_2AS_2AS_26getOriginAS(struct __pyx_obj_2AS_AS *__pyx_v_self, PyObject *__pyx_v_prefix); /* proto */
-static PyObject *__pyx_pf_2AS_2AS_28__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_2AS_AS *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_2AS_2AS_30__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_2AS_AS *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
+static PyObject *__pyx_pf_2AS_2AS_28get_BGP_UPDATE_COUNTER(CYTHON_UNUSED struct __pyx_obj_2AS_AS *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_2AS_2AS_30__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_2AS_AS *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_2AS_2AS_32__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_2AS_AS *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
 static PyObject *__pyx_tp_new_2AS_AS(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 /* #### Code section: late_includes ### */
 /* #### Code section: module_state ### */
@@ -3023,9 +3042,9 @@ typedef struct {
   __Pyx_CachedCFunction __pyx_umethod_PyDict_Type_pop;
   __Pyx_CachedCFunction __pyx_umethod_PyDict_Type_values;
   PyObject *__pyx_slice[1];
-  PyObject *__pyx_tuple[1];
-  PyObject *__pyx_codeobj_tab[14];
-  PyObject *__pyx_string_tab[125];
+  PyObject *__pyx_tuple[2];
+  PyObject *__pyx_codeobj_tab[17];
+  PyObject *__pyx_string_tab[135];
   PyObject *__pyx_number_tab[3];
 /* #### Code section: module_state_contents ### */
 /* CommonTypesMetaclass.module_state_decls */
@@ -3106,92 +3125,102 @@ static __pyx_mstatetype * const __pyx_mstate_global = &__pyx_mstate_global_stati
 #define __pyx_n_u_AS_getFilter __pyx_string_tab[36]
 #define __pyx_n_u_AS_getOriginAS __pyx_string_tab[37]
 #define __pyx_n_u_AS_getPeers __pyx_string_tab[38]
-#define __pyx_n_u_AS_loadASSet __pyx_string_tab[39]
-#define __pyx_n_u_AS_removeFilter __pyx_string_tab[40]
-#define __pyx_n_u_AS_showBestRoute __pyx_string_tab[41]
-#define __pyx_n_u_AS_showRoute __pyx_string_tab[42]
-#define __pyx_n_u_AS_showRouteInDB __pyx_string_tab[43]
-#define __pyx_n_u_Pyx_PyDict_NextRef __pyx_string_tab[44]
-#define __pyx_n_u_action __pyx_string_tab[45]
-#define __pyx_n_u_addFilter __pyx_string_tab[46]
-#define __pyx_n_u_addPeer __pyx_string_tab[47]
-#define __pyx_n_u_any __pyx_string_tab[48]
-#define __pyx_n_u_asyncio_coroutines __pyx_string_tab[49]
-#define __pyx_n_u_class_getitem __pyx_string_tab[50]
-#define __pyx_n_u_cline_in_traceback __pyx_string_tab[51]
-#define __pyx_n_u_countRoute __pyx_string_tab[52]
-#define __pyx_n_u_data __pyx_string_tab[53]
-#define __pyx_n_u_deleteRouteByPeerAS __pyx_string_tab[54]
-#define __pyx_n_u_dict __pyx_string_tab[55]
-#define __pyx_n_u_encode __pyx_string_tab[56]
-#define __pyx_n_u_enter __pyx_string_tab[57]
-#define __pyx_n_u_exit __pyx_string_tab[58]
-#define __pyx_n_u_f __pyx_string_tab[59]
-#define __pyx_n_u_filePath __pyx_string_tab[60]
-#define __pyx_n_u_filter __pyx_string_tab[61]
-#define __pyx_n_u_filterType __pyx_string_tab[62]
-#define __pyx_n_u_func __pyx_string_tab[63]
-#define __pyx_n_u_getFilter __pyx_string_tab[64]
-#define __pyx_n_u_getOriginAS __pyx_string_tab[65]
-#define __pyx_n_u_getPeers __pyx_string_tab[66]
-#define __pyx_n_u_getstate __pyx_string_tab[67]
-#define __pyx_n_u_i __pyx_string_tab[68]
-#define __pyx_n_u_index __pyx_string_tab[69]
-#define __pyx_n_u_is_coroutine __pyx_string_tab[70]
-#define __pyx_n_u_items __pyx_string_tab[71]
-#define __pyx_n_u_j __pyx_string_tab[72]
-#define __pyx_n_u_json __pyx_string_tab[73]
-#define __pyx_n_u_lastPtr __pyx_string_tab[74]
-#define __pyx_n_u_load __pyx_string_tab[75]
-#define __pyx_n_u_loadASSet __pyx_string_tab[76]
-#define __pyx_n_u_main __pyx_string_tab[77]
-#define __pyx_n_u_match __pyx_string_tab[78]
-#define __pyx_n_u_module __pyx_string_tab[79]
-#define __pyx_n_u_name __pyx_string_tab[80]
-#define __pyx_n_u_open __pyx_string_tab[81]
-#define __pyx_n_u_p __pyx_string_tab[82]
-#define __pyx_n_u_peer __pyx_string_tab[83]
-#define __pyx_n_u_peerAS __pyx_string_tab[84]
-#define __pyx_n_u_peerASN __pyx_string_tab[85]
-#define __pyx_n_u_pop __pyx_string_tab[86]
-#define __pyx_n_u_prefix __pyx_string_tab[87]
-#define __pyx_n_u_print __pyx_string_tab[88]
-#define __pyx_n_u_ptr __pyx_string_tab[89]
-#define __pyx_n_u_pyx_capi __pyx_string_tab[90]
-#define __pyx_n_u_pyx_state __pyx_string_tab[91]
-#define __pyx_n_u_pyx_vtable __pyx_string_tab[92]
-#define __pyx_n_u_qualname __pyx_string_tab[93]
-#define __pyx_n_u_r __pyx_string_tab[94]
-#define __pyx_n_u_reduce __pyx_string_tab[95]
-#define __pyx_n_u_reduce_cython __pyx_string_tab[96]
-#define __pyx_n_u_reduce_ex __pyx_string_tab[97]
-#define __pyx_n_u_removeFilter __pyx_string_tab[98]
-#define __pyx_n_u_self __pyx_string_tab[99]
-#define __pyx_n_u_set_name __pyx_string_tab[100]
-#define __pyx_n_u_setdefault __pyx_string_tab[101]
-#define __pyx_n_u_setstate __pyx_string_tab[102]
-#define __pyx_n_u_setstate_cython __pyx_string_tab[103]
-#define __pyx_n_u_showBestRoute __pyx_string_tab[104]
-#define __pyx_n_u_showRoute __pyx_string_tab[105]
-#define __pyx_n_u_showRouteInDB __pyx_string_tab[106]
-#define __pyx_n_u_staticmethod __pyx_string_tab[107]
-#define __pyx_n_u_subAction __pyx_string_tab[108]
-#define __pyx_n_u_test __pyx_string_tab[109]
-#define __pyx_n_u_values __pyx_string_tab[110]
-#define __pyx_kp_b_iso88591_A_1A_a_1_Rq_Qc_HD_q_axq_2Q_4s_F __pyx_string_tab[111]
-#define __pyx_kp_b_iso88591_A_1D_1F __pyx_string_tab[112]
-#define __pyx_kp_b_iso88591_A_1D_1_q __pyx_string_tab[113]
-#define __pyx_kp_b_iso88591_A_1D_Zq_gQa __pyx_string_tab[114]
-#define __pyx_kp_b_iso88591_A_4uKq __pyx_string_tab[115]
-#define __pyx_kp_b_iso88591_A_4uL_waq __pyx_string_tab[116]
-#define __pyx_kp_b_iso88591_A_HA_4uAQ_Q_q_E_Qa_WAT_7_1_Qawa __pyx_string_tab[117]
-#define __pyx_kp_b_iso88591_A_a_1_Rq_Qc_HD_q_2Q_4s_C_Q_A_Cq __pyx_string_tab[118]
-#define __pyx_kp_b_iso88591_A_a_1_WAQ_waq_Jb_Qc_HD_fA_Zq_q_Z __pyx_string_tab[119]
-#define __pyx_kp_b_iso88591_A_aq_4q_Qd_z_fA __pyx_string_tab[120]
-#define __pyx_kp_b_iso88591_A_uAT __pyx_string_tab[121]
-#define __pyx_kp_b_iso88591_Q __pyx_string_tab[122]
-#define __pyx_kp_b_std_unordered_map_int_RouteTable __pyx_string_tab[123]
-#define __pyx_kp_b_std_unordered_set_int_std_unorde __pyx_string_tab[124]
+#define __pyx_n_u_AS_get_BGP_UPDATE_COUNTER __pyx_string_tab[39]
+#define __pyx_n_u_AS_loadASSet __pyx_string_tab[40]
+#define __pyx_n_u_AS_removeFilter __pyx_string_tab[41]
+#define __pyx_n_u_AS_showBestRoute __pyx_string_tab[42]
+#define __pyx_n_u_AS_showRoute __pyx_string_tab[43]
+#define __pyx_n_u_AS_showRouteInDB __pyx_string_tab[44]
+#define __pyx_n_u_Pyx_PyDict_NextRef __pyx_string_tab[45]
+#define __pyx_n_u_action __pyx_string_tab[46]
+#define __pyx_n_u_addFilter __pyx_string_tab[47]
+#define __pyx_n_u_addPeer __pyx_string_tab[48]
+#define __pyx_n_u_any __pyx_string_tab[49]
+#define __pyx_n_u_asyncio_coroutines __pyx_string_tab[50]
+#define __pyx_n_u_class_getitem __pyx_string_tab[51]
+#define __pyx_n_u_cline_in_traceback __pyx_string_tab[52]
+#define __pyx_n_u_countRoute __pyx_string_tab[53]
+#define __pyx_n_u_data __pyx_string_tab[54]
+#define __pyx_n_u_deleteRouteByPeerAS __pyx_string_tab[55]
+#define __pyx_n_u_dict __pyx_string_tab[56]
+#define __pyx_n_u_encode __pyx_string_tab[57]
+#define __pyx_n_u_enter __pyx_string_tab[58]
+#define __pyx_n_u_exit __pyx_string_tab[59]
+#define __pyx_n_u_f __pyx_string_tab[60]
+#define __pyx_n_u_filePath __pyx_string_tab[61]
+#define __pyx_n_u_filter __pyx_string_tab[62]
+#define __pyx_n_u_filterType __pyx_string_tab[63]
+#define __pyx_n_u_func __pyx_string_tab[64]
+#define __pyx_n_u_getFilter __pyx_string_tab[65]
+#define __pyx_n_u_getOriginAS __pyx_string_tab[66]
+#define __pyx_n_u_getPeers __pyx_string_tab[67]
+#define __pyx_n_u_get_BGP_UPDATE_COUNTER __pyx_string_tab[68]
+#define __pyx_n_u_getstate __pyx_string_tab[69]
+#define __pyx_n_u_i __pyx_string_tab[70]
+#define __pyx_n_u_index __pyx_string_tab[71]
+#define __pyx_n_u_is_coroutine __pyx_string_tab[72]
+#define __pyx_n_u_items __pyx_string_tab[73]
+#define __pyx_n_u_j __pyx_string_tab[74]
+#define __pyx_n_u_json __pyx_string_tab[75]
+#define __pyx_n_u_lastPtr __pyx_string_tab[76]
+#define __pyx_n_u_load __pyx_string_tab[77]
+#define __pyx_n_u_loadASSet __pyx_string_tab[78]
+#define __pyx_n_u_main __pyx_string_tab[79]
+#define __pyx_n_u_match __pyx_string_tab[80]
+#define __pyx_n_u_module __pyx_string_tab[81]
+#define __pyx_n_u_name __pyx_string_tab[82]
+#define __pyx_n_u_open __pyx_string_tab[83]
+#define __pyx_n_u_p __pyx_string_tab[84]
+#define __pyx_n_u_peer __pyx_string_tab[85]
+#define __pyx_n_u_peerAS __pyx_string_tab[86]
+#define __pyx_n_u_peerASN __pyx_string_tab[87]
+#define __pyx_n_u_pop __pyx_string_tab[88]
+#define __pyx_n_u_prefix __pyx_string_tab[89]
+#define __pyx_n_u_print __pyx_string_tab[90]
+#define __pyx_n_u_ptr __pyx_string_tab[91]
+#define __pyx_n_u_pyx_capi __pyx_string_tab[92]
+#define __pyx_n_u_pyx_state __pyx_string_tab[93]
+#define __pyx_n_u_pyx_vtable __pyx_string_tab[94]
+#define __pyx_n_u_qualname __pyx_string_tab[95]
+#define __pyx_n_u_r __pyx_string_tab[96]
+#define __pyx_n_u_reduce __pyx_string_tab[97]
+#define __pyx_n_u_reduce_cython __pyx_string_tab[98]
+#define __pyx_n_u_reduce_ex __pyx_string_tab[99]
+#define __pyx_n_u_removeFilter __pyx_string_tab[100]
+#define __pyx_n_u_reset_BGP_UPDATE_COUNTER __pyx_string_tab[101]
+#define __pyx_n_u_self __pyx_string_tab[102]
+#define __pyx_n_u_set_name __pyx_string_tab[103]
+#define __pyx_n_u_setdefault __pyx_string_tab[104]
+#define __pyx_n_u_setstate __pyx_string_tab[105]
+#define __pyx_n_u_setstate_cython __pyx_string_tab[106]
+#define __pyx_n_u_showBestRoute __pyx_string_tab[107]
+#define __pyx_n_u_showRoute __pyx_string_tab[108]
+#define __pyx_n_u_showRouteInDB __pyx_string_tab[109]
+#define __pyx_n_u_staticmethod __pyx_string_tab[110]
+#define __pyx_n_u_subAction __pyx_string_tab[111]
+#define __pyx_n_u_test __pyx_string_tab[112]
+#define __pyx_n_u_value __pyx_string_tab[113]
+#define __pyx_n_u_values __pyx_string_tab[114]
+#define __pyx_kp_b_iso88591_1 __pyx_string_tab[115]
+#define __pyx_kp_b_iso88591_A_1A_a_1_Rq_Qc_HD_q_axq_2Q_4s_F __pyx_string_tab[116]
+#define __pyx_kp_b_iso88591_A_1D_1F __pyx_string_tab[117]
+#define __pyx_kp_b_iso88591_A_1D_1_q __pyx_string_tab[118]
+#define __pyx_kp_b_iso88591_A_1D_Zq_gQa __pyx_string_tab[119]
+#define __pyx_kp_b_iso88591_A_4uKq __pyx_string_tab[120]
+#define __pyx_kp_b_iso88591_A_4uL_waq __pyx_string_tab[121]
+#define __pyx_kp_b_iso88591_A_HA_4uAQ_Q_q_E_Qa_WAT_7_1_Qawa __pyx_string_tab[122]
+#define __pyx_kp_b_iso88591_A_a_1_Rq_Qc_HD_q_2Q_4s_C_Q_A_Cq __pyx_string_tab[123]
+#define __pyx_kp_b_iso88591_A_a_1_WAQ_waq_Jb_Qc_HD_fA_Zq_q_Z __pyx_string_tab[124]
+#define __pyx_kp_b_iso88591_A_aq_4q_Qd_z_fA __pyx_string_tab[125]
+#define __pyx_kp_b_iso88591_A_q __pyx_string_tab[126]
+#define __pyx_kp_b_iso88591_A_uAT __pyx_string_tab[127]
+#define __pyx_kp_b_iso88591_Q __pyx_string_tab[128]
+#define __pyx_kp_b_iso88591_Q_2 __pyx_string_tab[129]
+#define __pyx_kp_b_std_unordered_map_int_RouteTable __pyx_string_tab[130]
+#define __pyx_kp_b_std_unordered_set_int_std_unorde __pyx_string_tab[131]
+#define __pyx_n_b_A __pyx_string_tab[132]
+#define __pyx_n_b_U __pyx_string_tab[133]
+#define __pyx_n_b_W __pyx_string_tab[134]
 #define __pyx_int_0 __pyx_number_tab[0]
 #define __pyx_int_neg_1 __pyx_number_tab[1]
 #define __pyx_int_1 __pyx_number_tab[2]
@@ -3215,9 +3244,9 @@ static CYTHON_SMALL_CODE int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_ptype_2AS_AS);
   Py_CLEAR(clear_module_state->__pyx_type_2AS_AS);
   for (int i=0; i<1; ++i) { Py_CLEAR(clear_module_state->__pyx_slice[i]); }
-  for (int i=0; i<1; ++i) { Py_CLEAR(clear_module_state->__pyx_tuple[i]); }
-  for (int i=0; i<14; ++i) { Py_CLEAR(clear_module_state->__pyx_codeobj_tab[i]); }
-  for (int i=0; i<125; ++i) { Py_CLEAR(clear_module_state->__pyx_string_tab[i]); }
+  for (int i=0; i<2; ++i) { Py_CLEAR(clear_module_state->__pyx_tuple[i]); }
+  for (int i=0; i<17; ++i) { Py_CLEAR(clear_module_state->__pyx_codeobj_tab[i]); }
+  for (int i=0; i<135; ++i) { Py_CLEAR(clear_module_state->__pyx_string_tab[i]); }
   for (int i=0; i<3; ++i) { Py_CLEAR(clear_module_state->__pyx_number_tab[i]); }
 /* #### Code section: module_state_clear_contents ### */
 /* CommonTypesMetaclass.module_state_clear */
@@ -3247,9 +3276,9 @@ static CYTHON_SMALL_CODE int __pyx_m_traverse(PyObject *m, visitproc visit, void
   Py_VISIT(traverse_module_state->__pyx_ptype_2AS_AS);
   Py_VISIT(traverse_module_state->__pyx_type_2AS_AS);
   for (int i=0; i<1; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_slice[i]); }
-  for (int i=0; i<1; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_tuple[i]); }
-  for (int i=0; i<14; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_codeobj_tab[i]); }
-  for (int i=0; i<125; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_string_tab[i]); }
+  for (int i=0; i<2; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_tuple[i]); }
+  for (int i=0; i<17; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_codeobj_tab[i]); }
+  for (int i=0; i<135; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_string_tab[i]); }
   for (int i=0; i<3; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_number_tab[i]); }
 /* #### Code section: module_state_traverse_contents ### */
 /* CommonTypesMetaclass.module_state_traverse */
@@ -3263,6 +3292,7 @@ return 0;
 }
 #endif
 /* #### Code section: module_code ### */
+long BGP_UPDATE_COUNTER;
 
 /* "pair.from_py":190
  *         pair(T&, U&) except +
@@ -4287,7 +4317,208 @@ static std::vector<std::pair<int,char> >  __pyx_convert_vector_from_py_std_3a__3
 }
 
 /* "AS.pyx":4
+ * cdef public long BGP_UPDATE_COUNTER = 0
  * 
+ * def get_BGP_UPDATE_COUNTER():             # <<<<<<<<<<<<<<
+ *     return BGP_UPDATE_COUNTER
+ * def reset_BGP_UPDATE_COUNTER(value = 0):
+*/
+
+/* Python wrapper */
+static PyObject *__pyx_pw_2AS_1get_BGP_UPDATE_COUNTER(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static PyMethodDef __pyx_mdef_2AS_1get_BGP_UPDATE_COUNTER = {"get_BGP_UPDATE_COUNTER", (PyCFunction)__pyx_pw_2AS_1get_BGP_UPDATE_COUNTER, METH_NOARGS, 0};
+static PyObject *__pyx_pw_2AS_1get_BGP_UPDATE_COUNTER(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused) {
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("get_BGP_UPDATE_COUNTER (wrapper)", 0);
+  __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
+  __pyx_r = __pyx_pf_2AS_get_BGP_UPDATE_COUNTER(__pyx_self);
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_2AS_get_BGP_UPDATE_COUNTER(CYTHON_UNUSED PyObject *__pyx_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("get_BGP_UPDATE_COUNTER", 0);
+
+  /* "AS.pyx":5
+ * 
+ * def get_BGP_UPDATE_COUNTER():
+ *     return BGP_UPDATE_COUNTER             # <<<<<<<<<<<<<<
+ * def reset_BGP_UPDATE_COUNTER(value = 0):
+ *     global BGP_UPDATE_COUNTER
+*/
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = __Pyx_PyLong_From_long(BGP_UPDATE_COUNTER); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 5, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* "AS.pyx":4
+ * cdef public long BGP_UPDATE_COUNTER = 0
+ * 
+ * def get_BGP_UPDATE_COUNTER():             # <<<<<<<<<<<<<<
+ *     return BGP_UPDATE_COUNTER
+ * def reset_BGP_UPDATE_COUNTER(value = 0):
+*/
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("AS.get_BGP_UPDATE_COUNTER", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "AS.pyx":6
+ * def get_BGP_UPDATE_COUNTER():
+ *     return BGP_UPDATE_COUNTER
+ * def reset_BGP_UPDATE_COUNTER(value = 0):             # <<<<<<<<<<<<<<
+ *     global BGP_UPDATE_COUNTER
+ *     BGP_UPDATE_COUNTER = value
+*/
+
+/* Python wrapper */
+static PyObject *__pyx_pw_2AS_3reset_BGP_UPDATE_COUNTER(PyObject *__pyx_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+); /*proto*/
+static PyMethodDef __pyx_mdef_2AS_3reset_BGP_UPDATE_COUNTER = {"reset_BGP_UPDATE_COUNTER", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_2AS_3reset_BGP_UPDATE_COUNTER, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_2AS_3reset_BGP_UPDATE_COUNTER(PyObject *__pyx_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+) {
+  PyObject *__pyx_v_value = 0;
+  #if !CYTHON_METH_FASTCALL
+  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
+  #endif
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject* values[1] = {0};
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("reset_BGP_UPDATE_COUNTER (wrapper)", 0);
+  #if !CYTHON_METH_FASTCALL
+  #if CYTHON_ASSUME_SAFE_SIZE
+  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
+  #else
+  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs < 0)) return NULL;
+  #endif
+  #endif
+  __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
+  {
+    PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_value,0};
+    const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 6, __pyx_L3_error)
+    if (__pyx_kwds_len > 0) {
+      switch (__pyx_nargs) {
+        case  1:
+        values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 6, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      const Py_ssize_t kwd_pos_args = __pyx_nargs;
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "reset_BGP_UPDATE_COUNTER", 0) < (0)) __PYX_ERR(0, 6, __pyx_L3_error)
+      if (!values[0]) values[0] = __Pyx_NewRef(((PyObject *)((PyObject*)__pyx_mstate_global->__pyx_int_0)));
+    } else {
+      switch (__pyx_nargs) {
+        case  1:
+        values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 6, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      if (!values[0]) values[0] = __Pyx_NewRef(((PyObject *)((PyObject*)__pyx_mstate_global->__pyx_int_0)));
+    }
+    __pyx_v_value = values[0];
+  }
+  goto __pyx_L6_skip;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("reset_BGP_UPDATE_COUNTER", 0, 0, 1, __pyx_nargs); __PYX_ERR(0, 6, __pyx_L3_error)
+  __pyx_L6_skip:;
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L3_error:;
+  for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+    Py_XDECREF(values[__pyx_temp]);
+  }
+  __Pyx_AddTraceback("AS.reset_BGP_UPDATE_COUNTER", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_2AS_2reset_BGP_UPDATE_COUNTER(__pyx_self, __pyx_v_value);
+
+  /* function exit code */
+  for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+    Py_XDECREF(values[__pyx_temp]);
+  }
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_2AS_2reset_BGP_UPDATE_COUNTER(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_value) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  long __pyx_t_1;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("reset_BGP_UPDATE_COUNTER", 0);
+
+  /* "AS.pyx":8
+ * def reset_BGP_UPDATE_COUNTER(value = 0):
+ *     global BGP_UPDATE_COUNTER
+ *     BGP_UPDATE_COUNTER = value             # <<<<<<<<<<<<<<
+ * cdef class AS:
+ *     def __cinit__(self, ASN):
+*/
+  __pyx_t_1 = __Pyx_PyLong_As_long(__pyx_v_value); if (unlikely((__pyx_t_1 == (long)-1) && PyErr_Occurred())) __PYX_ERR(0, 8, __pyx_L1_error)
+  BGP_UPDATE_COUNTER = __pyx_t_1;
+
+  /* "AS.pyx":6
+ * def get_BGP_UPDATE_COUNTER():
+ *     return BGP_UPDATE_COUNTER
+ * def reset_BGP_UPDATE_COUNTER(value = 0):             # <<<<<<<<<<<<<<
+ *     global BGP_UPDATE_COUNTER
+ *     BGP_UPDATE_COUNTER = value
+*/
+
+  /* function exit code */
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("AS.reset_BGP_UPDATE_COUNTER", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "AS.pyx":10
+ *     BGP_UPDATE_COUNTER = value
  * cdef class AS:
  *     def __cinit__(self, ASN):             # <<<<<<<<<<<<<<
  *         self.ASN = ASN
@@ -4316,32 +4547,32 @@ static int __pyx_pw_2AS_2AS_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_a
   {
     PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_ASN,0};
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_VARARGS(__pyx_kwds) : 0;
-    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 4, __pyx_L3_error)
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 10, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
         case  1:
         values[0] = __Pyx_ArgRef_VARARGS(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 4, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 10, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "__cinit__", 0) < (0)) __PYX_ERR(0, 4, __pyx_L3_error)
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "__cinit__", 0) < (0)) __PYX_ERR(0, 10, __pyx_L3_error)
       for (Py_ssize_t i = __pyx_nargs; i < 1; i++) {
-        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 1, 1, i); __PYX_ERR(0, 4, __pyx_L3_error) }
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 1, 1, i); __PYX_ERR(0, 10, __pyx_L3_error) }
       }
     } else if (unlikely(__pyx_nargs != 1)) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = __Pyx_ArgRef_VARARGS(__pyx_args, 0);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 4, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 10, __pyx_L3_error)
     }
     __pyx_v_ASN = values[0];
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 1, 1, __pyx_nargs); __PYX_ERR(0, 4, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 1, 1, __pyx_nargs); __PYX_ERR(0, 10, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -4371,50 +4602,50 @@ static int __pyx_pf_2AS_2AS___cinit__(struct __pyx_obj_2AS_AS *__pyx_v_self, PyO
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
 
-  /* "AS.pyx":5
+  /* "AS.pyx":11
  * cdef class AS:
  *     def __cinit__(self, ASN):
  *         self.ASN = ASN             # <<<<<<<<<<<<<<
  *         peers[ASN] = ()
  *         routeTables[ASN] = new RouteTable(ASN)
 */
-  __pyx_t_1 = __Pyx_PyLong_As_int(__pyx_v_ASN); if (unlikely((__pyx_t_1 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 5, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyLong_As_int(__pyx_v_ASN); if (unlikely((__pyx_t_1 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 11, __pyx_L1_error)
   __pyx_v_self->ASN = __pyx_t_1;
 
-  /* "AS.pyx":6
+  /* "AS.pyx":12
  *     def __cinit__(self, ASN):
  *         self.ASN = ASN
  *         peers[ASN] = ()             # <<<<<<<<<<<<<<
  *         routeTables[ASN] = new RouteTable(ASN)
  *         locks[ASN] = new mutex()
 */
-  __pyx_t_2 = __pyx_convert_vector_from_py_std_3a__3a_pair_3c_int_2c_char_3e___(__pyx_mstate_global->__pyx_empty_tuple); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 6, __pyx_L1_error)
-  __pyx_t_1 = __Pyx_PyLong_As_int(__pyx_v_ASN); if (unlikely((__pyx_t_1 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 6, __pyx_L1_error)
+  __pyx_t_2 = __pyx_convert_vector_from_py_std_3a__3a_pair_3c_int_2c_char_3e___(__pyx_mstate_global->__pyx_empty_tuple); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 12, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyLong_As_int(__pyx_v_ASN); if (unlikely((__pyx_t_1 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 12, __pyx_L1_error)
   (__pyx_v_2AS_peers[__pyx_t_1]) = __pyx_t_2;
 
-  /* "AS.pyx":7
+  /* "AS.pyx":13
  *         self.ASN = ASN
  *         peers[ASN] = ()
  *         routeTables[ASN] = new RouteTable(ASN)             # <<<<<<<<<<<<<<
  *         locks[ASN] = new mutex()
- * 
+ *     @staticmethod
 */
-  __pyx_t_1 = __Pyx_PyLong_As_int(__pyx_v_ASN); if (unlikely((__pyx_t_1 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 7, __pyx_L1_error)
-  __pyx_t_3 = __Pyx_PyLong_As_int(__pyx_v_ASN); if (unlikely((__pyx_t_3 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 7, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyLong_As_int(__pyx_v_ASN); if (unlikely((__pyx_t_1 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 13, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyLong_As_int(__pyx_v_ASN); if (unlikely((__pyx_t_3 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 13, __pyx_L1_error)
   (__pyx_v_2AS_routeTables[__pyx_t_3]) = new RouteTable(__pyx_t_1);
 
-  /* "AS.pyx":8
+  /* "AS.pyx":14
  *         peers[ASN] = ()
  *         routeTables[ASN] = new RouteTable(ASN)
  *         locks[ASN] = new mutex()             # <<<<<<<<<<<<<<
- * 
  *     @staticmethod
+ *     def loadASSet(filePath):
 */
-  __pyx_t_1 = __Pyx_PyLong_As_int(__pyx_v_ASN); if (unlikely((__pyx_t_1 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 8, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyLong_As_int(__pyx_v_ASN); if (unlikely((__pyx_t_1 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 14, __pyx_L1_error)
   (__pyx_v_2AS_locks[__pyx_t_1]) = new std::mutex();
 
-  /* "AS.pyx":4
- * 
+  /* "AS.pyx":10
+ *     BGP_UPDATE_COUNTER = value
  * cdef class AS:
  *     def __cinit__(self, ASN):             # <<<<<<<<<<<<<<
  *         self.ASN = ASN
@@ -4431,9 +4662,9 @@ static int __pyx_pf_2AS_2AS___cinit__(struct __pyx_obj_2AS_AS *__pyx_v_self, PyO
   return __pyx_r;
 }
 
-/* "AS.pyx":10
+/* "AS.pyx":15
+ *         routeTables[ASN] = new RouteTable(ASN)
  *         locks[ASN] = new mutex()
- * 
  *     @staticmethod             # <<<<<<<<<<<<<<
  *     def loadASSet(filePath):
  *         cdef set[int] ASMembers
@@ -4478,32 +4709,32 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   {
     PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_filePath,0};
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
-    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 10, __pyx_L3_error)
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 15, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
         case  1:
         values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 10, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 15, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "loadASSet", 0) < (0)) __PYX_ERR(0, 10, __pyx_L3_error)
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "loadASSet", 0) < (0)) __PYX_ERR(0, 15, __pyx_L3_error)
       for (Py_ssize_t i = __pyx_nargs; i < 1; i++) {
-        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("loadASSet", 1, 1, 1, i); __PYX_ERR(0, 10, __pyx_L3_error) }
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("loadASSet", 1, 1, 1, i); __PYX_ERR(0, 15, __pyx_L3_error) }
       }
     } else if (unlikely(__pyx_nargs != 1)) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 10, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 15, __pyx_L3_error)
     }
     __pyx_v_filePath = values[0];
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("loadASSet", 1, 1, 1, __pyx_nargs); __PYX_ERR(0, 10, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("loadASSet", 1, 1, 1, __pyx_nargs); __PYX_ERR(0, 15, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -4556,7 +4787,7 @@ static PyObject *__pyx_pf_2AS_2AS_2loadASSet(PyObject *__pyx_v_filePath) {
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("loadASSet", 0);
 
-  /* "AS.pyx":14
+  /* "AS.pyx":19
  *         cdef set[int] ASMembers
  * 
  *         with open(filePath, "r") as f:             # <<<<<<<<<<<<<<
@@ -4570,13 +4801,13 @@ static PyObject *__pyx_pf_2AS_2AS_2loadASSet(PyObject *__pyx_v_filePath) {
       PyObject *__pyx_callargs[3] = {__pyx_t_2, __pyx_v_filePath, __pyx_mstate_global->__pyx_n_u_r};
       __pyx_t_1 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_open, __pyx_callargs+__pyx_t_3, (3-__pyx_t_3) | (__pyx_t_3*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
       __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 14, __pyx_L1_error)
+      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 19, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
     }
-    __pyx_t_4 = __Pyx_PyObject_LookupSpecial(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_exit); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 14, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_LookupSpecial(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_exit); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 19, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __pyx_t_5 = NULL;
-    __pyx_t_6 = __Pyx_PyObject_LookupSpecial(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_enter); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 14, __pyx_L3_error)
+    __pyx_t_6 = __Pyx_PyObject_LookupSpecial(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_enter); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 19, __pyx_L3_error)
     __Pyx_GOTREF(__pyx_t_6);
     __pyx_t_3 = 1;
     #if CYTHON_UNPACK_METHODS
@@ -4595,7 +4826,7 @@ static PyObject *__pyx_pf_2AS_2AS_2loadASSet(PyObject *__pyx_v_filePath) {
       __pyx_t_2 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_6, __pyx_callargs+__pyx_t_3, (1-__pyx_t_3) | (__pyx_t_3*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
       __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 14, __pyx_L3_error)
+      if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 19, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_2);
     }
     __pyx_t_6 = __pyx_t_2;
@@ -4613,7 +4844,7 @@ static PyObject *__pyx_pf_2AS_2AS_2loadASSet(PyObject *__pyx_v_filePath) {
           __pyx_v_f = __pyx_t_6;
           __pyx_t_6 = 0;
 
-          /* "AS.pyx":15
+          /* "AS.pyx":20
  * 
  *         with open(filePath, "r") as f:
  *             data = json.load(f)             # <<<<<<<<<<<<<<
@@ -4621,9 +4852,9 @@ static PyObject *__pyx_pf_2AS_2AS_2loadASSet(PyObject *__pyx_v_filePath) {
  *                 ASMembers.clear()
 */
           __pyx_t_1 = NULL;
-          __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_json); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 15, __pyx_L7_error)
+          __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_json); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 20, __pyx_L7_error)
           __Pyx_GOTREF(__pyx_t_2);
-          __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_load); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 15, __pyx_L7_error)
+          __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_load); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 20, __pyx_L7_error)
           __Pyx_GOTREF(__pyx_t_5);
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
           __pyx_t_3 = 1;
@@ -4643,13 +4874,13 @@ static PyObject *__pyx_pf_2AS_2AS_2loadASSet(PyObject *__pyx_v_filePath) {
             __pyx_t_6 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_5, __pyx_callargs+__pyx_t_3, (2-__pyx_t_3) | (__pyx_t_3*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
             __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
             __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-            if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 15, __pyx_L7_error)
+            if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 20, __pyx_L7_error)
             __Pyx_GOTREF(__pyx_t_6);
           }
           __pyx_v_data = __pyx_t_6;
           __pyx_t_6 = 0;
 
-          /* "AS.pyx":16
+          /* "AS.pyx":21
  *         with open(filePath, "r") as f:
  *             data = json.load(f)
  *             for i in data:             # <<<<<<<<<<<<<<
@@ -4661,9 +4892,9 @@ static PyObject *__pyx_pf_2AS_2AS_2loadASSet(PyObject *__pyx_v_filePath) {
             __pyx_t_10 = 0;
             __pyx_t_11 = NULL;
           } else {
-            __pyx_t_10 = -1; __pyx_t_6 = PyObject_GetIter(__pyx_v_data); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 16, __pyx_L7_error)
+            __pyx_t_10 = -1; __pyx_t_6 = PyObject_GetIter(__pyx_v_data); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 21, __pyx_L7_error)
             __Pyx_GOTREF(__pyx_t_6);
-            __pyx_t_11 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_6); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 16, __pyx_L7_error)
+            __pyx_t_11 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_6); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 21, __pyx_L7_error)
           }
           for (;;) {
             if (likely(!__pyx_t_11)) {
@@ -4671,7 +4902,7 @@ static PyObject *__pyx_pf_2AS_2AS_2loadASSet(PyObject *__pyx_v_filePath) {
                 {
                   Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_6);
                   #if !CYTHON_ASSUME_SAFE_SIZE
-                  if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 16, __pyx_L7_error)
+                  if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 21, __pyx_L7_error)
                   #endif
                   if (__pyx_t_10 >= __pyx_temp) break;
                 }
@@ -4681,7 +4912,7 @@ static PyObject *__pyx_pf_2AS_2AS_2loadASSet(PyObject *__pyx_v_filePath) {
                 {
                   Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_6);
                   #if !CYTHON_ASSUME_SAFE_SIZE
-                  if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 16, __pyx_L7_error)
+                  if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 21, __pyx_L7_error)
                   #endif
                   if (__pyx_t_10 >= __pyx_temp) break;
                 }
@@ -4692,13 +4923,13 @@ static PyObject *__pyx_pf_2AS_2AS_2loadASSet(PyObject *__pyx_v_filePath) {
                 #endif
                 ++__pyx_t_10;
               }
-              if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 16, __pyx_L7_error)
+              if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 21, __pyx_L7_error)
             } else {
               __pyx_t_5 = __pyx_t_11(__pyx_t_6);
               if (unlikely(!__pyx_t_5)) {
                 PyObject* exc_type = PyErr_Occurred();
                 if (exc_type) {
-                  if (unlikely(!__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) __PYX_ERR(0, 16, __pyx_L7_error)
+                  if (unlikely(!__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) __PYX_ERR(0, 21, __pyx_L7_error)
                   PyErr_Clear();
                 }
                 break;
@@ -4708,7 +4939,7 @@ static PyObject *__pyx_pf_2AS_2AS_2loadASSet(PyObject *__pyx_v_filePath) {
             __Pyx_XDECREF_SET(__pyx_v_i, __pyx_t_5);
             __pyx_t_5 = 0;
 
-            /* "AS.pyx":17
+            /* "AS.pyx":22
  *             data = json.load(f)
  *             for i in data:
  *                 ASMembers.clear()             # <<<<<<<<<<<<<<
@@ -4717,23 +4948,23 @@ static PyObject *__pyx_pf_2AS_2AS_2loadASSet(PyObject *__pyx_v_filePath) {
 */
             __pyx_v_ASMembers.clear();
 
-            /* "AS.pyx":18
+            /* "AS.pyx":23
  *             for i in data:
  *                 ASMembers.clear()
  *                 for j in data[i]:             # <<<<<<<<<<<<<<
  *                     ASMembers.insert(stoi(j.encode('utf-8')))
  * 
 */
-            __pyx_t_5 = __Pyx_PyObject_GetItem(__pyx_v_data, __pyx_v_i); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 18, __pyx_L7_error)
+            __pyx_t_5 = __Pyx_PyObject_GetItem(__pyx_v_data, __pyx_v_i); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 23, __pyx_L7_error)
             __Pyx_GOTREF(__pyx_t_5);
             if (likely(PyList_CheckExact(__pyx_t_5)) || PyTuple_CheckExact(__pyx_t_5)) {
               __pyx_t_1 = __pyx_t_5; __Pyx_INCREF(__pyx_t_1);
               __pyx_t_12 = 0;
               __pyx_t_13 = NULL;
             } else {
-              __pyx_t_12 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 18, __pyx_L7_error)
+              __pyx_t_12 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 23, __pyx_L7_error)
               __Pyx_GOTREF(__pyx_t_1);
-              __pyx_t_13 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 18, __pyx_L7_error)
+              __pyx_t_13 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 23, __pyx_L7_error)
             }
             __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
             for (;;) {
@@ -4742,7 +4973,7 @@ static PyObject *__pyx_pf_2AS_2AS_2loadASSet(PyObject *__pyx_v_filePath) {
                   {
                     Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_1);
                     #if !CYTHON_ASSUME_SAFE_SIZE
-                    if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 18, __pyx_L7_error)
+                    if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 23, __pyx_L7_error)
                     #endif
                     if (__pyx_t_12 >= __pyx_temp) break;
                   }
@@ -4752,7 +4983,7 @@ static PyObject *__pyx_pf_2AS_2AS_2loadASSet(PyObject *__pyx_v_filePath) {
                   {
                     Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_1);
                     #if !CYTHON_ASSUME_SAFE_SIZE
-                    if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 18, __pyx_L7_error)
+                    if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 23, __pyx_L7_error)
                     #endif
                     if (__pyx_t_12 >= __pyx_temp) break;
                   }
@@ -4763,13 +4994,13 @@ static PyObject *__pyx_pf_2AS_2AS_2loadASSet(PyObject *__pyx_v_filePath) {
                   #endif
                   ++__pyx_t_12;
                 }
-                if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 18, __pyx_L7_error)
+                if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 23, __pyx_L7_error)
               } else {
                 __pyx_t_5 = __pyx_t_13(__pyx_t_1);
                 if (unlikely(!__pyx_t_5)) {
                   PyObject* exc_type = PyErr_Occurred();
                   if (exc_type) {
-                    if (unlikely(!__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) __PYX_ERR(0, 18, __pyx_L7_error)
+                    if (unlikely(!__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) __PYX_ERR(0, 23, __pyx_L7_error)
                     PyErr_Clear();
                   }
                   break;
@@ -4779,7 +5010,7 @@ static PyObject *__pyx_pf_2AS_2AS_2loadASSet(PyObject *__pyx_v_filePath) {
               __Pyx_XDECREF_SET(__pyx_v_j, __pyx_t_5);
               __pyx_t_5 = 0;
 
-              /* "AS.pyx":19
+              /* "AS.pyx":24
  *                 ASMembers.clear()
  *                 for j in data[i]:
  *                     ASMembers.insert(stoi(j.encode('utf-8')))             # <<<<<<<<<<<<<<
@@ -4793,25 +5024,25 @@ static PyObject *__pyx_pf_2AS_2AS_2loadASSet(PyObject *__pyx_v_filePath) {
                 PyObject *__pyx_callargs[2] = {__pyx_t_2, __pyx_mstate_global->__pyx_kp_u_utf_8};
                 __pyx_t_5 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_encode, __pyx_callargs+__pyx_t_3, (2-__pyx_t_3) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
                 __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-                if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 19, __pyx_L7_error)
+                if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 24, __pyx_L7_error)
                 __Pyx_GOTREF(__pyx_t_5);
               }
-              __pyx_t_14 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_t_5); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 19, __pyx_L7_error)
+              __pyx_t_14 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_t_5); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 24, __pyx_L7_error)
               __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
               try {
                 __pyx_t_15 = std::stoi(__pyx_t_14);
               } catch(...) {
                 __Pyx_CppExn2PyErr();
-                __PYX_ERR(0, 19, __pyx_L7_error)
+                __PYX_ERR(0, 24, __pyx_L7_error)
               }
               try {
                 __pyx_v_ASMembers.insert(__pyx_t_15);
               } catch(...) {
                 __Pyx_CppExn2PyErr();
-                __PYX_ERR(0, 19, __pyx_L7_error)
+                __PYX_ERR(0, 24, __pyx_L7_error)
               }
 
-              /* "AS.pyx":18
+              /* "AS.pyx":23
  *             for i in data:
  *                 ASMembers.clear()
  *                 for j in data[i]:             # <<<<<<<<<<<<<<
@@ -4821,7 +5052,7 @@ static PyObject *__pyx_pf_2AS_2AS_2loadASSet(PyObject *__pyx_v_filePath) {
             }
             __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-            /* "AS.pyx":21
+            /* "AS.pyx":26
  *                     ASMembers.insert(stoi(j.encode('utf-8')))
  * 
  *                 ASSet[i.encode('utf-8')] = ASMembers             # <<<<<<<<<<<<<<
@@ -4835,14 +5066,14 @@ static PyObject *__pyx_pf_2AS_2AS_2loadASSet(PyObject *__pyx_v_filePath) {
               PyObject *__pyx_callargs[2] = {__pyx_t_5, __pyx_mstate_global->__pyx_kp_u_utf_8};
               __pyx_t_1 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_encode, __pyx_callargs+__pyx_t_3, (2-__pyx_t_3) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
               __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-              if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 21, __pyx_L7_error)
+              if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 26, __pyx_L7_error)
               __Pyx_GOTREF(__pyx_t_1);
             }
-            __pyx_t_14 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_t_1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 21, __pyx_L7_error)
+            __pyx_t_14 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_t_1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 26, __pyx_L7_error)
             __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
             (__pyx_v_2AS_ASSet[__pyx_t_14]) = __pyx_v_ASMembers;
 
-            /* "AS.pyx":16
+            /* "AS.pyx":21
  *         with open(filePath, "r") as f:
  *             data = json.load(f)
  *             for i in data:             # <<<<<<<<<<<<<<
@@ -4852,7 +5083,7 @@ static PyObject *__pyx_pf_2AS_2AS_2loadASSet(PyObject *__pyx_v_filePath) {
           }
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-          /* "AS.pyx":14
+          /* "AS.pyx":19
  *         cdef set[int] ASMembers
  * 
  *         with open(filePath, "r") as f:             # <<<<<<<<<<<<<<
@@ -4871,20 +5102,20 @@ static PyObject *__pyx_pf_2AS_2AS_2loadASSet(PyObject *__pyx_v_filePath) {
         __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
         /*except:*/ {
           __Pyx_AddTraceback("AS.AS.loadASSet", __pyx_clineno, __pyx_lineno, __pyx_filename);
-          if (__Pyx_GetException(&__pyx_t_6, &__pyx_t_1, &__pyx_t_5) < 0) __PYX_ERR(0, 14, __pyx_L9_except_error)
+          if (__Pyx_GetException(&__pyx_t_6, &__pyx_t_1, &__pyx_t_5) < 0) __PYX_ERR(0, 19, __pyx_L9_except_error)
           __Pyx_XGOTREF(__pyx_t_6);
           __Pyx_XGOTREF(__pyx_t_1);
           __Pyx_XGOTREF(__pyx_t_5);
-          __pyx_t_2 = PyTuple_Pack(3, __pyx_t_6, __pyx_t_1, __pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 14, __pyx_L9_except_error)
+          __pyx_t_2 = PyTuple_Pack(3, __pyx_t_6, __pyx_t_1, __pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 19, __pyx_L9_except_error)
           __Pyx_GOTREF(__pyx_t_2);
           __pyx_t_16 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_2, NULL);
           __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-          if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 14, __pyx_L9_except_error)
+          if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 19, __pyx_L9_except_error)
           __Pyx_GOTREF(__pyx_t_16);
           __pyx_t_17 = __Pyx_PyObject_IsTrue(__pyx_t_16);
           __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
-          if (__pyx_t_17 < (0)) __PYX_ERR(0, 14, __pyx_L9_except_error)
+          if (__pyx_t_17 < (0)) __PYX_ERR(0, 19, __pyx_L9_except_error)
           __pyx_t_18 = (!__pyx_t_17);
           if (unlikely(__pyx_t_18)) {
             __Pyx_GIVEREF(__pyx_t_6);
@@ -4892,7 +5123,7 @@ static PyObject *__pyx_pf_2AS_2AS_2loadASSet(PyObject *__pyx_v_filePath) {
             __Pyx_XGIVEREF(__pyx_t_5);
             __Pyx_ErrRestoreWithState(__pyx_t_6, __pyx_t_1, __pyx_t_5);
             __pyx_t_6 = 0;  __pyx_t_1 = 0;  __pyx_t_5 = 0; 
-            __PYX_ERR(0, 14, __pyx_L9_except_error)
+            __PYX_ERR(0, 19, __pyx_L9_except_error)
           }
           __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
           __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -4918,7 +5149,7 @@ static PyObject *__pyx_pf_2AS_2AS_2loadASSet(PyObject *__pyx_v_filePath) {
         if (__pyx_t_4) {
           __pyx_t_9 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_mstate_global->__pyx_tuple[0], NULL);
           __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-          if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 14, __pyx_L1_error)
+          if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 19, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_9);
           __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
         }
@@ -4933,7 +5164,7 @@ static PyObject *__pyx_pf_2AS_2AS_2loadASSet(PyObject *__pyx_v_filePath) {
     __pyx_L22:;
   }
 
-  /* "AS.pyx":23
+  /* "AS.pyx":28
  *                 ASSet[i.encode('utf-8')] = ASMembers
  * 
  *         print(f"Loaded {ASSet.size()} AS-SETs")             # <<<<<<<<<<<<<<
@@ -4941,13 +5172,13 @@ static PyObject *__pyx_pf_2AS_2AS_2loadASSet(PyObject *__pyx_v_filePath) {
  *     cpdef void addPeer(self, peer):
 */
   __pyx_t_1 = NULL;
-  __pyx_t_6 = __Pyx_PyUnicode_From_size_t(__pyx_v_2AS_ASSet.size(), 0, ' ', 'd'); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 23, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyUnicode_From_size_t(__pyx_v_2AS_ASSet.size(), 0, ' ', 'd'); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 28, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __pyx_t_19[0] = __pyx_mstate_global->__pyx_kp_u_Loaded;
   __pyx_t_19[1] = __pyx_t_6;
   __pyx_t_19[2] = __pyx_mstate_global->__pyx_kp_u_AS_SETs;
   __pyx_t_2 = __Pyx_PyUnicode_Join(__pyx_t_19, 3, 7 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_6) + 8, 127);
-  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 23, __pyx_L1_error)
+  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 28, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __pyx_t_3 = 1;
@@ -4956,14 +5187,14 @@ static PyObject *__pyx_pf_2AS_2AS_2loadASSet(PyObject *__pyx_v_filePath) {
     __pyx_t_5 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_3, (2-__pyx_t_3) | (__pyx_t_3*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
     __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 23, __pyx_L1_error)
+    if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 28, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
   }
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-  /* "AS.pyx":10
+  /* "AS.pyx":15
+ *         routeTables[ASN] = new RouteTable(ASN)
  *         locks[ASN] = new mutex()
- * 
  *     @staticmethod             # <<<<<<<<<<<<<<
  *     def loadASSet(filePath):
  *         cdef set[int] ASMembers
@@ -4989,7 +5220,7 @@ static PyObject *__pyx_pf_2AS_2AS_2loadASSet(PyObject *__pyx_v_filePath) {
   return __pyx_r;
 }
 
-/* "AS.pyx":25
+/* "AS.pyx":30
  *         print(f"Loaded {ASSet.size()} AS-SETs")
  * 
  *     cpdef void addPeer(self, peer):             # <<<<<<<<<<<<<<
@@ -5035,7 +5266,7 @@ static void __pyx_f_2AS_2AS_addPeer(struct __pyx_obj_2AS_AS *__pyx_v_self, PyObj
     if (unlikely(!__Pyx_object_dict_version_matches(((PyObject *)__pyx_v_self), __pyx_tp_dict_version, __pyx_obj_dict_version))) {
       PY_UINT64_T __pyx_typedict_guard = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
       #endif
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_mstate_global->__pyx_n_u_addPeer); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 25, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_mstate_global->__pyx_n_u_addPeer); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 30, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       if (!__Pyx_IsSameCFunction(__pyx_t_1, (void(*)(void)) __pyx_pw_2AS_2AS_5addPeer)) {
         __pyx_t_3 = NULL;
@@ -5058,7 +5289,7 @@ static void __pyx_f_2AS_2AS_addPeer(struct __pyx_obj_2AS_AS *__pyx_v_self, PyObj
           __pyx_t_2 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_4, __pyx_callargs+__pyx_t_5, (2-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
           __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
           __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 25, __pyx_L1_error)
+          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 30, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
         }
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -5078,33 +5309,33 @@ static void __pyx_f_2AS_2AS_addPeer(struct __pyx_obj_2AS_AS *__pyx_v_self, PyObj
     #endif
   }
 
-  /* "AS.pyx":28
+  /* "AS.pyx":33
  *         cdef pair[int, char] p
  * 
  *         p.first = peer[0]             # <<<<<<<<<<<<<<
  *         p.second = peer[1]
  * 
 */
-  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_peer, 0, long, 1, __Pyx_PyLong_From_long, 0, 0, 1, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 28, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_peer, 0, long, 1, __Pyx_PyLong_From_long, 0, 0, 1, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 33, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_6 = __Pyx_PyLong_As_int(__pyx_t_1); if (unlikely((__pyx_t_6 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 28, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyLong_As_int(__pyx_t_1); if (unlikely((__pyx_t_6 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 33, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_p.first = __pyx_t_6;
 
-  /* "AS.pyx":29
+  /* "AS.pyx":34
  * 
  *         p.first = peer[0]
  *         p.second = peer[1]             # <<<<<<<<<<<<<<
  * 
  *         peers[self.ASN].push_back(p)
 */
-  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_peer, 1, long, 1, __Pyx_PyLong_From_long, 0, 0, 1, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 29, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_peer, 1, long, 1, __Pyx_PyLong_From_long, 0, 0, 1, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 34, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_7 = __Pyx_PyLong_As_char(__pyx_t_1); if (unlikely((__pyx_t_7 == (char)-1) && PyErr_Occurred())) __PYX_ERR(0, 29, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyLong_As_char(__pyx_t_1); if (unlikely((__pyx_t_7 == (char)-1) && PyErr_Occurred())) __PYX_ERR(0, 34, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_p.second = __pyx_t_7;
 
-  /* "AS.pyx":31
+  /* "AS.pyx":36
  *         p.second = peer[1]
  * 
  *         peers[self.ASN].push_back(p)             # <<<<<<<<<<<<<<
@@ -5115,10 +5346,10 @@ static void __pyx_f_2AS_2AS_addPeer(struct __pyx_obj_2AS_AS *__pyx_v_self, PyObj
     (__pyx_v_2AS_peers[__pyx_v_self->ASN]).push_back(__pyx_v_p);
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(0, 31, __pyx_L1_error)
+    __PYX_ERR(0, 36, __pyx_L1_error)
   }
 
-  /* "AS.pyx":33
+  /* "AS.pyx":38
  *         peers[self.ASN].push_back(p)
  * 
  *         peerType[(self.ASN, p.first)] = p.second             # <<<<<<<<<<<<<<
@@ -5126,23 +5357,23 @@ static void __pyx_f_2AS_2AS_addPeer(struct __pyx_obj_2AS_AS *__pyx_v_self, PyObj
  *     def getPeers(self):
 */
   __pyx_t_7 = __pyx_v_p.second;
-  __pyx_t_1 = __Pyx_PyLong_From_int(__pyx_v_self->ASN); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 33, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyLong_From_int(__pyx_v_self->ASN); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 38, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyLong_From_int(__pyx_v_p.first); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 33, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyLong_From_int(__pyx_v_p.first); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 38, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 33, __pyx_L1_error)
+  __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 38, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_GIVEREF(__pyx_t_1);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_1) != (0)) __PYX_ERR(0, 33, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_1) != (0)) __PYX_ERR(0, 38, __pyx_L1_error);
   __Pyx_GIVEREF(__pyx_t_2);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_t_2) != (0)) __PYX_ERR(0, 33, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_t_2) != (0)) __PYX_ERR(0, 38, __pyx_L1_error);
   __pyx_t_1 = 0;
   __pyx_t_2 = 0;
-  __pyx_t_8 = __pyx_convert_pair_from_py_int__and_int(__pyx_t_4); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 33, __pyx_L1_error)
+  __pyx_t_8 = __pyx_convert_pair_from_py_int__and_int(__pyx_t_4); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 38, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   (__pyx_v_2AS_peerType[__pyx_t_8]) = __pyx_t_7;
 
-  /* "AS.pyx":25
+  /* "AS.pyx":30
  *         print(f"Loaded {ASSet.size()} AS-SETs")
  * 
  *     cpdef void addPeer(self, peer):             # <<<<<<<<<<<<<<
@@ -5201,32 +5432,32 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   {
     PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_peer,0};
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
-    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 25, __pyx_L3_error)
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 30, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
         case  1:
         values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 25, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 30, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "addPeer", 0) < (0)) __PYX_ERR(0, 25, __pyx_L3_error)
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "addPeer", 0) < (0)) __PYX_ERR(0, 30, __pyx_L3_error)
       for (Py_ssize_t i = __pyx_nargs; i < 1; i++) {
-        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("addPeer", 1, 1, 1, i); __PYX_ERR(0, 25, __pyx_L3_error) }
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("addPeer", 1, 1, 1, i); __PYX_ERR(0, 30, __pyx_L3_error) }
       }
     } else if (unlikely(__pyx_nargs != 1)) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 25, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 30, __pyx_L3_error)
     }
     __pyx_v_peer = values[0];
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("addPeer", 1, 1, 1, __pyx_nargs); __PYX_ERR(0, 25, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("addPeer", 1, 1, 1, __pyx_nargs); __PYX_ERR(0, 30, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -5256,8 +5487,8 @@ static PyObject *__pyx_pf_2AS_2AS_4addPeer(struct __pyx_obj_2AS_AS *__pyx_v_self
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("addPeer", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_f_2AS_2AS_addPeer(__pyx_v_self, __pyx_v_peer, 1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 25, __pyx_L1_error)
-  __pyx_t_1 = __Pyx_void_to_None(NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 25, __pyx_L1_error)
+  __pyx_f_2AS_2AS_addPeer(__pyx_v_self, __pyx_v_peer, 1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 30, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_void_to_None(NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 30, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -5274,7 +5505,7 @@ static PyObject *__pyx_pf_2AS_2AS_4addPeer(struct __pyx_obj_2AS_AS *__pyx_v_self
   return __pyx_r;
 }
 
-/* "AS.pyx":35
+/* "AS.pyx":40
  *         peerType[(self.ASN, p.first)] = p.second
  * 
  *     def getPeers(self):             # <<<<<<<<<<<<<<
@@ -5333,7 +5564,7 @@ static PyObject *__pyx_pf_2AS_2AS_6getPeers(struct __pyx_obj_2AS_AS *__pyx_v_sel
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("getPeers", 0);
 
-  /* "AS.pyx":36
+  /* "AS.pyx":41
  * 
  *     def getPeers(self):
  *         return peers[self.ASN]             # <<<<<<<<<<<<<<
@@ -5341,13 +5572,13 @@ static PyObject *__pyx_pf_2AS_2AS_6getPeers(struct __pyx_obj_2AS_AS *__pyx_v_sel
  *     def getFilter(self, peerASN, filterType):
 */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_convert_vector_to_py_std_3a__3a_pair_3c_int_2c_char_3e___((__pyx_v_2AS_peers[__pyx_v_self->ASN])); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 36, __pyx_L1_error)
+  __pyx_t_1 = __pyx_convert_vector_to_py_std_3a__3a_pair_3c_int_2c_char_3e___((__pyx_v_2AS_peers[__pyx_v_self->ASN])); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 41, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "AS.pyx":35
+  /* "AS.pyx":40
  *         peerType[(self.ASN, p.first)] = p.second
  * 
  *     def getPeers(self):             # <<<<<<<<<<<<<<
@@ -5366,7 +5597,7 @@ static PyObject *__pyx_pf_2AS_2AS_6getPeers(struct __pyx_obj_2AS_AS *__pyx_v_sel
   return __pyx_r;
 }
 
-/* "AS.pyx":38
+/* "AS.pyx":43
  *         return peers[self.ASN]
  * 
  *     def getFilter(self, peerASN, filterType):             # <<<<<<<<<<<<<<
@@ -5414,39 +5645,39 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   {
     PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_peerASN,&__pyx_mstate_global->__pyx_n_u_filterType,0};
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
-    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 38, __pyx_L3_error)
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 43, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
         case  2:
         values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 38, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 43, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  1:
         values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 38, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 43, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "getFilter", 0) < (0)) __PYX_ERR(0, 38, __pyx_L3_error)
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "getFilter", 0) < (0)) __PYX_ERR(0, 43, __pyx_L3_error)
       for (Py_ssize_t i = __pyx_nargs; i < 2; i++) {
-        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("getFilter", 1, 2, 2, i); __PYX_ERR(0, 38, __pyx_L3_error) }
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("getFilter", 1, 2, 2, i); __PYX_ERR(0, 43, __pyx_L3_error) }
       }
     } else if (unlikely(__pyx_nargs != 2)) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 38, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 43, __pyx_L3_error)
       values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 38, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 43, __pyx_L3_error)
     }
     __pyx_v_peerASN = values[0];
     __pyx_v_filterType = values[1];
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("getFilter", 1, 2, 2, __pyx_nargs); __PYX_ERR(0, 38, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("getFilter", 1, 2, 2, __pyx_nargs); __PYX_ERR(0, 43, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -5489,7 +5720,7 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("getFilter", 0);
 
-  /* "AS.pyx":43
+  /* "AS.pyx":48
  *             Filter* ptr
  * 
  *         p.first = self.ASN             # <<<<<<<<<<<<<<
@@ -5499,39 +5730,39 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
   __pyx_t_1 = __pyx_v_self->ASN;
   __pyx_v_p.first = __pyx_t_1;
 
-  /* "AS.pyx":44
+  /* "AS.pyx":49
  * 
  *         p.first = self.ASN
  *         p.second = peerASN             # <<<<<<<<<<<<<<
  *         filter = []
  * 
 */
-  __pyx_t_1 = __Pyx_PyLong_As_int(__pyx_v_peerASN); if (unlikely((__pyx_t_1 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 44, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyLong_As_int(__pyx_v_peerASN); if (unlikely((__pyx_t_1 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 49, __pyx_L1_error)
   __pyx_v_p.second = __pyx_t_1;
 
-  /* "AS.pyx":45
+  /* "AS.pyx":50
  *         p.first = self.ASN
  *         p.second = peerASN
  *         filter = []             # <<<<<<<<<<<<<<
  * 
  *         if filterType=='filter in':
 */
-  __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 45, __pyx_L1_error)
+  __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 50, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_v_filter = ((PyObject*)__pyx_t_2);
   __pyx_t_2 = 0;
 
-  /* "AS.pyx":47
+  /* "AS.pyx":52
  *         filter = []
  * 
  *         if filterType=='filter in':             # <<<<<<<<<<<<<<
  * 
  *             if (filterIn.find(p) == filterIn.end()):
 */
-  __pyx_t_3 = (__Pyx_PyUnicode_Equals(__pyx_v_filterType, __pyx_mstate_global->__pyx_kp_u_filter_in, Py_EQ)); if (unlikely((__pyx_t_3 < 0))) __PYX_ERR(0, 47, __pyx_L1_error)
+  __pyx_t_3 = (__Pyx_PyUnicode_Equals(__pyx_v_filterType, __pyx_mstate_global->__pyx_kp_u_filter_in, Py_EQ)); if (unlikely((__pyx_t_3 < 0))) __PYX_ERR(0, 52, __pyx_L1_error)
   if (__pyx_t_3) {
 
-    /* "AS.pyx":49
+    /* "AS.pyx":54
  *         if filterType=='filter in':
  * 
  *             if (filterIn.find(p) == filterIn.end()):             # <<<<<<<<<<<<<<
@@ -5541,7 +5772,7 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
     __pyx_t_3 = (__pyx_v_2AS_filterIn.find(__pyx_v_p) == __pyx_v_2AS_filterIn.end());
     if (__pyx_t_3) {
 
-      /* "AS.pyx":50
+      /* "AS.pyx":55
  * 
  *             if (filterIn.find(p) == filterIn.end()):
  *                 return []             # <<<<<<<<<<<<<<
@@ -5549,13 +5780,13 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
  *             ptr = filterIn[p].nextFt
 */
       __Pyx_XDECREF(__pyx_r);
-      __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 50, __pyx_L1_error)
+      __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 55, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __pyx_r = __pyx_t_2;
       __pyx_t_2 = 0;
       goto __pyx_L0;
 
-      /* "AS.pyx":49
+      /* "AS.pyx":54
  *         if filterType=='filter in':
  * 
  *             if (filterIn.find(p) == filterIn.end()):             # <<<<<<<<<<<<<<
@@ -5564,7 +5795,7 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
 */
     }
 
-    /* "AS.pyx":52
+    /* "AS.pyx":57
  *                 return []
  * 
  *             ptr = filterIn[p].nextFt             # <<<<<<<<<<<<<<
@@ -5574,7 +5805,7 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
     __pyx_t_4 = (__pyx_v_2AS_filterIn[__pyx_v_p]).nextFt;
     __pyx_v_ptr = __pyx_t_4;
 
-    /* "AS.pyx":54
+    /* "AS.pyx":59
  *             ptr = filterIn[p].nextFt
  * 
  *             while (ptr != NULL):             # <<<<<<<<<<<<<<
@@ -5585,7 +5816,7 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
       __pyx_t_3 = (__pyx_v_ptr != NULL);
       if (!__pyx_t_3) break;
 
-      /* "AS.pyx":56
+      /* "AS.pyx":61
  *             while (ptr != NULL):
  * 
  *                 match = ""             # <<<<<<<<<<<<<<
@@ -5595,7 +5826,7 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
       __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u_);
       __Pyx_XDECREF_SET(__pyx_v_match, __pyx_mstate_global->__pyx_kp_u_);
 
-      /* "AS.pyx":57
+      /* "AS.pyx":62
  * 
  *                 match = ""
  *                 action = ""             # <<<<<<<<<<<<<<
@@ -5605,7 +5836,7 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
       __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u_);
       __Pyx_XDECREF_SET(__pyx_v_action, __pyx_mstate_global->__pyx_kp_u_);
 
-      /* "AS.pyx":59
+      /* "AS.pyx":64
  *                 action = ""
  * 
  *                 if (ptr.matchType == ANY):             # <<<<<<<<<<<<<<
@@ -5615,7 +5846,7 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
       switch (__pyx_v_ptr->matchType) {
         case ANY:
 
-        /* "AS.pyx":61
+        /* "AS.pyx":66
  *                 if (ptr.matchType == ANY):
  * 
  *                     match = "any"             # <<<<<<<<<<<<<<
@@ -5625,7 +5856,7 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
         __Pyx_INCREF(__pyx_mstate_global->__pyx_n_u_any);
         __Pyx_DECREF_SET(__pyx_v_match, __pyx_mstate_global->__pyx_n_u_any);
 
-        /* "AS.pyx":59
+        /* "AS.pyx":64
  *                 action = ""
  * 
  *                 if (ptr.matchType == ANY):             # <<<<<<<<<<<<<<
@@ -5635,22 +5866,22 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
         break;
         case COMMUNITY_CONTAINS:
 
-        /* "AS.pyx":65
+        /* "AS.pyx":70
  *                 elif (ptr.matchType == COMMUNITY_CONTAINS):
  * 
  *                     match = "community contains " + ptr.matchValue.decode('utf-8')             # <<<<<<<<<<<<<<
  * 
  *                 elif (ptr.matchType == PREFIX_IS):
 */
-        __pyx_t_2 = __Pyx_decode_cpp_string(__pyx_v_ptr->matchValue, 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 65, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_decode_cpp_string(__pyx_v_ptr->matchValue, 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 70, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
-        __pyx_t_5 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_community_contains, __pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 65, __pyx_L1_error)
+        __pyx_t_5 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_community_contains, __pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 70, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_5);
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
         __Pyx_DECREF_SET(__pyx_v_match, __pyx_t_5);
         __pyx_t_5 = 0;
 
-        /* "AS.pyx":63
+        /* "AS.pyx":68
  *                     match = "any"
  * 
  *                 elif (ptr.matchType == COMMUNITY_CONTAINS):             # <<<<<<<<<<<<<<
@@ -5660,22 +5891,22 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
         break;
         case PREFIX_IS:
 
-        /* "AS.pyx":69
+        /* "AS.pyx":74
  *                 elif (ptr.matchType == PREFIX_IS):
  * 
  *                     match = "prefix is " + ptr.matchValue.decode('utf-8')             # <<<<<<<<<<<<<<
  * 
  *                 elif (ptr.matchType == PREFIX_IN):
 */
-        __pyx_t_5 = __Pyx_decode_cpp_string(__pyx_v_ptr->matchValue, 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 69, __pyx_L1_error)
+        __pyx_t_5 = __Pyx_decode_cpp_string(__pyx_v_ptr->matchValue, 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 74, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_5);
-        __pyx_t_2 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_prefix_is, __pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 69, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_prefix_is, __pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 74, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
         __Pyx_DECREF_SET(__pyx_v_match, __pyx_t_2);
         __pyx_t_2 = 0;
 
-        /* "AS.pyx":67
+        /* "AS.pyx":72
  *                     match = "community contains " + ptr.matchValue.decode('utf-8')
  * 
  *                 elif (ptr.matchType == PREFIX_IS):             # <<<<<<<<<<<<<<
@@ -5685,22 +5916,22 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
         break;
         case PREFIX_IN:
 
-        /* "AS.pyx":73
+        /* "AS.pyx":78
  *                 elif (ptr.matchType == PREFIX_IN):
  * 
  *                     match = "prefix in " + ptr.matchValue.decode('utf-8')             # <<<<<<<<<<<<<<
  * 
  *                 elif (ptr.matchType == PATH):
 */
-        __pyx_t_2 = __Pyx_decode_cpp_string(__pyx_v_ptr->matchValue, 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 73, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_decode_cpp_string(__pyx_v_ptr->matchValue, 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 78, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
-        __pyx_t_5 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_prefix_in, __pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 73, __pyx_L1_error)
+        __pyx_t_5 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_prefix_in, __pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 78, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_5);
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
         __Pyx_DECREF_SET(__pyx_v_match, __pyx_t_5);
         __pyx_t_5 = 0;
 
-        /* "AS.pyx":71
+        /* "AS.pyx":76
  *                     match = "prefix is " + ptr.matchValue.decode('utf-8')
  * 
  *                 elif (ptr.matchType == PREFIX_IN):             # <<<<<<<<<<<<<<
@@ -5710,22 +5941,22 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
         break;
         case PATH:
 
-        /* "AS.pyx":77
+        /* "AS.pyx":82
  *                 elif (ptr.matchType == PATH):
  * 
  *                     match = "path " + ptr.matchValue.decode('utf-8')             # <<<<<<<<<<<<<<
  * 
  *                 for subAction in ptr.actions:
 */
-        __pyx_t_5 = __Pyx_decode_cpp_string(__pyx_v_ptr->matchValue, 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 77, __pyx_L1_error)
+        __pyx_t_5 = __Pyx_decode_cpp_string(__pyx_v_ptr->matchValue, 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 82, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_5);
-        __pyx_t_2 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_path, __pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 77, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_path, __pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 82, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
         __Pyx_DECREF_SET(__pyx_v_match, __pyx_t_2);
         __pyx_t_2 = 0;
 
-        /* "AS.pyx":75
+        /* "AS.pyx":80
  *                     match = "prefix in " + ptr.matchValue.decode('utf-8')
  * 
  *                 elif (ptr.matchType == PATH):             # <<<<<<<<<<<<<<
@@ -5736,7 +5967,7 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
         default: break;
       }
 
-      /* "AS.pyx":79
+      /* "AS.pyx":84
  *                     match = "path " + ptr.matchValue.decode('utf-8')
  * 
  *                 for subAction in ptr.actions:             # <<<<<<<<<<<<<<
@@ -5748,7 +5979,7 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
         __pyx_t_7 = *__pyx_t_6;
         __pyx_v_subAction = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_7);
 
-        /* "AS.pyx":80
+        /* "AS.pyx":85
  * 
  *                 for subAction in ptr.actions:
  *                     if (subAction.first == DENY):             # <<<<<<<<<<<<<<
@@ -5758,19 +5989,19 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
         switch (__pyx_v_subAction.first) {
           case DENY:
 
-          /* "AS.pyx":82
+          /* "AS.pyx":87
  *                     if (subAction.first == DENY):
  * 
  *                         action = "deny;" + action             # <<<<<<<<<<<<<<
  * 
  *                     elif (subAction.first == LOCAL_PREF):
 */
-          __pyx_t_2 = PyNumber_Add(__pyx_mstate_global->__pyx_kp_u_deny, __pyx_v_action); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 82, __pyx_L1_error)
+          __pyx_t_2 = PyNumber_Add(__pyx_mstate_global->__pyx_kp_u_deny, __pyx_v_action); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 87, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_DECREF_SET(__pyx_v_action, __pyx_t_2);
           __pyx_t_2 = 0;
 
-          /* "AS.pyx":80
+          /* "AS.pyx":85
  * 
  *                 for subAction in ptr.actions:
  *                     if (subAction.first == DENY):             # <<<<<<<<<<<<<<
@@ -5780,28 +6011,28 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
           break;
           case LOCAL_PREF:
 
-          /* "AS.pyx":86
+          /* "AS.pyx":91
  *                     elif (subAction.first == LOCAL_PREF):
  * 
  *                         action = "local-pref " + subAction.second.decode('utf-8') + ";" + action             # <<<<<<<<<<<<<<
  * 
  *                     elif (subAction.first == COMMUNITY_ADD):
 */
-          __pyx_t_2 = __Pyx_decode_cpp_string(__pyx_v_subAction.second, 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 86, __pyx_L1_error)
+          __pyx_t_2 = __Pyx_decode_cpp_string(__pyx_v_subAction.second, 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 91, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
-          __pyx_t_5 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_local_pref, __pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 86, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_local_pref, __pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 91, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_5);
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-          __pyx_t_2 = __Pyx_PyUnicode_Concat__Pyx_ReferenceSharing_OwnStrongReferenceInPlace(__pyx_t_5, __pyx_mstate_global->__pyx_kp_u__2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 86, __pyx_L1_error)
+          __pyx_t_2 = __Pyx_PyUnicode_Concat__Pyx_ReferenceSharing_OwnStrongReferenceInPlace(__pyx_t_5, __pyx_mstate_global->__pyx_kp_u__2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 91, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-          __pyx_t_5 = PyNumber_Add(__pyx_t_2, __pyx_v_action); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 86, __pyx_L1_error)
+          __pyx_t_5 = PyNumber_Add(__pyx_t_2, __pyx_v_action); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 91, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_5);
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
           __Pyx_DECREF_SET(__pyx_v_action, __pyx_t_5);
           __pyx_t_5 = 0;
 
-          /* "AS.pyx":84
+          /* "AS.pyx":89
  *                         action = "deny;" + action
  * 
  *                     elif (subAction.first == LOCAL_PREF):             # <<<<<<<<<<<<<<
@@ -5811,28 +6042,28 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
           break;
           case COMMUNITY_ADD:
 
-          /* "AS.pyx":90
+          /* "AS.pyx":95
  *                     elif (subAction.first == COMMUNITY_ADD):
  * 
  *                         action = "community add " + subAction.second.decode('utf-8') + ";" + action             # <<<<<<<<<<<<<<
  * 
  *                     elif (subAction.first == COMMUNITY_STRIP):
 */
-          __pyx_t_5 = __Pyx_decode_cpp_string(__pyx_v_subAction.second, 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 90, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_decode_cpp_string(__pyx_v_subAction.second, 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 95, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_5);
-          __pyx_t_2 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_community_add, __pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 90, __pyx_L1_error)
+          __pyx_t_2 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_community_add, __pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 95, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-          __pyx_t_5 = __Pyx_PyUnicode_Concat__Pyx_ReferenceSharing_OwnStrongReferenceInPlace(__pyx_t_2, __pyx_mstate_global->__pyx_kp_u__2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 90, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_PyUnicode_Concat__Pyx_ReferenceSharing_OwnStrongReferenceInPlace(__pyx_t_2, __pyx_mstate_global->__pyx_kp_u__2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 95, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_5);
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-          __pyx_t_2 = PyNumber_Add(__pyx_t_5, __pyx_v_action); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 90, __pyx_L1_error)
+          __pyx_t_2 = PyNumber_Add(__pyx_t_5, __pyx_v_action); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 95, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
           __Pyx_DECREF_SET(__pyx_v_action, __pyx_t_2);
           __pyx_t_2 = 0;
 
-          /* "AS.pyx":88
+          /* "AS.pyx":93
  *                         action = "local-pref " + subAction.second.decode('utf-8') + ";" + action
  * 
  *                     elif (subAction.first == COMMUNITY_ADD):             # <<<<<<<<<<<<<<
@@ -5842,19 +6073,19 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
           break;
           case COMMUNITY_STRIP:
 
-          /* "AS.pyx":94
+          /* "AS.pyx":99
  *                     elif (subAction.first == COMMUNITY_STRIP):
  * 
  *                         action = "community strip;" + action             # <<<<<<<<<<<<<<
  * 
  *                     elif (subAction.first == COMMUNITY_REMOVE):
 */
-          __pyx_t_2 = PyNumber_Add(__pyx_mstate_global->__pyx_kp_u_community_strip, __pyx_v_action); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 94, __pyx_L1_error)
+          __pyx_t_2 = PyNumber_Add(__pyx_mstate_global->__pyx_kp_u_community_strip, __pyx_v_action); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 99, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_DECREF_SET(__pyx_v_action, __pyx_t_2);
           __pyx_t_2 = 0;
 
-          /* "AS.pyx":92
+          /* "AS.pyx":97
  *                         action = "community add " + subAction.second.decode('utf-8') + ";" + action
  * 
  *                     elif (subAction.first == COMMUNITY_STRIP):             # <<<<<<<<<<<<<<
@@ -5864,28 +6095,28 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
           break;
           case COMMUNITY_REMOVE:
 
-          /* "AS.pyx":98
+          /* "AS.pyx":103
  *                     elif (subAction.first == COMMUNITY_REMOVE):
  * 
  *                         action = "community remove " + subAction.second.decode('utf-8') + ";" + action             # <<<<<<<<<<<<<<
  * 
  *                     elif (subAction.first == PREPEND):
 */
-          __pyx_t_2 = __Pyx_decode_cpp_string(__pyx_v_subAction.second, 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 98, __pyx_L1_error)
+          __pyx_t_2 = __Pyx_decode_cpp_string(__pyx_v_subAction.second, 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 103, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
-          __pyx_t_5 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_community_remove, __pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 98, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_community_remove, __pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 103, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_5);
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-          __pyx_t_2 = __Pyx_PyUnicode_Concat__Pyx_ReferenceSharing_OwnStrongReferenceInPlace(__pyx_t_5, __pyx_mstate_global->__pyx_kp_u__2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 98, __pyx_L1_error)
+          __pyx_t_2 = __Pyx_PyUnicode_Concat__Pyx_ReferenceSharing_OwnStrongReferenceInPlace(__pyx_t_5, __pyx_mstate_global->__pyx_kp_u__2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 103, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-          __pyx_t_5 = PyNumber_Add(__pyx_t_2, __pyx_v_action); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 98, __pyx_L1_error)
+          __pyx_t_5 = PyNumber_Add(__pyx_t_2, __pyx_v_action); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 103, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_5);
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
           __Pyx_DECREF_SET(__pyx_v_action, __pyx_t_5);
           __pyx_t_5 = 0;
 
-          /* "AS.pyx":96
+          /* "AS.pyx":101
  *                         action = "community strip;" + action
  * 
  *                     elif (subAction.first == COMMUNITY_REMOVE):             # <<<<<<<<<<<<<<
@@ -5895,28 +6126,28 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
           break;
           case PREPEND:
 
-          /* "AS.pyx":102
+          /* "AS.pyx":107
  *                     elif (subAction.first == PREPEND):
  * 
  *                         action = "prepend " + subAction.second.decode('utf-8') + ";" + action             # <<<<<<<<<<<<<<
  * 
  * 
 */
-          __pyx_t_5 = __Pyx_decode_cpp_string(__pyx_v_subAction.second, 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 102, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_decode_cpp_string(__pyx_v_subAction.second, 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 107, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_5);
-          __pyx_t_2 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_prepend, __pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 102, __pyx_L1_error)
+          __pyx_t_2 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_prepend, __pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 107, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-          __pyx_t_5 = __Pyx_PyUnicode_Concat__Pyx_ReferenceSharing_OwnStrongReferenceInPlace(__pyx_t_2, __pyx_mstate_global->__pyx_kp_u__2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 102, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_PyUnicode_Concat__Pyx_ReferenceSharing_OwnStrongReferenceInPlace(__pyx_t_2, __pyx_mstate_global->__pyx_kp_u__2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 107, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_5);
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-          __pyx_t_2 = PyNumber_Add(__pyx_t_5, __pyx_v_action); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 102, __pyx_L1_error)
+          __pyx_t_2 = PyNumber_Add(__pyx_t_5, __pyx_v_action); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 107, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
           __Pyx_DECREF_SET(__pyx_v_action, __pyx_t_2);
           __pyx_t_2 = 0;
 
-          /* "AS.pyx":100
+          /* "AS.pyx":105
  *                         action = "community remove " + subAction.second.decode('utf-8') + ";" + action
  * 
  *                     elif (subAction.first == PREPEND):             # <<<<<<<<<<<<<<
@@ -5927,7 +6158,7 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
           default: break;
         }
 
-        /* "AS.pyx":79
+        /* "AS.pyx":84
  *                     match = "path " + ptr.matchValue.decode('utf-8')
  * 
  *                 for subAction in ptr.actions:             # <<<<<<<<<<<<<<
@@ -5936,27 +6167,27 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
 */
       }
 
-      /* "AS.pyx":105
+      /* "AS.pyx":110
  * 
  * 
  *                 filter.append((match, action[:-1]))             # <<<<<<<<<<<<<<
  * 
  *                 ptr = ptr.nextFt
 */
-      __pyx_t_2 = __Pyx_PyObject_GetSlice(__pyx_v_action, 0, -1L, NULL, NULL, &__pyx_mstate_global->__pyx_slice[0], 0, 1, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 105, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyObject_GetSlice(__pyx_v_action, 0, -1L, NULL, NULL, &__pyx_mstate_global->__pyx_slice[0], 0, 1, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 110, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_5 = PyTuple_New(2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 105, __pyx_L1_error)
+      __pyx_t_5 = PyTuple_New(2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 110, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_INCREF(__pyx_v_match);
       __Pyx_GIVEREF(__pyx_v_match);
-      if (__Pyx_PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_v_match) != (0)) __PYX_ERR(0, 105, __pyx_L1_error);
+      if (__Pyx_PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_v_match) != (0)) __PYX_ERR(0, 110, __pyx_L1_error);
       __Pyx_GIVEREF(__pyx_t_2);
-      if (__Pyx_PyTuple_SET_ITEM(__pyx_t_5, 1, __pyx_t_2) != (0)) __PYX_ERR(0, 105, __pyx_L1_error);
+      if (__Pyx_PyTuple_SET_ITEM(__pyx_t_5, 1, __pyx_t_2) != (0)) __PYX_ERR(0, 110, __pyx_L1_error);
       __pyx_t_2 = 0;
-      __pyx_t_8 = __Pyx_PyList_Append(__pyx_v_filter, __pyx_t_5); if (unlikely(__pyx_t_8 == ((int)-1))) __PYX_ERR(0, 105, __pyx_L1_error)
+      __pyx_t_8 = __Pyx_PyList_Append(__pyx_v_filter, __pyx_t_5); if (unlikely(__pyx_t_8 == ((int)-1))) __PYX_ERR(0, 110, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-      /* "AS.pyx":107
+      /* "AS.pyx":112
  *                 filter.append((match, action[:-1]))
  * 
  *                 ptr = ptr.nextFt             # <<<<<<<<<<<<<<
@@ -5967,7 +6198,7 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
       __pyx_v_ptr = __pyx_t_4;
     }
 
-    /* "AS.pyx":47
+    /* "AS.pyx":52
  *         filter = []
  * 
  *         if filterType=='filter in':             # <<<<<<<<<<<<<<
@@ -5977,7 +6208,7 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
     goto __pyx_L3;
   }
 
-  /* "AS.pyx":110
+  /* "AS.pyx":115
  * 
  *         else:
  *             if (filterOut.find(p) == filterOut.end()):             # <<<<<<<<<<<<<<
@@ -5988,7 +6219,7 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
     __pyx_t_3 = (__pyx_v_2AS_filterOut.find(__pyx_v_p) == __pyx_v_2AS_filterOut.end());
     if (__pyx_t_3) {
 
-      /* "AS.pyx":111
+      /* "AS.pyx":116
  *         else:
  *             if (filterOut.find(p) == filterOut.end()):
  *                 return []             # <<<<<<<<<<<<<<
@@ -5996,13 +6227,13 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
  *             ptr = filterOut[p].nextFt
 */
       __Pyx_XDECREF(__pyx_r);
-      __pyx_t_5 = PyList_New(0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 111, __pyx_L1_error)
+      __pyx_t_5 = PyList_New(0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 116, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
       __pyx_r = __pyx_t_5;
       __pyx_t_5 = 0;
       goto __pyx_L0;
 
-      /* "AS.pyx":110
+      /* "AS.pyx":115
  * 
  *         else:
  *             if (filterOut.find(p) == filterOut.end()):             # <<<<<<<<<<<<<<
@@ -6011,7 +6242,7 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
 */
     }
 
-    /* "AS.pyx":113
+    /* "AS.pyx":118
  *                 return []
  * 
  *             ptr = filterOut[p].nextFt             # <<<<<<<<<<<<<<
@@ -6021,7 +6252,7 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
     __pyx_t_4 = (__pyx_v_2AS_filterOut[__pyx_v_p]).nextFt;
     __pyx_v_ptr = __pyx_t_4;
 
-    /* "AS.pyx":115
+    /* "AS.pyx":120
  *             ptr = filterOut[p].nextFt
  * 
  *             while (ptr != NULL):             # <<<<<<<<<<<<<<
@@ -6032,7 +6263,7 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
       __pyx_t_3 = (__pyx_v_ptr != NULL);
       if (!__pyx_t_3) break;
 
-      /* "AS.pyx":117
+      /* "AS.pyx":122
  *             while (ptr != NULL):
  * 
  *                 match = ""             # <<<<<<<<<<<<<<
@@ -6042,7 +6273,7 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
       __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u_);
       __Pyx_XDECREF_SET(__pyx_v_match, __pyx_mstate_global->__pyx_kp_u_);
 
-      /* "AS.pyx":118
+      /* "AS.pyx":123
  * 
  *                 match = ""
  *                 action = ""             # <<<<<<<<<<<<<<
@@ -6052,7 +6283,7 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
       __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u_);
       __Pyx_XDECREF_SET(__pyx_v_action, __pyx_mstate_global->__pyx_kp_u_);
 
-      /* "AS.pyx":120
+      /* "AS.pyx":125
  *                 action = ""
  * 
  *                 if (ptr.matchType == ANY):             # <<<<<<<<<<<<<<
@@ -6062,7 +6293,7 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
       switch (__pyx_v_ptr->matchType) {
         case ANY:
 
-        /* "AS.pyx":122
+        /* "AS.pyx":127
  *                 if (ptr.matchType == ANY):
  * 
  *                     match = "any"             # <<<<<<<<<<<<<<
@@ -6072,7 +6303,7 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
         __Pyx_INCREF(__pyx_mstate_global->__pyx_n_u_any);
         __Pyx_DECREF_SET(__pyx_v_match, __pyx_mstate_global->__pyx_n_u_any);
 
-        /* "AS.pyx":120
+        /* "AS.pyx":125
  *                 action = ""
  * 
  *                 if (ptr.matchType == ANY):             # <<<<<<<<<<<<<<
@@ -6082,22 +6313,22 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
         break;
         case COMMUNITY_CONTAINS:
 
-        /* "AS.pyx":126
+        /* "AS.pyx":131
  *                 elif (ptr.matchType == COMMUNITY_CONTAINS):
  * 
  *                     match = "community contains " + ptr.matchValue.decode('utf-8')             # <<<<<<<<<<<<<<
  * 
  *                 elif (ptr.matchType == PREFIX_IS):
 */
-        __pyx_t_5 = __Pyx_decode_cpp_string(__pyx_v_ptr->matchValue, 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 126, __pyx_L1_error)
+        __pyx_t_5 = __Pyx_decode_cpp_string(__pyx_v_ptr->matchValue, 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 131, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_5);
-        __pyx_t_2 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_community_contains, __pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 126, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_community_contains, __pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 131, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
         __Pyx_DECREF_SET(__pyx_v_match, __pyx_t_2);
         __pyx_t_2 = 0;
 
-        /* "AS.pyx":124
+        /* "AS.pyx":129
  *                     match = "any"
  * 
  *                 elif (ptr.matchType == COMMUNITY_CONTAINS):             # <<<<<<<<<<<<<<
@@ -6107,22 +6338,22 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
         break;
         case PREFIX_IS:
 
-        /* "AS.pyx":130
+        /* "AS.pyx":135
  *                 elif (ptr.matchType == PREFIX_IS):
  * 
  *                     match = "prefix is " + ptr.matchValue.decode('utf-8')             # <<<<<<<<<<<<<<
  * 
  *                 elif (ptr.matchType == PREFIX_IN):
 */
-        __pyx_t_2 = __Pyx_decode_cpp_string(__pyx_v_ptr->matchValue, 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 130, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_decode_cpp_string(__pyx_v_ptr->matchValue, 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 135, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
-        __pyx_t_5 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_prefix_is, __pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 130, __pyx_L1_error)
+        __pyx_t_5 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_prefix_is, __pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 135, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_5);
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
         __Pyx_DECREF_SET(__pyx_v_match, __pyx_t_5);
         __pyx_t_5 = 0;
 
-        /* "AS.pyx":128
+        /* "AS.pyx":133
  *                     match = "community contains " + ptr.matchValue.decode('utf-8')
  * 
  *                 elif (ptr.matchType == PREFIX_IS):             # <<<<<<<<<<<<<<
@@ -6132,22 +6363,22 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
         break;
         case PREFIX_IN:
 
-        /* "AS.pyx":134
+        /* "AS.pyx":139
  *                 elif (ptr.matchType == PREFIX_IN):
  * 
  *                     match = "prefix in " + ptr.matchValue.decode('utf-8')             # <<<<<<<<<<<<<<
  * 
  *                 elif (ptr.matchType == PATH):
 */
-        __pyx_t_5 = __Pyx_decode_cpp_string(__pyx_v_ptr->matchValue, 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 134, __pyx_L1_error)
+        __pyx_t_5 = __Pyx_decode_cpp_string(__pyx_v_ptr->matchValue, 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 139, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_5);
-        __pyx_t_2 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_prefix_in, __pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 134, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_prefix_in, __pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 139, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
         __Pyx_DECREF_SET(__pyx_v_match, __pyx_t_2);
         __pyx_t_2 = 0;
 
-        /* "AS.pyx":132
+        /* "AS.pyx":137
  *                     match = "prefix is " + ptr.matchValue.decode('utf-8')
  * 
  *                 elif (ptr.matchType == PREFIX_IN):             # <<<<<<<<<<<<<<
@@ -6157,22 +6388,22 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
         break;
         case PATH:
 
-        /* "AS.pyx":138
+        /* "AS.pyx":143
  *                 elif (ptr.matchType == PATH):
  * 
  *                     match = "path " + ptr.matchValue.decode('utf-8')             # <<<<<<<<<<<<<<
  * 
  *                 for subAction in ptr.actions:
 */
-        __pyx_t_2 = __Pyx_decode_cpp_string(__pyx_v_ptr->matchValue, 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 138, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_decode_cpp_string(__pyx_v_ptr->matchValue, 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 143, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
-        __pyx_t_5 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_path, __pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 138, __pyx_L1_error)
+        __pyx_t_5 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_path, __pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 143, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_5);
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
         __Pyx_DECREF_SET(__pyx_v_match, __pyx_t_5);
         __pyx_t_5 = 0;
 
-        /* "AS.pyx":136
+        /* "AS.pyx":141
  *                     match = "prefix in " + ptr.matchValue.decode('utf-8')
  * 
  *                 elif (ptr.matchType == PATH):             # <<<<<<<<<<<<<<
@@ -6183,7 +6414,7 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
         default: break;
       }
 
-      /* "AS.pyx":140
+      /* "AS.pyx":145
  *                     match = "path " + ptr.matchValue.decode('utf-8')
  * 
  *                 for subAction in ptr.actions:             # <<<<<<<<<<<<<<
@@ -6195,7 +6426,7 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
         __pyx_t_7 = *__pyx_t_6;
         __pyx_v_subAction = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_7);
 
-        /* "AS.pyx":141
+        /* "AS.pyx":146
  * 
  *                 for subAction in ptr.actions:
  *                     if (subAction.first == DENY):             # <<<<<<<<<<<<<<
@@ -6205,19 +6436,19 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
         switch (__pyx_v_subAction.first) {
           case DENY:
 
-          /* "AS.pyx":143
+          /* "AS.pyx":148
  *                     if (subAction.first == DENY):
  * 
  *                         action = "deny;" + action             # <<<<<<<<<<<<<<
  * 
  *                     elif (subAction.first == LOCAL_PREF):
 */
-          __pyx_t_5 = PyNumber_Add(__pyx_mstate_global->__pyx_kp_u_deny, __pyx_v_action); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 143, __pyx_L1_error)
+          __pyx_t_5 = PyNumber_Add(__pyx_mstate_global->__pyx_kp_u_deny, __pyx_v_action); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 148, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_5);
           __Pyx_DECREF_SET(__pyx_v_action, __pyx_t_5);
           __pyx_t_5 = 0;
 
-          /* "AS.pyx":141
+          /* "AS.pyx":146
  * 
  *                 for subAction in ptr.actions:
  *                     if (subAction.first == DENY):             # <<<<<<<<<<<<<<
@@ -6227,28 +6458,28 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
           break;
           case LOCAL_PREF:
 
-          /* "AS.pyx":147
+          /* "AS.pyx":152
  *                     elif (subAction.first == LOCAL_PREF):
  * 
  *                         action = "local-pref " + subAction.second.decode('utf-8') + ";" + action             # <<<<<<<<<<<<<<
  * 
  *                     elif (subAction.first == COMMUNITY_ADD):
 */
-          __pyx_t_5 = __Pyx_decode_cpp_string(__pyx_v_subAction.second, 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 147, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_decode_cpp_string(__pyx_v_subAction.second, 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 152, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_5);
-          __pyx_t_2 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_local_pref, __pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 147, __pyx_L1_error)
+          __pyx_t_2 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_local_pref, __pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 152, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-          __pyx_t_5 = __Pyx_PyUnicode_Concat__Pyx_ReferenceSharing_OwnStrongReferenceInPlace(__pyx_t_2, __pyx_mstate_global->__pyx_kp_u__2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 147, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_PyUnicode_Concat__Pyx_ReferenceSharing_OwnStrongReferenceInPlace(__pyx_t_2, __pyx_mstate_global->__pyx_kp_u__2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 152, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_5);
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-          __pyx_t_2 = PyNumber_Add(__pyx_t_5, __pyx_v_action); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 147, __pyx_L1_error)
+          __pyx_t_2 = PyNumber_Add(__pyx_t_5, __pyx_v_action); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 152, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
           __Pyx_DECREF_SET(__pyx_v_action, __pyx_t_2);
           __pyx_t_2 = 0;
 
-          /* "AS.pyx":145
+          /* "AS.pyx":150
  *                         action = "deny;" + action
  * 
  *                     elif (subAction.first == LOCAL_PREF):             # <<<<<<<<<<<<<<
@@ -6258,28 +6489,28 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
           break;
           case COMMUNITY_ADD:
 
-          /* "AS.pyx":151
+          /* "AS.pyx":156
  *                     elif (subAction.first == COMMUNITY_ADD):
  * 
  *                         action = "community add " + subAction.second.decode('utf-8') + ";" + action             # <<<<<<<<<<<<<<
  * 
  *                     elif (subAction.first == COMMUNITY_STRIP):
 */
-          __pyx_t_2 = __Pyx_decode_cpp_string(__pyx_v_subAction.second, 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 151, __pyx_L1_error)
+          __pyx_t_2 = __Pyx_decode_cpp_string(__pyx_v_subAction.second, 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 156, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
-          __pyx_t_5 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_community_add, __pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 151, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_community_add, __pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 156, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_5);
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-          __pyx_t_2 = __Pyx_PyUnicode_Concat__Pyx_ReferenceSharing_OwnStrongReferenceInPlace(__pyx_t_5, __pyx_mstate_global->__pyx_kp_u__2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 151, __pyx_L1_error)
+          __pyx_t_2 = __Pyx_PyUnicode_Concat__Pyx_ReferenceSharing_OwnStrongReferenceInPlace(__pyx_t_5, __pyx_mstate_global->__pyx_kp_u__2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 156, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-          __pyx_t_5 = PyNumber_Add(__pyx_t_2, __pyx_v_action); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 151, __pyx_L1_error)
+          __pyx_t_5 = PyNumber_Add(__pyx_t_2, __pyx_v_action); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 156, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_5);
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
           __Pyx_DECREF_SET(__pyx_v_action, __pyx_t_5);
           __pyx_t_5 = 0;
 
-          /* "AS.pyx":149
+          /* "AS.pyx":154
  *                         action = "local-pref " + subAction.second.decode('utf-8') + ";" + action
  * 
  *                     elif (subAction.first == COMMUNITY_ADD):             # <<<<<<<<<<<<<<
@@ -6289,19 +6520,19 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
           break;
           case COMMUNITY_STRIP:
 
-          /* "AS.pyx":155
+          /* "AS.pyx":160
  *                     elif (subAction.first == COMMUNITY_STRIP):
  * 
  *                         action = "community strip;" + action             # <<<<<<<<<<<<<<
  * 
  *                     elif (subAction.first == COMMUNITY_REMOVE):
 */
-          __pyx_t_5 = PyNumber_Add(__pyx_mstate_global->__pyx_kp_u_community_strip, __pyx_v_action); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 155, __pyx_L1_error)
+          __pyx_t_5 = PyNumber_Add(__pyx_mstate_global->__pyx_kp_u_community_strip, __pyx_v_action); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 160, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_5);
           __Pyx_DECREF_SET(__pyx_v_action, __pyx_t_5);
           __pyx_t_5 = 0;
 
-          /* "AS.pyx":153
+          /* "AS.pyx":158
  *                         action = "community add " + subAction.second.decode('utf-8') + ";" + action
  * 
  *                     elif (subAction.first == COMMUNITY_STRIP):             # <<<<<<<<<<<<<<
@@ -6311,28 +6542,28 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
           break;
           case COMMUNITY_REMOVE:
 
-          /* "AS.pyx":159
+          /* "AS.pyx":164
  *                     elif (subAction.first == COMMUNITY_REMOVE):
  * 
  *                         action = "community remove " + subAction.second.decode('utf-8') + ";" + action             # <<<<<<<<<<<<<<
  * 
  *                     elif (subAction.first == PREPEND):
 */
-          __pyx_t_5 = __Pyx_decode_cpp_string(__pyx_v_subAction.second, 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 159, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_decode_cpp_string(__pyx_v_subAction.second, 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 164, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_5);
-          __pyx_t_2 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_community_remove, __pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 159, __pyx_L1_error)
+          __pyx_t_2 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_community_remove, __pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 164, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-          __pyx_t_5 = __Pyx_PyUnicode_Concat__Pyx_ReferenceSharing_OwnStrongReferenceInPlace(__pyx_t_2, __pyx_mstate_global->__pyx_kp_u__2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 159, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_PyUnicode_Concat__Pyx_ReferenceSharing_OwnStrongReferenceInPlace(__pyx_t_2, __pyx_mstate_global->__pyx_kp_u__2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 164, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_5);
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-          __pyx_t_2 = PyNumber_Add(__pyx_t_5, __pyx_v_action); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 159, __pyx_L1_error)
+          __pyx_t_2 = PyNumber_Add(__pyx_t_5, __pyx_v_action); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 164, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
           __Pyx_DECREF_SET(__pyx_v_action, __pyx_t_2);
           __pyx_t_2 = 0;
 
-          /* "AS.pyx":157
+          /* "AS.pyx":162
  *                         action = "community strip;" + action
  * 
  *                     elif (subAction.first == COMMUNITY_REMOVE):             # <<<<<<<<<<<<<<
@@ -6342,28 +6573,28 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
           break;
           case PREPEND:
 
-          /* "AS.pyx":163
+          /* "AS.pyx":168
  *                     elif (subAction.first == PREPEND):
  * 
  *                         action = "prepend " + subAction.second.decode('utf-8') + ";" + action             # <<<<<<<<<<<<<<
  * 
  * 
 */
-          __pyx_t_2 = __Pyx_decode_cpp_string(__pyx_v_subAction.second, 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 163, __pyx_L1_error)
+          __pyx_t_2 = __Pyx_decode_cpp_string(__pyx_v_subAction.second, 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 168, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
-          __pyx_t_5 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_prepend, __pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 163, __pyx_L1_error)
+          __pyx_t_5 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_prepend, __pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 168, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_5);
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-          __pyx_t_2 = __Pyx_PyUnicode_Concat__Pyx_ReferenceSharing_OwnStrongReferenceInPlace(__pyx_t_5, __pyx_mstate_global->__pyx_kp_u__2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 163, __pyx_L1_error)
+          __pyx_t_2 = __Pyx_PyUnicode_Concat__Pyx_ReferenceSharing_OwnStrongReferenceInPlace(__pyx_t_5, __pyx_mstate_global->__pyx_kp_u__2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 168, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-          __pyx_t_5 = PyNumber_Add(__pyx_t_2, __pyx_v_action); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 163, __pyx_L1_error)
+          __pyx_t_5 = PyNumber_Add(__pyx_t_2, __pyx_v_action); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 168, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_5);
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
           __Pyx_DECREF_SET(__pyx_v_action, __pyx_t_5);
           __pyx_t_5 = 0;
 
-          /* "AS.pyx":161
+          /* "AS.pyx":166
  *                         action = "community remove " + subAction.second.decode('utf-8') + ";" + action
  * 
  *                     elif (subAction.first == PREPEND):             # <<<<<<<<<<<<<<
@@ -6374,7 +6605,7 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
           default: break;
         }
 
-        /* "AS.pyx":140
+        /* "AS.pyx":145
  *                     match = "path " + ptr.matchValue.decode('utf-8')
  * 
  *                 for subAction in ptr.actions:             # <<<<<<<<<<<<<<
@@ -6383,27 +6614,27 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
 */
       }
 
-      /* "AS.pyx":166
+      /* "AS.pyx":171
  * 
  * 
  *                 filter.append((match, action[:-1]))             # <<<<<<<<<<<<<<
  * 
  *                 ptr = ptr.nextFt
 */
-      __pyx_t_5 = __Pyx_PyObject_GetSlice(__pyx_v_action, 0, -1L, NULL, NULL, &__pyx_mstate_global->__pyx_slice[0], 0, 1, 1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 166, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyObject_GetSlice(__pyx_v_action, 0, -1L, NULL, NULL, &__pyx_mstate_global->__pyx_slice[0], 0, 1, 1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 171, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
-      __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 166, __pyx_L1_error)
+      __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 171, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_INCREF(__pyx_v_match);
       __Pyx_GIVEREF(__pyx_v_match);
-      if (__Pyx_PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_v_match) != (0)) __PYX_ERR(0, 166, __pyx_L1_error);
+      if (__Pyx_PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_v_match) != (0)) __PYX_ERR(0, 171, __pyx_L1_error);
       __Pyx_GIVEREF(__pyx_t_5);
-      if (__Pyx_PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_t_5) != (0)) __PYX_ERR(0, 166, __pyx_L1_error);
+      if (__Pyx_PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_t_5) != (0)) __PYX_ERR(0, 171, __pyx_L1_error);
       __pyx_t_5 = 0;
-      __pyx_t_8 = __Pyx_PyList_Append(__pyx_v_filter, __pyx_t_2); if (unlikely(__pyx_t_8 == ((int)-1))) __PYX_ERR(0, 166, __pyx_L1_error)
+      __pyx_t_8 = __Pyx_PyList_Append(__pyx_v_filter, __pyx_t_2); if (unlikely(__pyx_t_8 == ((int)-1))) __PYX_ERR(0, 171, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-      /* "AS.pyx":168
+      /* "AS.pyx":173
  *                 filter.append((match, action[:-1]))
  * 
  *                 ptr = ptr.nextFt             # <<<<<<<<<<<<<<
@@ -6416,7 +6647,7 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
   }
   __pyx_L3:;
 
-  /* "AS.pyx":170
+  /* "AS.pyx":175
  *                 ptr = ptr.nextFt
  * 
  *         return filter             # <<<<<<<<<<<<<<
@@ -6428,7 +6659,7 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
   __pyx_r = __pyx_v_filter;
   goto __pyx_L0;
 
-  /* "AS.pyx":38
+  /* "AS.pyx":43
  *         return peers[self.ASN]
  * 
  *     def getFilter(self, peerASN, filterType):             # <<<<<<<<<<<<<<
@@ -6451,7 +6682,7 @@ static PyObject *__pyx_pf_2AS_2AS_8getFilter(struct __pyx_obj_2AS_AS *__pyx_v_se
   return __pyx_r;
 }
 
-/* "AS.pyx":172
+/* "AS.pyx":177
  *         return filter
  * 
  *     def removeFilter(self, peerASN, filterType, index):             # <<<<<<<<<<<<<<
@@ -6500,38 +6731,38 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   {
     PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_peerASN,&__pyx_mstate_global->__pyx_n_u_filterType,&__pyx_mstate_global->__pyx_n_u_index,0};
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
-    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 172, __pyx_L3_error)
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 177, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
         case  3:
         values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 172, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 177, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  2:
         values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 172, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 177, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  1:
         values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 172, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 177, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "removeFilter", 0) < (0)) __PYX_ERR(0, 172, __pyx_L3_error)
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "removeFilter", 0) < (0)) __PYX_ERR(0, 177, __pyx_L3_error)
       for (Py_ssize_t i = __pyx_nargs; i < 3; i++) {
-        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("removeFilter", 1, 3, 3, i); __PYX_ERR(0, 172, __pyx_L3_error) }
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("removeFilter", 1, 3, 3, i); __PYX_ERR(0, 177, __pyx_L3_error) }
       }
     } else if (unlikely(__pyx_nargs != 3)) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 172, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 177, __pyx_L3_error)
       values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 172, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 177, __pyx_L3_error)
       values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 172, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 177, __pyx_L3_error)
     }
     __pyx_v_peerASN = values[0];
     __pyx_v_filterType = values[1];
@@ -6539,7 +6770,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("removeFilter", 1, 3, 3, __pyx_nargs); __PYX_ERR(0, 172, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("removeFilter", 1, 3, 3, __pyx_nargs); __PYX_ERR(0, 177, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -6576,19 +6807,19 @@ static PyObject *__pyx_pf_2AS_2AS_10removeFilter(struct __pyx_obj_2AS_AS *__pyx_
   __Pyx_RefNannySetupContext("removeFilter", 0);
   __Pyx_INCREF(__pyx_v_index);
 
-  /* "AS.pyx":178
+  /* "AS.pyx":183
  *             Filter* lastPtr
  * 
  *         index = int(index)             # <<<<<<<<<<<<<<
  *         p.first = self.ASN
  *         p.second = peerASN
 */
-  __pyx_t_1 = __Pyx_PyNumber_Int(__pyx_v_index); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 178, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyNumber_Int(__pyx_v_index); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 183, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF_SET(__pyx_v_index, __pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "AS.pyx":179
+  /* "AS.pyx":184
  * 
  *         index = int(index)
  *         p.first = self.ASN             # <<<<<<<<<<<<<<
@@ -6598,27 +6829,27 @@ static PyObject *__pyx_pf_2AS_2AS_10removeFilter(struct __pyx_obj_2AS_AS *__pyx_
   __pyx_t_2 = __pyx_v_self->ASN;
   __pyx_v_p.first = __pyx_t_2;
 
-  /* "AS.pyx":180
+  /* "AS.pyx":185
  *         index = int(index)
  *         p.first = self.ASN
  *         p.second = peerASN             # <<<<<<<<<<<<<<
  * 
  *         if filterType=='filter in':
 */
-  __pyx_t_2 = __Pyx_PyLong_As_int(__pyx_v_peerASN); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 180, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyLong_As_int(__pyx_v_peerASN); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 185, __pyx_L1_error)
   __pyx_v_p.second = __pyx_t_2;
 
-  /* "AS.pyx":182
+  /* "AS.pyx":187
  *         p.second = peerASN
  * 
  *         if filterType=='filter in':             # <<<<<<<<<<<<<<
  * 
  *             if (filterIn.find(p) == filterIn.end()):
 */
-  __pyx_t_3 = (__Pyx_PyUnicode_Equals(__pyx_v_filterType, __pyx_mstate_global->__pyx_kp_u_filter_in, Py_EQ)); if (unlikely((__pyx_t_3 < 0))) __PYX_ERR(0, 182, __pyx_L1_error)
+  __pyx_t_3 = (__Pyx_PyUnicode_Equals(__pyx_v_filterType, __pyx_mstate_global->__pyx_kp_u_filter_in, Py_EQ)); if (unlikely((__pyx_t_3 < 0))) __PYX_ERR(0, 187, __pyx_L1_error)
   if (__pyx_t_3) {
 
-    /* "AS.pyx":184
+    /* "AS.pyx":189
  *         if filterType=='filter in':
  * 
  *             if (filterIn.find(p) == filterIn.end()):             # <<<<<<<<<<<<<<
@@ -6628,7 +6859,7 @@ static PyObject *__pyx_pf_2AS_2AS_10removeFilter(struct __pyx_obj_2AS_AS *__pyx_
     __pyx_t_3 = (__pyx_v_2AS_filterIn.find(__pyx_v_p) == __pyx_v_2AS_filterIn.end());
     if (__pyx_t_3) {
 
-      /* "AS.pyx":185
+      /* "AS.pyx":190
  * 
  *             if (filterIn.find(p) == filterIn.end()):
  *                 return False             # <<<<<<<<<<<<<<
@@ -6640,7 +6871,7 @@ static PyObject *__pyx_pf_2AS_2AS_10removeFilter(struct __pyx_obj_2AS_AS *__pyx_
       __pyx_r = Py_False;
       goto __pyx_L0;
 
-      /* "AS.pyx":184
+      /* "AS.pyx":189
  *         if filterType=='filter in':
  * 
  *             if (filterIn.find(p) == filterIn.end()):             # <<<<<<<<<<<<<<
@@ -6649,7 +6880,7 @@ static PyObject *__pyx_pf_2AS_2AS_10removeFilter(struct __pyx_obj_2AS_AS *__pyx_
 */
     }
 
-    /* "AS.pyx":187
+    /* "AS.pyx":192
  *                 return False
  * 
  *             lastPtr = &filterIn[p]             # <<<<<<<<<<<<<<
@@ -6658,7 +6889,7 @@ static PyObject *__pyx_pf_2AS_2AS_10removeFilter(struct __pyx_obj_2AS_AS *__pyx_
 */
     __pyx_v_lastPtr = (&(__pyx_v_2AS_filterIn[__pyx_v_p]));
 
-    /* "AS.pyx":188
+    /* "AS.pyx":193
  * 
  *             lastPtr = &filterIn[p]
  *             ptr = filterIn[p].nextFt             # <<<<<<<<<<<<<<
@@ -6668,7 +6899,7 @@ static PyObject *__pyx_pf_2AS_2AS_10removeFilter(struct __pyx_obj_2AS_AS *__pyx_
     __pyx_t_4 = (__pyx_v_2AS_filterIn[__pyx_v_p]).nextFt;
     __pyx_v_ptr = __pyx_t_4;
 
-    /* "AS.pyx":190
+    /* "AS.pyx":195
  *             ptr = filterIn[p].nextFt
  * 
  *             while (ptr != NULL):             # <<<<<<<<<<<<<<
@@ -6679,17 +6910,17 @@ static PyObject *__pyx_pf_2AS_2AS_10removeFilter(struct __pyx_obj_2AS_AS *__pyx_
       __pyx_t_3 = (__pyx_v_ptr != NULL);
       if (!__pyx_t_3) break;
 
-      /* "AS.pyx":192
+      /* "AS.pyx":197
  *             while (ptr != NULL):
  * 
  *                 if (index == 0):             # <<<<<<<<<<<<<<
  *                     lastPtr.nextFt = ptr.nextFt
  *                     del ptr
 */
-      __pyx_t_3 = (__Pyx_PyLong_BoolEqObjC(__pyx_v_index, __pyx_mstate_global->__pyx_int_0, 0, 0)); if (unlikely((__pyx_t_3 < 0))) __PYX_ERR(0, 192, __pyx_L1_error)
+      __pyx_t_3 = (__Pyx_PyLong_BoolEqObjC(__pyx_v_index, __pyx_mstate_global->__pyx_int_0, 0, 0)); if (unlikely((__pyx_t_3 < 0))) __PYX_ERR(0, 197, __pyx_L1_error)
       if (__pyx_t_3) {
 
-        /* "AS.pyx":193
+        /* "AS.pyx":198
  * 
  *                 if (index == 0):
  *                     lastPtr.nextFt = ptr.nextFt             # <<<<<<<<<<<<<<
@@ -6699,7 +6930,7 @@ static PyObject *__pyx_pf_2AS_2AS_10removeFilter(struct __pyx_obj_2AS_AS *__pyx_
         __pyx_t_4 = __pyx_v_ptr->nextFt;
         __pyx_v_lastPtr->nextFt = __pyx_t_4;
 
-        /* "AS.pyx":194
+        /* "AS.pyx":199
  *                 if (index == 0):
  *                     lastPtr.nextFt = ptr.nextFt
  *                     del ptr             # <<<<<<<<<<<<<<
@@ -6708,7 +6939,7 @@ static PyObject *__pyx_pf_2AS_2AS_10removeFilter(struct __pyx_obj_2AS_AS *__pyx_
 */
         delete __pyx_v_ptr;
 
-        /* "AS.pyx":195
+        /* "AS.pyx":200
  *                     lastPtr.nextFt = ptr.nextFt
  *                     del ptr
  *                     return True             # <<<<<<<<<<<<<<
@@ -6720,7 +6951,7 @@ static PyObject *__pyx_pf_2AS_2AS_10removeFilter(struct __pyx_obj_2AS_AS *__pyx_
         __pyx_r = Py_True;
         goto __pyx_L0;
 
-        /* "AS.pyx":192
+        /* "AS.pyx":197
  *             while (ptr != NULL):
  * 
  *                 if (index == 0):             # <<<<<<<<<<<<<<
@@ -6729,19 +6960,19 @@ static PyObject *__pyx_pf_2AS_2AS_10removeFilter(struct __pyx_obj_2AS_AS *__pyx_
 */
       }
 
-      /* "AS.pyx":197
+      /* "AS.pyx":202
  *                     return True
  * 
  *                 index -= 1             # <<<<<<<<<<<<<<
  *                 lastPtr = ptr
  *                 ptr = ptr.nextFt
 */
-      __pyx_t_1 = __Pyx_PyLong_SubtractObjC(__pyx_v_index, __pyx_mstate_global->__pyx_int_1, 1, 1, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 197, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyLong_SubtractObjC(__pyx_v_index, __pyx_mstate_global->__pyx_int_1, 1, 1, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 202, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF_SET(__pyx_v_index, __pyx_t_1);
       __pyx_t_1 = 0;
 
-      /* "AS.pyx":198
+      /* "AS.pyx":203
  * 
  *                 index -= 1
  *                 lastPtr = ptr             # <<<<<<<<<<<<<<
@@ -6750,7 +6981,7 @@ static PyObject *__pyx_pf_2AS_2AS_10removeFilter(struct __pyx_obj_2AS_AS *__pyx_
 */
       __pyx_v_lastPtr = __pyx_v_ptr;
 
-      /* "AS.pyx":199
+      /* "AS.pyx":204
  *                 index -= 1
  *                 lastPtr = ptr
  *                 ptr = ptr.nextFt             # <<<<<<<<<<<<<<
@@ -6761,7 +6992,7 @@ static PyObject *__pyx_pf_2AS_2AS_10removeFilter(struct __pyx_obj_2AS_AS *__pyx_
       __pyx_v_ptr = __pyx_t_4;
     }
 
-    /* "AS.pyx":182
+    /* "AS.pyx":187
  *         p.second = peerASN
  * 
  *         if filterType=='filter in':             # <<<<<<<<<<<<<<
@@ -6771,7 +7002,7 @@ static PyObject *__pyx_pf_2AS_2AS_10removeFilter(struct __pyx_obj_2AS_AS *__pyx_
     goto __pyx_L3;
   }
 
-  /* "AS.pyx":202
+  /* "AS.pyx":207
  * 
  *         else:
  *             if (filterOut.find(p) == filterOut.end()):             # <<<<<<<<<<<<<<
@@ -6782,7 +7013,7 @@ static PyObject *__pyx_pf_2AS_2AS_10removeFilter(struct __pyx_obj_2AS_AS *__pyx_
     __pyx_t_3 = (__pyx_v_2AS_filterOut.find(__pyx_v_p) == __pyx_v_2AS_filterOut.end());
     if (__pyx_t_3) {
 
-      /* "AS.pyx":203
+      /* "AS.pyx":208
  *         else:
  *             if (filterOut.find(p) == filterOut.end()):
  *                 return False             # <<<<<<<<<<<<<<
@@ -6794,7 +7025,7 @@ static PyObject *__pyx_pf_2AS_2AS_10removeFilter(struct __pyx_obj_2AS_AS *__pyx_
       __pyx_r = Py_False;
       goto __pyx_L0;
 
-      /* "AS.pyx":202
+      /* "AS.pyx":207
  * 
  *         else:
  *             if (filterOut.find(p) == filterOut.end()):             # <<<<<<<<<<<<<<
@@ -6803,7 +7034,7 @@ static PyObject *__pyx_pf_2AS_2AS_10removeFilter(struct __pyx_obj_2AS_AS *__pyx_
 */
     }
 
-    /* "AS.pyx":205
+    /* "AS.pyx":210
  *                 return False
  * 
  *             lastPtr = &filterOut[p]             # <<<<<<<<<<<<<<
@@ -6812,7 +7043,7 @@ static PyObject *__pyx_pf_2AS_2AS_10removeFilter(struct __pyx_obj_2AS_AS *__pyx_
 */
     __pyx_v_lastPtr = (&(__pyx_v_2AS_filterOut[__pyx_v_p]));
 
-    /* "AS.pyx":206
+    /* "AS.pyx":211
  * 
  *             lastPtr = &filterOut[p]
  *             ptr = filterOut[p].nextFt             # <<<<<<<<<<<<<<
@@ -6822,7 +7053,7 @@ static PyObject *__pyx_pf_2AS_2AS_10removeFilter(struct __pyx_obj_2AS_AS *__pyx_
     __pyx_t_4 = (__pyx_v_2AS_filterOut[__pyx_v_p]).nextFt;
     __pyx_v_ptr = __pyx_t_4;
 
-    /* "AS.pyx":208
+    /* "AS.pyx":213
  *             ptr = filterOut[p].nextFt
  * 
  *             while (ptr != NULL):             # <<<<<<<<<<<<<<
@@ -6833,17 +7064,17 @@ static PyObject *__pyx_pf_2AS_2AS_10removeFilter(struct __pyx_obj_2AS_AS *__pyx_
       __pyx_t_3 = (__pyx_v_ptr != NULL);
       if (!__pyx_t_3) break;
 
-      /* "AS.pyx":210
+      /* "AS.pyx":215
  *             while (ptr != NULL):
  * 
  *                 if (index == 0):             # <<<<<<<<<<<<<<
  *                     lastPtr.nextFt = ptr.nextFt
  *                     del ptr
 */
-      __pyx_t_3 = (__Pyx_PyLong_BoolEqObjC(__pyx_v_index, __pyx_mstate_global->__pyx_int_0, 0, 0)); if (unlikely((__pyx_t_3 < 0))) __PYX_ERR(0, 210, __pyx_L1_error)
+      __pyx_t_3 = (__Pyx_PyLong_BoolEqObjC(__pyx_v_index, __pyx_mstate_global->__pyx_int_0, 0, 0)); if (unlikely((__pyx_t_3 < 0))) __PYX_ERR(0, 215, __pyx_L1_error)
       if (__pyx_t_3) {
 
-        /* "AS.pyx":211
+        /* "AS.pyx":216
  * 
  *                 if (index == 0):
  *                     lastPtr.nextFt = ptr.nextFt             # <<<<<<<<<<<<<<
@@ -6853,7 +7084,7 @@ static PyObject *__pyx_pf_2AS_2AS_10removeFilter(struct __pyx_obj_2AS_AS *__pyx_
         __pyx_t_4 = __pyx_v_ptr->nextFt;
         __pyx_v_lastPtr->nextFt = __pyx_t_4;
 
-        /* "AS.pyx":212
+        /* "AS.pyx":217
  *                 if (index == 0):
  *                     lastPtr.nextFt = ptr.nextFt
  *                     del ptr             # <<<<<<<<<<<<<<
@@ -6862,7 +7093,7 @@ static PyObject *__pyx_pf_2AS_2AS_10removeFilter(struct __pyx_obj_2AS_AS *__pyx_
 */
         delete __pyx_v_ptr;
 
-        /* "AS.pyx":213
+        /* "AS.pyx":218
  *                     lastPtr.nextFt = ptr.nextFt
  *                     del ptr
  *                     return True             # <<<<<<<<<<<<<<
@@ -6874,7 +7105,7 @@ static PyObject *__pyx_pf_2AS_2AS_10removeFilter(struct __pyx_obj_2AS_AS *__pyx_
         __pyx_r = Py_True;
         goto __pyx_L0;
 
-        /* "AS.pyx":210
+        /* "AS.pyx":215
  *             while (ptr != NULL):
  * 
  *                 if (index == 0):             # <<<<<<<<<<<<<<
@@ -6883,19 +7114,19 @@ static PyObject *__pyx_pf_2AS_2AS_10removeFilter(struct __pyx_obj_2AS_AS *__pyx_
 */
       }
 
-      /* "AS.pyx":215
+      /* "AS.pyx":220
  *                     return True
  * 
  *                 index -= 1             # <<<<<<<<<<<<<<
  *                 lastPtr = ptr
  *                 ptr = ptr.nextFt
 */
-      __pyx_t_1 = __Pyx_PyLong_SubtractObjC(__pyx_v_index, __pyx_mstate_global->__pyx_int_1, 1, 1, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 215, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyLong_SubtractObjC(__pyx_v_index, __pyx_mstate_global->__pyx_int_1, 1, 1, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 220, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF_SET(__pyx_v_index, __pyx_t_1);
       __pyx_t_1 = 0;
 
-      /* "AS.pyx":216
+      /* "AS.pyx":221
  * 
  *                 index -= 1
  *                 lastPtr = ptr             # <<<<<<<<<<<<<<
@@ -6904,7 +7135,7 @@ static PyObject *__pyx_pf_2AS_2AS_10removeFilter(struct __pyx_obj_2AS_AS *__pyx_
 */
       __pyx_v_lastPtr = __pyx_v_ptr;
 
-      /* "AS.pyx":217
+      /* "AS.pyx":222
  *                 index -= 1
  *                 lastPtr = ptr
  *                 ptr = ptr.nextFt             # <<<<<<<<<<<<<<
@@ -6917,7 +7148,7 @@ static PyObject *__pyx_pf_2AS_2AS_10removeFilter(struct __pyx_obj_2AS_AS *__pyx_
   }
   __pyx_L3:;
 
-  /* "AS.pyx":219
+  /* "AS.pyx":224
  *                 ptr = ptr.nextFt
  * 
  *         return False             # <<<<<<<<<<<<<<
@@ -6929,7 +7160,7 @@ static PyObject *__pyx_pf_2AS_2AS_10removeFilter(struct __pyx_obj_2AS_AS *__pyx_
   __pyx_r = Py_False;
   goto __pyx_L0;
 
-  /* "AS.pyx":172
+  /* "AS.pyx":177
  *         return filter
  * 
  *     def removeFilter(self, peerASN, filterType, index):             # <<<<<<<<<<<<<<
@@ -6949,7 +7180,7 @@ static PyObject *__pyx_pf_2AS_2AS_10removeFilter(struct __pyx_obj_2AS_AS *__pyx_
   return __pyx_r;
 }
 
-/* "AS.pyx":221
+/* "AS.pyx":226
  *         return False
  * 
  *     cpdef void addFilter(self, peerASN, filterType, match, action):             # <<<<<<<<<<<<<<
@@ -7001,7 +7232,7 @@ static void __pyx_f_2AS_2AS_addFilter(struct __pyx_obj_2AS_AS *__pyx_v_self, PyO
     if (unlikely(!__Pyx_object_dict_version_matches(((PyObject *)__pyx_v_self), __pyx_tp_dict_version, __pyx_obj_dict_version))) {
       PY_UINT64_T __pyx_typedict_guard = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
       #endif
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_mstate_global->__pyx_n_u_addFilter); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 221, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_mstate_global->__pyx_n_u_addFilter); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 226, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       if (!__Pyx_IsSameCFunction(__pyx_t_1, (void(*)(void)) __pyx_pw_2AS_2AS_13addFilter)) {
         __pyx_t_3 = NULL;
@@ -7024,7 +7255,7 @@ static void __pyx_f_2AS_2AS_addFilter(struct __pyx_obj_2AS_AS *__pyx_v_self, PyO
           __pyx_t_2 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_4, __pyx_callargs+__pyx_t_5, (5-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
           __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
           __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 221, __pyx_L1_error)
+          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 226, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
         }
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -7044,7 +7275,7 @@ static void __pyx_f_2AS_2AS_addFilter(struct __pyx_obj_2AS_AS *__pyx_v_self, PyO
     #endif
   }
 
-  /* "AS.pyx":227
+  /* "AS.pyx":232
  *             Filter* ptr
  * 
  *         p.first = self.ASN             # <<<<<<<<<<<<<<
@@ -7054,17 +7285,17 @@ static void __pyx_f_2AS_2AS_addFilter(struct __pyx_obj_2AS_AS *__pyx_v_self, PyO
   __pyx_t_6 = __pyx_v_self->ASN;
   __pyx_v_p.first = __pyx_t_6;
 
-  /* "AS.pyx":228
+  /* "AS.pyx":233
  * 
  *         p.first = self.ASN
  *         p.second = peerASN             # <<<<<<<<<<<<<<
  *         match = match.encode('utf-8')
  *         action = action.encode('utf-8')
 */
-  __pyx_t_6 = __Pyx_PyLong_As_int(__pyx_v_peerASN); if (unlikely((__pyx_t_6 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 228, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyLong_As_int(__pyx_v_peerASN); if (unlikely((__pyx_t_6 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 233, __pyx_L1_error)
   __pyx_v_p.second = __pyx_t_6;
 
-  /* "AS.pyx":229
+  /* "AS.pyx":234
  *         p.first = self.ASN
  *         p.second = peerASN
  *         match = match.encode('utf-8')             # <<<<<<<<<<<<<<
@@ -7078,13 +7309,13 @@ static void __pyx_f_2AS_2AS_addFilter(struct __pyx_obj_2AS_AS *__pyx_v_self, PyO
     PyObject *__pyx_callargs[2] = {__pyx_t_2, __pyx_mstate_global->__pyx_kp_u_utf_8};
     __pyx_t_1 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_encode, __pyx_callargs+__pyx_t_5, (2-__pyx_t_5) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 229, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 234, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
   __Pyx_DECREF_SET(__pyx_v_match, __pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "AS.pyx":230
+  /* "AS.pyx":235
  *         p.second = peerASN
  *         match = match.encode('utf-8')
  *         action = action.encode('utf-8')             # <<<<<<<<<<<<<<
@@ -7098,23 +7329,23 @@ static void __pyx_f_2AS_2AS_addFilter(struct __pyx_obj_2AS_AS *__pyx_v_self, PyO
     PyObject *__pyx_callargs[2] = {__pyx_t_2, __pyx_mstate_global->__pyx_kp_u_utf_8};
     __pyx_t_1 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_encode, __pyx_callargs+__pyx_t_5, (2-__pyx_t_5) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 230, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 235, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
   __Pyx_DECREF_SET(__pyx_v_action, __pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "AS.pyx":232
+  /* "AS.pyx":237
  *         action = action.encode('utf-8')
  * 
  *         if (filterType=='filter in'):             # <<<<<<<<<<<<<<
  * 
  *             if (filterIn.find(p) == filterIn.end()):
 */
-  __pyx_t_7 = (__Pyx_PyUnicode_Equals(__pyx_v_filterType, __pyx_mstate_global->__pyx_kp_u_filter_in, Py_EQ)); if (unlikely((__pyx_t_7 < 0))) __PYX_ERR(0, 232, __pyx_L1_error)
+  __pyx_t_7 = (__Pyx_PyUnicode_Equals(__pyx_v_filterType, __pyx_mstate_global->__pyx_kp_u_filter_in, Py_EQ)); if (unlikely((__pyx_t_7 < 0))) __PYX_ERR(0, 237, __pyx_L1_error)
   if (__pyx_t_7) {
 
-    /* "AS.pyx":234
+    /* "AS.pyx":239
  *         if (filterType=='filter in'):
  * 
  *             if (filterIn.find(p) == filterIn.end()):             # <<<<<<<<<<<<<<
@@ -7124,7 +7355,7 @@ static void __pyx_f_2AS_2AS_addFilter(struct __pyx_obj_2AS_AS *__pyx_v_self, PyO
     __pyx_t_7 = (__pyx_v_2AS_filterIn.find(__pyx_v_p) == __pyx_v_2AS_filterIn.end());
     if (__pyx_t_7) {
 
-      /* "AS.pyx":236
+      /* "AS.pyx":241
  *             if (filterIn.find(p) == filterIn.end()):
  * 
  *                 filterIn[p] = Filter()             # <<<<<<<<<<<<<<
@@ -7133,18 +7364,18 @@ static void __pyx_f_2AS_2AS_addFilter(struct __pyx_obj_2AS_AS *__pyx_v_self, PyO
 */
       (__pyx_v_2AS_filterIn[__pyx_v_p]) = Filter();
 
-      /* "AS.pyx":237
+      /* "AS.pyx":242
  * 
  *                 filterIn[p] = Filter()
  *                 filterIn[p].nextFt = new Filter(match, action)             # <<<<<<<<<<<<<<
  * 
  *             else:
 */
-      __pyx_t_8 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_v_match); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 237, __pyx_L1_error)
-      __pyx_t_9 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_v_action); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 237, __pyx_L1_error)
+      __pyx_t_8 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_v_match); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 242, __pyx_L1_error)
+      __pyx_t_9 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_v_action); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 242, __pyx_L1_error)
       (__pyx_v_2AS_filterIn[__pyx_v_p]).nextFt = new Filter(__pyx_t_8, __pyx_t_9);
 
-      /* "AS.pyx":234
+      /* "AS.pyx":239
  *         if (filterType=='filter in'):
  * 
  *             if (filterIn.find(p) == filterIn.end()):             # <<<<<<<<<<<<<<
@@ -7154,7 +7385,7 @@ static void __pyx_f_2AS_2AS_addFilter(struct __pyx_obj_2AS_AS *__pyx_v_self, PyO
       goto __pyx_L4;
     }
 
-    /* "AS.pyx":241
+    /* "AS.pyx":246
  *             else:
  * 
  *                 ft = new Filter(match, action)             # <<<<<<<<<<<<<<
@@ -7162,11 +7393,11 @@ static void __pyx_f_2AS_2AS_addFilter(struct __pyx_obj_2AS_AS *__pyx_v_self, PyO
  * 
 */
     /*else*/ {
-      __pyx_t_9 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_v_match); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 241, __pyx_L1_error)
-      __pyx_t_8 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_v_action); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 241, __pyx_L1_error)
+      __pyx_t_9 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_v_match); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 246, __pyx_L1_error)
+      __pyx_t_8 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_v_action); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 246, __pyx_L1_error)
       __pyx_v_ft = new Filter(__pyx_t_9, __pyx_t_8);
 
-      /* "AS.pyx":242
+      /* "AS.pyx":247
  * 
  *                 ft = new Filter(match, action)
  *                 ptr = filterIn[p].nextFt             # <<<<<<<<<<<<<<
@@ -7176,7 +7407,7 @@ static void __pyx_f_2AS_2AS_addFilter(struct __pyx_obj_2AS_AS *__pyx_v_self, PyO
       __pyx_t_10 = (__pyx_v_2AS_filterIn[__pyx_v_p]).nextFt;
       __pyx_v_ptr = __pyx_t_10;
 
-      /* "AS.pyx":244
+      /* "AS.pyx":249
  *                 ptr = filterIn[p].nextFt
  * 
  *                 if (ptr == NULL):             # <<<<<<<<<<<<<<
@@ -7186,7 +7417,7 @@ static void __pyx_f_2AS_2AS_addFilter(struct __pyx_obj_2AS_AS *__pyx_v_self, PyO
       __pyx_t_7 = (__pyx_v_ptr == NULL);
       if (__pyx_t_7) {
 
-        /* "AS.pyx":245
+        /* "AS.pyx":250
  * 
  *                 if (ptr == NULL):
  *                     filterIn[p].nextFt = ft             # <<<<<<<<<<<<<<
@@ -7195,7 +7426,7 @@ static void __pyx_f_2AS_2AS_addFilter(struct __pyx_obj_2AS_AS *__pyx_v_self, PyO
 */
         (__pyx_v_2AS_filterIn[__pyx_v_p]).nextFt = __pyx_v_ft;
 
-        /* "AS.pyx":244
+        /* "AS.pyx":249
  *                 ptr = filterIn[p].nextFt
  * 
  *                 if (ptr == NULL):             # <<<<<<<<<<<<<<
@@ -7205,7 +7436,7 @@ static void __pyx_f_2AS_2AS_addFilter(struct __pyx_obj_2AS_AS *__pyx_v_self, PyO
         goto __pyx_L5;
       }
 
-      /* "AS.pyx":247
+      /* "AS.pyx":252
  *                     filterIn[p].nextFt = ft
  *                 else:
  *                     while (ptr.nextFt != NULL):             # <<<<<<<<<<<<<<
@@ -7217,7 +7448,7 @@ static void __pyx_f_2AS_2AS_addFilter(struct __pyx_obj_2AS_AS *__pyx_v_self, PyO
           __pyx_t_7 = (__pyx_v_ptr->nextFt != NULL);
           if (!__pyx_t_7) break;
 
-          /* "AS.pyx":248
+          /* "AS.pyx":253
  *                 else:
  *                     while (ptr.nextFt != NULL):
  *                         ptr = ptr.nextFt             # <<<<<<<<<<<<<<
@@ -7228,7 +7459,7 @@ static void __pyx_f_2AS_2AS_addFilter(struct __pyx_obj_2AS_AS *__pyx_v_self, PyO
           __pyx_v_ptr = __pyx_t_10;
         }
 
-        /* "AS.pyx":249
+        /* "AS.pyx":254
  *                     while (ptr.nextFt != NULL):
  *                         ptr = ptr.nextFt
  *                     ptr.nextFt = ft             # <<<<<<<<<<<<<<
@@ -7241,7 +7472,7 @@ static void __pyx_f_2AS_2AS_addFilter(struct __pyx_obj_2AS_AS *__pyx_v_self, PyO
     }
     __pyx_L4:;
 
-    /* "AS.pyx":232
+    /* "AS.pyx":237
  *         action = action.encode('utf-8')
  * 
  *         if (filterType=='filter in'):             # <<<<<<<<<<<<<<
@@ -7251,7 +7482,7 @@ static void __pyx_f_2AS_2AS_addFilter(struct __pyx_obj_2AS_AS *__pyx_v_self, PyO
     goto __pyx_L3;
   }
 
-  /* "AS.pyx":253
+  /* "AS.pyx":258
  *         else:
  * 
  *             if (filterOut.find(p) == filterOut.end()):             # <<<<<<<<<<<<<<
@@ -7262,7 +7493,7 @@ static void __pyx_f_2AS_2AS_addFilter(struct __pyx_obj_2AS_AS *__pyx_v_self, PyO
     __pyx_t_7 = (__pyx_v_2AS_filterOut.find(__pyx_v_p) == __pyx_v_2AS_filterOut.end());
     if (__pyx_t_7) {
 
-      /* "AS.pyx":255
+      /* "AS.pyx":260
  *             if (filterOut.find(p) == filterOut.end()):
  * 
  *                 filterOut[p] = Filter()             # <<<<<<<<<<<<<<
@@ -7271,18 +7502,18 @@ static void __pyx_f_2AS_2AS_addFilter(struct __pyx_obj_2AS_AS *__pyx_v_self, PyO
 */
       (__pyx_v_2AS_filterOut[__pyx_v_p]) = Filter();
 
-      /* "AS.pyx":256
+      /* "AS.pyx":261
  * 
  *                 filterOut[p] = Filter()
  *                 filterOut[p].nextFt = new Filter(match, action)             # <<<<<<<<<<<<<<
  * 
  *             else:
 */
-      __pyx_t_8 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_v_match); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 256, __pyx_L1_error)
-      __pyx_t_9 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_v_action); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 256, __pyx_L1_error)
+      __pyx_t_8 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_v_match); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 261, __pyx_L1_error)
+      __pyx_t_9 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_v_action); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 261, __pyx_L1_error)
       (__pyx_v_2AS_filterOut[__pyx_v_p]).nextFt = new Filter(__pyx_t_8, __pyx_t_9);
 
-      /* "AS.pyx":253
+      /* "AS.pyx":258
  *         else:
  * 
  *             if (filterOut.find(p) == filterOut.end()):             # <<<<<<<<<<<<<<
@@ -7292,7 +7523,7 @@ static void __pyx_f_2AS_2AS_addFilter(struct __pyx_obj_2AS_AS *__pyx_v_self, PyO
       goto __pyx_L8;
     }
 
-    /* "AS.pyx":260
+    /* "AS.pyx":265
  *             else:
  * 
  *                 ft = new Filter(match, action)             # <<<<<<<<<<<<<<
@@ -7300,11 +7531,11 @@ static void __pyx_f_2AS_2AS_addFilter(struct __pyx_obj_2AS_AS *__pyx_v_self, PyO
  * 
 */
     /*else*/ {
-      __pyx_t_9 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_v_match); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 260, __pyx_L1_error)
-      __pyx_t_8 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_v_action); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 260, __pyx_L1_error)
+      __pyx_t_9 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_v_match); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 265, __pyx_L1_error)
+      __pyx_t_8 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_v_action); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 265, __pyx_L1_error)
       __pyx_v_ft = new Filter(__pyx_t_9, __pyx_t_8);
 
-      /* "AS.pyx":261
+      /* "AS.pyx":266
  * 
  *                 ft = new Filter(match, action)
  *                 ptr = filterOut[p].nextFt             # <<<<<<<<<<<<<<
@@ -7314,7 +7545,7 @@ static void __pyx_f_2AS_2AS_addFilter(struct __pyx_obj_2AS_AS *__pyx_v_self, PyO
       __pyx_t_10 = (__pyx_v_2AS_filterOut[__pyx_v_p]).nextFt;
       __pyx_v_ptr = __pyx_t_10;
 
-      /* "AS.pyx":263
+      /* "AS.pyx":268
  *                 ptr = filterOut[p].nextFt
  * 
  *                 if (ptr == NULL):             # <<<<<<<<<<<<<<
@@ -7324,7 +7555,7 @@ static void __pyx_f_2AS_2AS_addFilter(struct __pyx_obj_2AS_AS *__pyx_v_self, PyO
       __pyx_t_7 = (__pyx_v_ptr == NULL);
       if (__pyx_t_7) {
 
-        /* "AS.pyx":264
+        /* "AS.pyx":269
  * 
  *                 if (ptr == NULL):
  *                     filterOut[p].nextFt = ft             # <<<<<<<<<<<<<<
@@ -7333,7 +7564,7 @@ static void __pyx_f_2AS_2AS_addFilter(struct __pyx_obj_2AS_AS *__pyx_v_self, PyO
 */
         (__pyx_v_2AS_filterOut[__pyx_v_p]).nextFt = __pyx_v_ft;
 
-        /* "AS.pyx":263
+        /* "AS.pyx":268
  *                 ptr = filterOut[p].nextFt
  * 
  *                 if (ptr == NULL):             # <<<<<<<<<<<<<<
@@ -7343,7 +7574,7 @@ static void __pyx_f_2AS_2AS_addFilter(struct __pyx_obj_2AS_AS *__pyx_v_self, PyO
         goto __pyx_L9;
       }
 
-      /* "AS.pyx":266
+      /* "AS.pyx":271
  *                     filterOut[p].nextFt = ft
  *                 else:
  *                     while (ptr.nextFt != NULL):             # <<<<<<<<<<<<<<
@@ -7355,7 +7586,7 @@ static void __pyx_f_2AS_2AS_addFilter(struct __pyx_obj_2AS_AS *__pyx_v_self, PyO
           __pyx_t_7 = (__pyx_v_ptr->nextFt != NULL);
           if (!__pyx_t_7) break;
 
-          /* "AS.pyx":267
+          /* "AS.pyx":272
  *                 else:
  *                     while (ptr.nextFt != NULL):
  *                         ptr = ptr.nextFt             # <<<<<<<<<<<<<<
@@ -7366,7 +7597,7 @@ static void __pyx_f_2AS_2AS_addFilter(struct __pyx_obj_2AS_AS *__pyx_v_self, PyO
           __pyx_v_ptr = __pyx_t_10;
         }
 
-        /* "AS.pyx":268
+        /* "AS.pyx":273
  *                     while (ptr.nextFt != NULL):
  *                         ptr = ptr.nextFt
  *                     ptr.nextFt = ft             # <<<<<<<<<<<<<<
@@ -7381,7 +7612,7 @@ static void __pyx_f_2AS_2AS_addFilter(struct __pyx_obj_2AS_AS *__pyx_v_self, PyO
   }
   __pyx_L3:;
 
-  /* "AS.pyx":221
+  /* "AS.pyx":226
  *         return False
  * 
  *     cpdef void addFilter(self, peerASN, filterType, match, action):             # <<<<<<<<<<<<<<
@@ -7445,44 +7676,44 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   {
     PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_peerASN,&__pyx_mstate_global->__pyx_n_u_filterType,&__pyx_mstate_global->__pyx_n_u_match,&__pyx_mstate_global->__pyx_n_u_action,0};
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
-    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 221, __pyx_L3_error)
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 226, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
         case  4:
         values[3] = __Pyx_ArgRef_FASTCALL(__pyx_args, 3);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 221, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 226, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  3:
         values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 221, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 226, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  2:
         values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 221, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 226, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  1:
         values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 221, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 226, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "addFilter", 0) < (0)) __PYX_ERR(0, 221, __pyx_L3_error)
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "addFilter", 0) < (0)) __PYX_ERR(0, 226, __pyx_L3_error)
       for (Py_ssize_t i = __pyx_nargs; i < 4; i++) {
-        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("addFilter", 1, 4, 4, i); __PYX_ERR(0, 221, __pyx_L3_error) }
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("addFilter", 1, 4, 4, i); __PYX_ERR(0, 226, __pyx_L3_error) }
       }
     } else if (unlikely(__pyx_nargs != 4)) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 221, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 226, __pyx_L3_error)
       values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 221, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 226, __pyx_L3_error)
       values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 221, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 226, __pyx_L3_error)
       values[3] = __Pyx_ArgRef_FASTCALL(__pyx_args, 3);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 221, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 226, __pyx_L3_error)
     }
     __pyx_v_peerASN = values[0];
     __pyx_v_filterType = values[1];
@@ -7491,7 +7722,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("addFilter", 1, 4, 4, __pyx_nargs); __PYX_ERR(0, 221, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("addFilter", 1, 4, 4, __pyx_nargs); __PYX_ERR(0, 226, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -7521,8 +7752,8 @@ static PyObject *__pyx_pf_2AS_2AS_12addFilter(struct __pyx_obj_2AS_AS *__pyx_v_s
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("addFilter", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_f_2AS_2AS_addFilter(__pyx_v_self, __pyx_v_peerASN, __pyx_v_filterType, __pyx_v_match, __pyx_v_action, 1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 221, __pyx_L1_error)
-  __pyx_t_1 = __Pyx_void_to_None(NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 221, __pyx_L1_error)
+  __pyx_f_2AS_2AS_addFilter(__pyx_v_self, __pyx_v_peerASN, __pyx_v_filterType, __pyx_v_match, __pyx_v_action, 1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 226, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_void_to_None(NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 226, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -7539,7 +7770,7 @@ static PyObject *__pyx_pf_2AS_2AS_12addFilter(struct __pyx_obj_2AS_AS *__pyx_v_s
   return __pyx_r;
 }
 
-/* "AS.pyx":270
+/* "AS.pyx":275
  *                     ptr.nextFt = ft
  * 
  *     def __str__(self):             # <<<<<<<<<<<<<<
@@ -7574,7 +7805,7 @@ static PyObject *__pyx_pf_2AS_2AS_14__str__(struct __pyx_obj_2AS_AS *__pyx_v_sel
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__str__", 0);
 
-  /* "AS.pyx":271
+  /* "AS.pyx":276
  * 
  *     def __str__(self):
  *         return f"AS(ASN={self.ASN}, peers={peers[self.ASN]})"             # <<<<<<<<<<<<<<
@@ -7582,11 +7813,11 @@ static PyObject *__pyx_pf_2AS_2AS_14__str__(struct __pyx_obj_2AS_AS *__pyx_v_sel
  *     @staticmethod
 */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyUnicode_From_int(__pyx_v_self->ASN, 0, ' ', 'd'); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 271, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyUnicode_From_int(__pyx_v_self->ASN, 0, ' ', 'd'); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 276, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __pyx_convert_vector_to_py_std_3a__3a_pair_3c_int_2c_char_3e___((__pyx_v_2AS_peers[__pyx_v_self->ASN])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 271, __pyx_L1_error)
+  __pyx_t_2 = __pyx_convert_vector_to_py_std_3a__3a_pair_3c_int_2c_char_3e___((__pyx_v_2AS_peers[__pyx_v_self->ASN])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 276, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_FormatSimple(__pyx_t_2, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 271, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_FormatSimple(__pyx_t_2, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 276, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_4[0] = __pyx_mstate_global->__pyx_kp_u_AS_ASN;
@@ -7595,7 +7826,7 @@ static PyObject *__pyx_pf_2AS_2AS_14__str__(struct __pyx_obj_2AS_AS *__pyx_v_sel
   __pyx_t_4[3] = __pyx_t_3;
   __pyx_t_4[4] = __pyx_mstate_global->__pyx_kp_u__3;
   __pyx_t_2 = __Pyx_PyUnicode_Join(__pyx_t_4, 5, 7 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_1) + 8 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_3) + 1, 127 | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_3));
-  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 271, __pyx_L1_error)
+  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 276, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -7603,7 +7834,7 @@ static PyObject *__pyx_pf_2AS_2AS_14__str__(struct __pyx_obj_2AS_AS *__pyx_v_sel
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "AS.pyx":270
+  /* "AS.pyx":275
  *                     ptr.nextFt = ft
  * 
  *     def __str__(self):             # <<<<<<<<<<<<<<
@@ -7624,7 +7855,7 @@ static PyObject *__pyx_pf_2AS_2AS_14__str__(struct __pyx_obj_2AS_AS *__pyx_v_sel
   return __pyx_r;
 }
 
-/* "AS.pyx":273
+/* "AS.pyx":278
  *         return f"AS(ASN={self.ASN}, peers={peers[self.ASN]})"
  * 
  *     @staticmethod             # <<<<<<<<<<<<<<
@@ -7647,7 +7878,7 @@ static void __pyx_f_2AS_2AS_announcePrefix(int __pyx_v_ASN, std::string const &_
   int __pyx_clineno = 0;
   PyGILState_STATE __pyx_gilstate_save;
 
-  /* "AS.pyx":279
+  /* "AS.pyx":284
  *             shared_ptr[Route] route
  * 
  *         route = make_shared[Route](Route(prefix, 100, "", "IGP", ""))             # <<<<<<<<<<<<<<
@@ -7660,11 +7891,11 @@ static void __pyx_f_2AS_2AS_announcePrefix(int __pyx_v_ASN, std::string const &_
     PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
     __Pyx_CppExn2PyErr();
     __Pyx_PyGILState_Release(__pyx_gilstate_save);
-    __PYX_ERR(0, 279, __pyx_L1_error)
+    __PYX_ERR(0, 284, __pyx_L1_error)
   }
   __pyx_v_route = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_1);
 
-  /* "AS.pyx":280
+  /* "AS.pyx":285
  * 
  *         route = make_shared[Route](Route(prefix, 100, "", "IGP", ""))
  *         locks[ASN].lock()             # <<<<<<<<<<<<<<
@@ -7673,7 +7904,7 @@ static void __pyx_f_2AS_2AS_announcePrefix(int __pyx_v_ASN, std::string const &_
 */
   (__pyx_v_2AS_locks[__pyx_v_ASN])->lock();
 
-  /* "AS.pyx":281
+  /* "AS.pyx":286
  *         route = make_shared[Route](Route(prefix, 100, "", "IGP", ""))
  *         locks[ASN].lock()
  *         routeTables[ASN].insertRoute(route)             # <<<<<<<<<<<<<<
@@ -7682,7 +7913,7 @@ static void __pyx_f_2AS_2AS_announcePrefix(int __pyx_v_ASN, std::string const &_
 */
   (void)((__pyx_v_2AS_routeTables[__pyx_v_ASN])->insertRoute(__pyx_v_route));
 
-  /* "AS.pyx":282
+  /* "AS.pyx":287
  *         locks[ASN].lock()
  *         routeTables[ASN].insertRoute(route)
  *         locks[ASN].unlock()             # <<<<<<<<<<<<<<
@@ -7691,7 +7922,7 @@ static void __pyx_f_2AS_2AS_announcePrefix(int __pyx_v_ASN, std::string const &_
 */
   (__pyx_v_2AS_locks[__pyx_v_ASN])->unlock();
 
-  /* "AS.pyx":284
+  /* "AS.pyx":289
  *         locks[ASN].unlock()
  * 
  *         for peer in peers[ASN]:             # <<<<<<<<<<<<<<
@@ -7704,7 +7935,7 @@ static void __pyx_f_2AS_2AS_announcePrefix(int __pyx_v_ASN, std::string const &_
     __pyx_t_4 = *__pyx_t_2;
     __pyx_v_peer = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_4);
 
-    /* "AS.pyx":286
+    /* "AS.pyx":291
  *         for peer in peers[ASN]:
  * 
  *             message = make_shared[Message](Message("A", peer, ASN, prefix, to_string(ASN), "IGP"))             # <<<<<<<<<<<<<<
@@ -7717,7 +7948,7 @@ static void __pyx_f_2AS_2AS_announcePrefix(int __pyx_v_ASN, std::string const &_
       PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
       __Pyx_CppExn2PyErr();
       __Pyx_PyGILState_Release(__pyx_gilstate_save);
-      __PYX_ERR(0, 286, __pyx_L1_error)
+      __PYX_ERR(0, 291, __pyx_L1_error)
     }
     try {
       __pyx_t_6 = std::make_shared<Message>(Message(((char *)"A"), __pyx_v_peer, __pyx_v_ASN, __pyx_v_prefix, __pyx_t_5, ((std::string const &)"IGP")));
@@ -7725,11 +7956,11 @@ static void __pyx_f_2AS_2AS_announcePrefix(int __pyx_v_ASN, std::string const &_
       PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
       __Pyx_CppExn2PyErr();
       __Pyx_PyGILState_Release(__pyx_gilstate_save);
-      __PYX_ERR(0, 286, __pyx_L1_error)
+      __PYX_ERR(0, 291, __pyx_L1_error)
     }
     __pyx_v_message = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_6);
 
-    /* "AS.pyx":287
+    /* "AS.pyx":292
  * 
  *             message = make_shared[Message](Message("A", peer, ASN, prefix, to_string(ASN), "IGP"))
  *             processor.addMessage(message)             # <<<<<<<<<<<<<<
@@ -7738,7 +7969,7 @@ static void __pyx_f_2AS_2AS_announcePrefix(int __pyx_v_ASN, std::string const &_
 */
     ((struct __pyx_vtabstruct_9Processor_Processor *)__pyx_v_processor->__pyx_vtab)->addMessage(__pyx_v_processor, __pyx_v_message);
 
-    /* "AS.pyx":284
+    /* "AS.pyx":289
  *         locks[ASN].unlock()
  * 
  *         for peer in peers[ASN]:             # <<<<<<<<<<<<<<
@@ -7747,7 +7978,7 @@ static void __pyx_f_2AS_2AS_announcePrefix(int __pyx_v_ASN, std::string const &_
 */
   }
 
-  /* "AS.pyx":273
+  /* "AS.pyx":278
  *         return f"AS(ASN={self.ASN}, peers={peers[self.ASN]})"
  * 
  *     @staticmethod             # <<<<<<<<<<<<<<
@@ -7764,7 +7995,7 @@ static void __pyx_f_2AS_2AS_announcePrefix(int __pyx_v_ASN, std::string const &_
   __pyx_L0:;
 }
 
-/* "AS.pyx":289
+/* "AS.pyx":294
  *             processor.addMessage(message)
  * 
  *     @staticmethod             # <<<<<<<<<<<<<<
@@ -7790,7 +8021,7 @@ static void __pyx_f_2AS_2AS_withdrawPrefix(int __pyx_v_ASN, std::string const &_
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
 
-  /* "AS.pyx":297
+  /* "AS.pyx":302
  *             Route* rt
  * 
  *         if (originAS != ""): # The origin AS is not itself             # <<<<<<<<<<<<<<
@@ -7800,7 +8031,7 @@ static void __pyx_f_2AS_2AS_withdrawPrefix(int __pyx_v_ASN, std::string const &_
   __pyx_t_1 = (__pyx_v_originAS != __pyx_k_);
   if (__pyx_t_1) {
 
-    /* "AS.pyx":298
+    /* "AS.pyx":303
  * 
  *         if (originAS != ""): # The origin AS is not itself
  *             locks[ASN].lock()             # <<<<<<<<<<<<<<
@@ -7809,7 +8040,7 @@ static void __pyx_f_2AS_2AS_withdrawPrefix(int __pyx_v_ASN, std::string const &_
 */
     (__pyx_v_2AS_locks[__pyx_v_ASN])->lock();
 
-    /* "AS.pyx":299
+    /* "AS.pyx":304
  *         if (originAS != ""): # The origin AS is not itself
  *             locks[ASN].lock()
  *             routes = routeTables[ASN].getRoutes(prefix)             # <<<<<<<<<<<<<<
@@ -7818,7 +8049,7 @@ static void __pyx_f_2AS_2AS_withdrawPrefix(int __pyx_v_ASN, std::string const &_
 */
     __pyx_v_routes = (__pyx_v_2AS_routeTables[__pyx_v_ASN])->getRoutes(__pyx_v_prefix);
 
-    /* "AS.pyx":301
+    /* "AS.pyx":306
  *             routes = routeTables[ASN].getRoutes(prefix)
  * 
  *             for route in routes:             # <<<<<<<<<<<<<<
@@ -7830,7 +8061,7 @@ static void __pyx_f_2AS_2AS_withdrawPrefix(int __pyx_v_ASN, std::string const &_
       __pyx_t_3 = *__pyx_t_2;
       __pyx_v_route = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_3);
 
-      /* "AS.pyx":302
+      /* "AS.pyx":307
  * 
  *             for route in routes:
  *                 rt = route.get()             # <<<<<<<<<<<<<<
@@ -7839,7 +8070,7 @@ static void __pyx_f_2AS_2AS_withdrawPrefix(int __pyx_v_ASN, std::string const &_
 */
       __pyx_v_rt = __pyx_v_route.get();
 
-      /* "AS.pyx":303
+      /* "AS.pyx":308
  *             for route in routes:
  *                 rt = route.get()
  *                 if (rt.ASPath.substr(rt.ASPath.rfind(' ') + 1) == originAS):             # <<<<<<<<<<<<<<
@@ -7850,12 +8081,12 @@ static void __pyx_f_2AS_2AS_withdrawPrefix(int __pyx_v_ASN, std::string const &_
         __pyx_t_4 = __pyx_v_rt->ASPath.substr((__pyx_v_rt->ASPath.rfind(__pyx_k__4) + 1));
       } catch(...) {
         __Pyx_CppExn2PyErr();
-        __PYX_ERR(0, 303, __pyx_L1_error)
+        __PYX_ERR(0, 308, __pyx_L1_error)
       }
       __pyx_t_1 = (__pyx_t_4 == __pyx_v_originAS);
       if (__pyx_t_1) {
 
-        /* "AS.pyx":304
+        /* "AS.pyx":309
  *                 rt = route.get()
  *                 if (rt.ASPath.substr(rt.ASPath.rfind(' ') + 1) == originAS):
  *                     routeTables[ASN].deleteRoute(route)             # <<<<<<<<<<<<<<
@@ -7864,7 +8095,7 @@ static void __pyx_f_2AS_2AS_withdrawPrefix(int __pyx_v_ASN, std::string const &_
 */
         (__pyx_v_2AS_routeTables[__pyx_v_ASN])->deleteRoute(__pyx_v_route);
 
-        /* "AS.pyx":303
+        /* "AS.pyx":308
  *             for route in routes:
  *                 rt = route.get()
  *                 if (rt.ASPath.substr(rt.ASPath.rfind(' ') + 1) == originAS):             # <<<<<<<<<<<<<<
@@ -7873,7 +8104,7 @@ static void __pyx_f_2AS_2AS_withdrawPrefix(int __pyx_v_ASN, std::string const &_
 */
       }
 
-      /* "AS.pyx":301
+      /* "AS.pyx":306
  *             routes = routeTables[ASN].getRoutes(prefix)
  * 
  *             for route in routes:             # <<<<<<<<<<<<<<
@@ -7882,7 +8113,7 @@ static void __pyx_f_2AS_2AS_withdrawPrefix(int __pyx_v_ASN, std::string const &_
 */
     }
 
-    /* "AS.pyx":306
+    /* "AS.pyx":311
  *                     routeTables[ASN].deleteRoute(route)
  * 
  *             locks[ASN].unlock()             # <<<<<<<<<<<<<<
@@ -7891,7 +8122,7 @@ static void __pyx_f_2AS_2AS_withdrawPrefix(int __pyx_v_ASN, std::string const &_
 */
     (__pyx_v_2AS_locks[__pyx_v_ASN])->unlock();
 
-    /* "AS.pyx":297
+    /* "AS.pyx":302
  *             Route* rt
  * 
  *         if (originAS != ""): # The origin AS is not itself             # <<<<<<<<<<<<<<
@@ -7901,7 +8132,7 @@ static void __pyx_f_2AS_2AS_withdrawPrefix(int __pyx_v_ASN, std::string const &_
     goto __pyx_L3;
   }
 
-  /* "AS.pyx":309
+  /* "AS.pyx":314
  * 
  *         else:
  *             locks[ASN].lock()             # <<<<<<<<<<<<<<
@@ -7911,7 +8142,7 @@ static void __pyx_f_2AS_2AS_withdrawPrefix(int __pyx_v_ASN, std::string const &_
   /*else*/ {
     (__pyx_v_2AS_locks[__pyx_v_ASN])->lock();
 
-    /* "AS.pyx":311
+    /* "AS.pyx":316
  *             locks[ASN].lock()
  * 
  *             route = make_shared[Route](Route(prefix, 100, "", "IGP", ""))             # <<<<<<<<<<<<<<
@@ -7922,11 +8153,11 @@ static void __pyx_f_2AS_2AS_withdrawPrefix(int __pyx_v_ASN, std::string const &_
       __pyx_t_3 = std::make_shared<Route>(Route(__pyx_v_prefix, 0x64, ((std::string const &)""), ((std::string const &)"IGP"), ((std::string const &)"")));
     } catch(...) {
       __Pyx_CppExn2PyErr();
-      __PYX_ERR(0, 311, __pyx_L1_error)
+      __PYX_ERR(0, 316, __pyx_L1_error)
     }
     __pyx_v_route = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_3);
 
-    /* "AS.pyx":312
+    /* "AS.pyx":317
  * 
  *             route = make_shared[Route](Route(prefix, 100, "", "IGP", ""))
  *             routeTables[ASN].deleteRoute(route)             # <<<<<<<<<<<<<<
@@ -7935,7 +8166,7 @@ static void __pyx_f_2AS_2AS_withdrawPrefix(int __pyx_v_ASN, std::string const &_
 */
     (__pyx_v_2AS_routeTables[__pyx_v_ASN])->deleteRoute(__pyx_v_route);
 
-    /* "AS.pyx":314
+    /* "AS.pyx":319
  *             routeTables[ASN].deleteRoute(route)
  * 
  *             locks[ASN].unlock()             # <<<<<<<<<<<<<<
@@ -7946,7 +8177,7 @@ static void __pyx_f_2AS_2AS_withdrawPrefix(int __pyx_v_ASN, std::string const &_
   }
   __pyx_L3:;
 
-  /* "AS.pyx":316
+  /* "AS.pyx":321
  *             locks[ASN].unlock()
  * 
  *         for peer in peers[ASN]:             # <<<<<<<<<<<<<<
@@ -7959,7 +8190,7 @@ static void __pyx_f_2AS_2AS_withdrawPrefix(int __pyx_v_ASN, std::string const &_
     __pyx_t_7 = *__pyx_t_5;
     __pyx_v_peer = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_7);
 
-    /* "AS.pyx":317
+    /* "AS.pyx":322
  * 
  *         for peer in peers[ASN]:
  *             message = make_shared[Message](Message("W", peer, ASN, prefix))             # <<<<<<<<<<<<<<
@@ -7970,11 +8201,11 @@ static void __pyx_f_2AS_2AS_withdrawPrefix(int __pyx_v_ASN, std::string const &_
       __pyx_t_8 = std::make_shared<Message>(Message(((char *)"W"), __pyx_v_peer, __pyx_v_ASN, __pyx_v_prefix));
     } catch(...) {
       __Pyx_CppExn2PyErr();
-      __PYX_ERR(0, 317, __pyx_L1_error)
+      __PYX_ERR(0, 322, __pyx_L1_error)
     }
     __pyx_v_message = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_8);
 
-    /* "AS.pyx":318
+    /* "AS.pyx":323
  *         for peer in peers[ASN]:
  *             message = make_shared[Message](Message("W", peer, ASN, prefix))
  *             processor.addMessage(message)             # <<<<<<<<<<<<<<
@@ -7983,7 +8214,7 @@ static void __pyx_f_2AS_2AS_withdrawPrefix(int __pyx_v_ASN, std::string const &_
 */
     ((struct __pyx_vtabstruct_9Processor_Processor *)__pyx_v_processor->__pyx_vtab)->addMessage(__pyx_v_processor, __pyx_v_message);
 
-    /* "AS.pyx":316
+    /* "AS.pyx":321
  *             locks[ASN].unlock()
  * 
  *         for peer in peers[ASN]:             # <<<<<<<<<<<<<<
@@ -7992,7 +8223,7 @@ static void __pyx_f_2AS_2AS_withdrawPrefix(int __pyx_v_ASN, std::string const &_
 */
   }
 
-  /* "AS.pyx":289
+  /* "AS.pyx":294
  *             processor.addMessage(message)
  * 
  *     @staticmethod             # <<<<<<<<<<<<<<
@@ -8007,7 +8238,7 @@ static void __pyx_f_2AS_2AS_withdrawPrefix(int __pyx_v_ASN, std::string const &_
   __pyx_L0:;
 }
 
-/* "AS.pyx":320
+/* "AS.pyx":325
  *             processor.addMessage(message)
  * 
  *     @staticmethod             # <<<<<<<<<<<<<<
@@ -8037,7 +8268,7 @@ static void __pyx_f_2AS_2AS_announceTo(int __pyx_v_ASN, int __pyx_v_peerASN, std
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
 
-  /* "AS.pyx":330
+  /* "AS.pyx":335
  *             int lastAS
  * 
  *         for p in peers[ASN]:             # <<<<<<<<<<<<<<
@@ -8050,7 +8281,7 @@ static void __pyx_f_2AS_2AS_announceTo(int __pyx_v_ASN, int __pyx_v_peerASN, std
     __pyx_t_3 = *__pyx_t_1;
     __pyx_v_p = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_3);
 
-    /* "AS.pyx":331
+    /* "AS.pyx":336
  * 
  *         for p in peers[ASN]:
  *             if (p.first == peerASN):             # <<<<<<<<<<<<<<
@@ -8060,7 +8291,7 @@ static void __pyx_f_2AS_2AS_announceTo(int __pyx_v_ASN, int __pyx_v_peerASN, std
     __pyx_t_4 = (__pyx_v_p.first == __pyx_v_peerASN);
     if (__pyx_t_4) {
 
-      /* "AS.pyx":332
+      /* "AS.pyx":337
  *         for p in peers[ASN]:
  *             if (p.first == peerASN):
  *                 peer = p             # <<<<<<<<<<<<<<
@@ -8069,7 +8300,7 @@ static void __pyx_f_2AS_2AS_announceTo(int __pyx_v_ASN, int __pyx_v_peerASN, std
 */
       __pyx_v_peer = __pyx_v_p;
 
-      /* "AS.pyx":333
+      /* "AS.pyx":338
  *             if (p.first == peerASN):
  *                 peer = p
  *                 break             # <<<<<<<<<<<<<<
@@ -8078,7 +8309,7 @@ static void __pyx_f_2AS_2AS_announceTo(int __pyx_v_ASN, int __pyx_v_peerASN, std
 */
       goto __pyx_L4_break;
 
-      /* "AS.pyx":331
+      /* "AS.pyx":336
  * 
  *         for p in peers[ASN]:
  *             if (p.first == peerASN):             # <<<<<<<<<<<<<<
@@ -8087,7 +8318,7 @@ static void __pyx_f_2AS_2AS_announceTo(int __pyx_v_ASN, int __pyx_v_peerASN, std
 */
     }
 
-    /* "AS.pyx":330
+    /* "AS.pyx":335
  *             int lastAS
  * 
  *         for p in peers[ASN]:             # <<<<<<<<<<<<<<
@@ -8100,7 +8331,7 @@ static void __pyx_f_2AS_2AS_announceTo(int __pyx_v_ASN, int __pyx_v_peerASN, std
   goto __pyx_L6_for_end;
   __pyx_L6_for_end:;
 
-  /* "AS.pyx":335
+  /* "AS.pyx":340
  *                 break
  * 
  *         locks[ASN].lock()             # <<<<<<<<<<<<<<
@@ -8109,7 +8340,7 @@ static void __pyx_f_2AS_2AS_announceTo(int __pyx_v_ASN, int __pyx_v_peerASN, std
 */
   (__pyx_v_2AS_locks[__pyx_v_ASN])->lock();
 
-  /* "AS.pyx":336
+  /* "AS.pyx":341
  * 
  *         locks[ASN].lock()
  *         routes = routeTables[ASN].getRoutes(prefix)             # <<<<<<<<<<<<<<
@@ -8118,7 +8349,7 @@ static void __pyx_f_2AS_2AS_announceTo(int __pyx_v_ASN, int __pyx_v_peerASN, std
 */
   __pyx_v_routes = (__pyx_v_2AS_routeTables[__pyx_v_ASN])->getRoutes(__pyx_v_prefix);
 
-  /* "AS.pyx":337
+  /* "AS.pyx":342
  *         locks[ASN].lock()
  *         routes = routeTables[ASN].getRoutes(prefix)
  *         locks[ASN].unlock()             # <<<<<<<<<<<<<<
@@ -8127,7 +8358,7 @@ static void __pyx_f_2AS_2AS_announceTo(int __pyx_v_ASN, int __pyx_v_peerASN, std
 */
   (__pyx_v_2AS_locks[__pyx_v_ASN])->unlock();
 
-  /* "AS.pyx":339
+  /* "AS.pyx":344
  *         locks[ASN].unlock()
  * 
  *         for route in routes:             # <<<<<<<<<<<<<<
@@ -8139,7 +8370,7 @@ static void __pyx_f_2AS_2AS_announceTo(int __pyx_v_ASN, int __pyx_v_peerASN, std
     __pyx_t_6 = *__pyx_t_5;
     __pyx_v_route = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_6);
 
-    /* "AS.pyx":341
+    /* "AS.pyx":346
  *         for route in routes:
  * 
  *             rt = route.get()             # <<<<<<<<<<<<<<
@@ -8148,7 +8379,7 @@ static void __pyx_f_2AS_2AS_announceTo(int __pyx_v_ASN, int __pyx_v_peerASN, std
 */
     __pyx_v_rt = __pyx_v_route.get();
 
-    /* "AS.pyx":343
+    /* "AS.pyx":348
  *             rt = route.get()
  * 
  *             if (rt.ASPath == ""): # The origin AS is itself             # <<<<<<<<<<<<<<
@@ -8158,7 +8389,7 @@ static void __pyx_f_2AS_2AS_announceTo(int __pyx_v_ASN, int __pyx_v_peerASN, std
     __pyx_t_4 = (__pyx_v_rt->ASPath == __pyx_k_);
     if (__pyx_t_4) {
 
-      /* "AS.pyx":345
+      /* "AS.pyx":350
  *             if (rt.ASPath == ""): # The origin AS is itself
  * 
  *                 message = make_shared[Message](Message("A", peer, ASN, rt.prefix, to_string(ASN), "IGP"))             # <<<<<<<<<<<<<<
@@ -8169,17 +8400,17 @@ static void __pyx_f_2AS_2AS_announceTo(int __pyx_v_ASN, int __pyx_v_peerASN, std
         __pyx_t_7 = std::to_string(__pyx_v_ASN);
       } catch(...) {
         __Pyx_CppExn2PyErr();
-        __PYX_ERR(0, 345, __pyx_L1_error)
+        __PYX_ERR(0, 350, __pyx_L1_error)
       }
       try {
         __pyx_t_8 = std::make_shared<Message>(Message(((char *)"A"), __pyx_v_peer, __pyx_v_ASN, __pyx_v_rt->prefix, __pyx_t_7, ((std::string const &)"IGP")));
       } catch(...) {
         __Pyx_CppExn2PyErr();
-        __PYX_ERR(0, 345, __pyx_L1_error)
+        __PYX_ERR(0, 350, __pyx_L1_error)
       }
       __pyx_v_message = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_8);
 
-      /* "AS.pyx":343
+      /* "AS.pyx":348
  *             rt = route.get()
  * 
  *             if (rt.ASPath == ""): # The origin AS is itself             # <<<<<<<<<<<<<<
@@ -8189,7 +8420,7 @@ static void __pyx_f_2AS_2AS_announceTo(int __pyx_v_ASN, int __pyx_v_peerASN, std
       goto __pyx_L9;
     }
 
-    /* "AS.pyx":349
+    /* "AS.pyx":354
  *             else:
  * 
  *                 lastAS = stoi(rt.ASPath.substr(0, rt.ASPath.find(' ')))             # <<<<<<<<<<<<<<
@@ -8201,17 +8432,17 @@ static void __pyx_f_2AS_2AS_announceTo(int __pyx_v_ASN, int __pyx_v_peerASN, std
         __pyx_t_7 = __pyx_v_rt->ASPath.substr(0, __pyx_v_rt->ASPath.find(__pyx_k__4));
       } catch(...) {
         __Pyx_CppExn2PyErr();
-        __PYX_ERR(0, 349, __pyx_L1_error)
+        __PYX_ERR(0, 354, __pyx_L1_error)
       }
       try {
         __pyx_t_9 = std::stoi(__pyx_t_7);
       } catch(...) {
         __Pyx_CppExn2PyErr();
-        __PYX_ERR(0, 349, __pyx_L1_error)
+        __PYX_ERR(0, 354, __pyx_L1_error)
       }
       __pyx_v_lastAS = __pyx_t_9;
 
-      /* "AS.pyx":350
+      /* "AS.pyx":355
  * 
  *                 lastAS = stoi(rt.ASPath.substr(0, rt.ASPath.find(' ')))
  *                 if (lastAS == peerASN):             # <<<<<<<<<<<<<<
@@ -8221,7 +8452,7 @@ static void __pyx_f_2AS_2AS_announceTo(int __pyx_v_ASN, int __pyx_v_peerASN, std
       __pyx_t_4 = (__pyx_v_lastAS == __pyx_v_peerASN);
       if (__pyx_t_4) {
 
-        /* "AS.pyx":351
+        /* "AS.pyx":356
  *                 lastAS = stoi(rt.ASPath.substr(0, rt.ASPath.find(' ')))
  *                 if (lastAS == peerASN):
  *                     continue             # <<<<<<<<<<<<<<
@@ -8230,7 +8461,7 @@ static void __pyx_f_2AS_2AS_announceTo(int __pyx_v_ASN, int __pyx_v_peerASN, std
 */
         goto __pyx_L7_continue;
 
-        /* "AS.pyx":350
+        /* "AS.pyx":355
  * 
  *                 lastAS = stoi(rt.ASPath.substr(0, rt.ASPath.find(' ')))
  *                 if (lastAS == peerASN):             # <<<<<<<<<<<<<<
@@ -8239,7 +8470,7 @@ static void __pyx_f_2AS_2AS_announceTo(int __pyx_v_ASN, int __pyx_v_peerASN, std
 */
       }
 
-      /* "AS.pyx":353
+      /* "AS.pyx":358
  *                     continue
  * 
  *                 for p in peers[lastAS]:             # <<<<<<<<<<<<<<
@@ -8252,7 +8483,7 @@ static void __pyx_f_2AS_2AS_announceTo(int __pyx_v_ASN, int __pyx_v_peerASN, std
         __pyx_t_3 = *__pyx_t_1;
         __pyx_v_p = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_3);
 
-        /* "AS.pyx":354
+        /* "AS.pyx":359
  * 
  *                 for p in peers[lastAS]:
  *                     if (p.first == ASN):             # <<<<<<<<<<<<<<
@@ -8262,7 +8493,7 @@ static void __pyx_f_2AS_2AS_announceTo(int __pyx_v_ASN, int __pyx_v_peerASN, std
         __pyx_t_4 = (__pyx_v_p.first == __pyx_v_ASN);
         if (__pyx_t_4) {
 
-          /* "AS.pyx":355
+          /* "AS.pyx":360
  *                 for p in peers[lastAS]:
  *                     if (p.first == ASN):
  *                         lastPeer = p             # <<<<<<<<<<<<<<
@@ -8271,7 +8502,7 @@ static void __pyx_f_2AS_2AS_announceTo(int __pyx_v_ASN, int __pyx_v_peerASN, std
 */
           __pyx_v_lastPeer = __pyx_v_p;
 
-          /* "AS.pyx":356
+          /* "AS.pyx":361
  *                     if (p.first == ASN):
  *                         lastPeer = p
  *                         break             # <<<<<<<<<<<<<<
@@ -8280,7 +8511,7 @@ static void __pyx_f_2AS_2AS_announceTo(int __pyx_v_ASN, int __pyx_v_peerASN, std
 */
           goto __pyx_L12_break;
 
-          /* "AS.pyx":354
+          /* "AS.pyx":359
  * 
  *                 for p in peers[lastAS]:
  *                     if (p.first == ASN):             # <<<<<<<<<<<<<<
@@ -8289,7 +8520,7 @@ static void __pyx_f_2AS_2AS_announceTo(int __pyx_v_ASN, int __pyx_v_peerASN, std
 */
         }
 
-        /* "AS.pyx":353
+        /* "AS.pyx":358
  *                     continue
  * 
  *                 for p in peers[lastAS]:             # <<<<<<<<<<<<<<
@@ -8302,7 +8533,7 @@ static void __pyx_f_2AS_2AS_announceTo(int __pyx_v_ASN, int __pyx_v_peerASN, std
       goto __pyx_L14_for_end;
       __pyx_L14_for_end:;
 
-      /* "AS.pyx":358
+      /* "AS.pyx":363
  *                         break
  * 
  *                 route.get().prefix = rt.prefix             # <<<<<<<<<<<<<<
@@ -8312,7 +8543,7 @@ static void __pyx_f_2AS_2AS_announceTo(int __pyx_v_ASN, int __pyx_v_peerASN, std
       __pyx_t_7 = __pyx_v_rt->prefix;
       __pyx_v_route.get()->prefix = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_7);
 
-      /* "AS.pyx":360
+      /* "AS.pyx":365
  *                 route.get().prefix = rt.prefix
  * 
  *                 message = AS.filterOut(ASN, peer, lastPeer, route)             # <<<<<<<<<<<<<<
@@ -8323,7 +8554,7 @@ static void __pyx_f_2AS_2AS_announceTo(int __pyx_v_ASN, int __pyx_v_peerASN, std
     }
     __pyx_L9:;
 
-    /* "AS.pyx":362
+    /* "AS.pyx":367
  *                 message = AS.filterOut(ASN, peer, lastPeer, route)
  * 
  *             if (message == NULL):             # <<<<<<<<<<<<<<
@@ -8333,7 +8564,7 @@ static void __pyx_f_2AS_2AS_announceTo(int __pyx_v_ASN, int __pyx_v_peerASN, std
     __pyx_t_4 = ((__pyx_v_message == NULL) != 0);
     if (__pyx_t_4) {
 
-      /* "AS.pyx":363
+      /* "AS.pyx":368
  * 
  *             if (message == NULL):
  *                 message = make_shared[Message](Message("X", peer, ASN, rt.prefix))             # <<<<<<<<<<<<<<
@@ -8344,11 +8575,11 @@ static void __pyx_f_2AS_2AS_announceTo(int __pyx_v_ASN, int __pyx_v_peerASN, std
         __pyx_t_8 = std::make_shared<Message>(Message(((char *)"X"), __pyx_v_peer, __pyx_v_ASN, __pyx_v_rt->prefix));
       } catch(...) {
         __Pyx_CppExn2PyErr();
-        __PYX_ERR(0, 363, __pyx_L1_error)
+        __PYX_ERR(0, 368, __pyx_L1_error)
       }
       __pyx_v_message = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_8);
 
-      /* "AS.pyx":362
+      /* "AS.pyx":367
  *                 message = AS.filterOut(ASN, peer, lastPeer, route)
  * 
  *             if (message == NULL):             # <<<<<<<<<<<<<<
@@ -8357,7 +8588,7 @@ static void __pyx_f_2AS_2AS_announceTo(int __pyx_v_ASN, int __pyx_v_peerASN, std
 */
     }
 
-    /* "AS.pyx":365
+    /* "AS.pyx":370
  *                 message = make_shared[Message](Message("X", peer, ASN, rt.prefix))
  * 
  *             processor.addMessage(message)             # <<<<<<<<<<<<<<
@@ -8366,7 +8597,7 @@ static void __pyx_f_2AS_2AS_announceTo(int __pyx_v_ASN, int __pyx_v_peerASN, std
 */
     ((struct __pyx_vtabstruct_9Processor_Processor *)__pyx_v_processor->__pyx_vtab)->addMessage(__pyx_v_processor, __pyx_v_message);
 
-    /* "AS.pyx":339
+    /* "AS.pyx":344
  *         locks[ASN].unlock()
  * 
  *         for route in routes:             # <<<<<<<<<<<<<<
@@ -8376,7 +8607,7 @@ static void __pyx_f_2AS_2AS_announceTo(int __pyx_v_ASN, int __pyx_v_peerASN, std
     __pyx_L7_continue:;
   }
 
-  /* "AS.pyx":320
+  /* "AS.pyx":325
  *             processor.addMessage(message)
  * 
  *     @staticmethod             # <<<<<<<<<<<<<<
@@ -8391,7 +8622,7 @@ static void __pyx_f_2AS_2AS_announceTo(int __pyx_v_ASN, int __pyx_v_peerASN, std
   __pyx_L0:;
 }
 
-/* "AS.pyx":367
+/* "AS.pyx":372
  *             processor.addMessage(message)
  * 
  *     @staticmethod             # <<<<<<<<<<<<<<
@@ -8407,7 +8638,7 @@ static void __pyx_f_2AS_2AS_store(int __pyx_v_ASN, struct __pyx_obj_9Processor_P
   int __pyx_clineno = 0;
   PyGILState_STATE __pyx_gilstate_save;
 
-  /* "AS.pyx":372
+  /* "AS.pyx":377
  *             shared_ptr[Message] message
  * 
  *         message = make_shared[Message](Message("S", ASN))             # <<<<<<<<<<<<<<
@@ -8420,11 +8651,11 @@ static void __pyx_f_2AS_2AS_store(int __pyx_v_ASN, struct __pyx_obj_9Processor_P
     PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
     __Pyx_CppExn2PyErr();
     __Pyx_PyGILState_Release(__pyx_gilstate_save);
-    __PYX_ERR(0, 372, __pyx_L1_error)
+    __PYX_ERR(0, 377, __pyx_L1_error)
   }
   __pyx_v_message = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_1);
 
-  /* "AS.pyx":373
+  /* "AS.pyx":378
  * 
  *         message = make_shared[Message](Message("S", ASN))
  *         processor.addMessage(message)             # <<<<<<<<<<<<<<
@@ -8433,7 +8664,7 @@ static void __pyx_f_2AS_2AS_store(int __pyx_v_ASN, struct __pyx_obj_9Processor_P
 */
   ((struct __pyx_vtabstruct_9Processor_Processor *)__pyx_v_processor->__pyx_vtab)->addMessage(__pyx_v_processor, __pyx_v_message);
 
-  /* "AS.pyx":367
+  /* "AS.pyx":372
  *             processor.addMessage(message)
  * 
  *     @staticmethod             # <<<<<<<<<<<<<<
@@ -8450,7 +8681,7 @@ static void __pyx_f_2AS_2AS_store(int __pyx_v_ASN, struct __pyx_obj_9Processor_P
   __pyx_L0:;
 }
 
-/* "AS.pyx":375
+/* "AS.pyx":380
  *         processor.addMessage(message)
  * 
  *     @staticmethod             # <<<<<<<<<<<<<<
@@ -8466,7 +8697,7 @@ static void __pyx_f_2AS_2AS_fetch(int __pyx_v_ASN, std::vector<std::string>  con
   int __pyx_clineno = 0;
   PyGILState_STATE __pyx_gilstate_save;
 
-  /* "AS.pyx":380
+  /* "AS.pyx":385
  *             shared_ptr[Message] message
  * 
  *         message = make_shared[Message](Message("F", ASN, prefixes))             # <<<<<<<<<<<<<<
@@ -8479,11 +8710,11 @@ static void __pyx_f_2AS_2AS_fetch(int __pyx_v_ASN, std::vector<std::string>  con
     PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
     __Pyx_CppExn2PyErr();
     __Pyx_PyGILState_Release(__pyx_gilstate_save);
-    __PYX_ERR(0, 380, __pyx_L1_error)
+    __PYX_ERR(0, 385, __pyx_L1_error)
   }
   __pyx_v_message = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_1);
 
-  /* "AS.pyx":381
+  /* "AS.pyx":386
  * 
  *         message = make_shared[Message](Message("F", ASN, prefixes))
  *         processor.addMessage(message)             # <<<<<<<<<<<<<<
@@ -8492,7 +8723,7 @@ static void __pyx_f_2AS_2AS_fetch(int __pyx_v_ASN, std::vector<std::string>  con
 */
   ((struct __pyx_vtabstruct_9Processor_Processor *)__pyx_v_processor->__pyx_vtab)->addMessage(__pyx_v_processor, __pyx_v_message);
 
-  /* "AS.pyx":375
+  /* "AS.pyx":380
  *         processor.addMessage(message)
  * 
  *     @staticmethod             # <<<<<<<<<<<<<<
@@ -8509,7 +8740,7 @@ static void __pyx_f_2AS_2AS_fetch(int __pyx_v_ASN, std::vector<std::string>  con
   __pyx_L0:;
 }
 
-/* "AS.pyx":383
+/* "AS.pyx":388
  *         processor.addMessage(message)
  * 
  *     @staticmethod             # <<<<<<<<<<<<<<
@@ -8523,7 +8754,7 @@ static char *__pyx_f_2AS_2AS_strtokX(char *__pyx_v_str, char const *__pyx_v_deli
   int __pyx_t_1;
   int __pyx_t_2;
 
-  /* "AS.pyx":388
+  /* "AS.pyx":393
  * 
  *         # If the str is empty, processing the last string
  *         if str == NULL:             # <<<<<<<<<<<<<<
@@ -8533,7 +8764,7 @@ static char *__pyx_f_2AS_2AS_strtokX(char *__pyx_v_str, char const *__pyx_v_deli
   __pyx_t_1 = (__pyx_v_str == NULL);
   if (__pyx_t_1) {
 
-    /* "AS.pyx":389
+    /* "AS.pyx":394
  *         # If the str is empty, processing the last string
  *         if str == NULL:
  *             str = savePtr[0]             # <<<<<<<<<<<<<<
@@ -8542,7 +8773,7 @@ static char *__pyx_f_2AS_2AS_strtokX(char *__pyx_v_str, char const *__pyx_v_deli
 */
     __pyx_v_str = (__pyx_v_savePtr[0]);
 
-    /* "AS.pyx":388
+    /* "AS.pyx":393
  * 
  *         # If the str is empty, processing the last string
  *         if str == NULL:             # <<<<<<<<<<<<<<
@@ -8551,7 +8782,7 @@ static char *__pyx_f_2AS_2AS_strtokX(char *__pyx_v_str, char const *__pyx_v_deli
 */
   }
 
-  /* "AS.pyx":390
+  /* "AS.pyx":395
  *         if str == NULL:
  *             str = savePtr[0]
  *         if not str:             # <<<<<<<<<<<<<<
@@ -8561,7 +8792,7 @@ static char *__pyx_f_2AS_2AS_strtokX(char *__pyx_v_str, char const *__pyx_v_deli
   __pyx_t_1 = (!(__pyx_v_str != 0));
   if (__pyx_t_1) {
 
-    /* "AS.pyx":391
+    /* "AS.pyx":396
  *             str = savePtr[0]
  *         if not str:
  *             return NULL             # <<<<<<<<<<<<<<
@@ -8571,7 +8802,7 @@ static char *__pyx_f_2AS_2AS_strtokX(char *__pyx_v_str, char const *__pyx_v_deli
     __pyx_r = NULL;
     goto __pyx_L0;
 
-    /* "AS.pyx":390
+    /* "AS.pyx":395
  *         if str == NULL:
  *             str = savePtr[0]
  *         if not str:             # <<<<<<<<<<<<<<
@@ -8580,7 +8811,7 @@ static char *__pyx_f_2AS_2AS_strtokX(char *__pyx_v_str, char const *__pyx_v_deli
 */
   }
 
-  /* "AS.pyx":394
+  /* "AS.pyx":399
  * 
  *         # Skip characters in delim
  *         while str[0] and strchr(delim, str[0]):             # <<<<<<<<<<<<<<
@@ -8599,7 +8830,7 @@ static char *__pyx_f_2AS_2AS_strtokX(char *__pyx_v_str, char const *__pyx_v_deli
     __pyx_L7_bool_binop_done:;
     if (!__pyx_t_1) break;
 
-    /* "AS.pyx":395
+    /* "AS.pyx":400
  *         # Skip characters in delim
  *         while str[0] and strchr(delim, str[0]):
  *             str += 1             # <<<<<<<<<<<<<<
@@ -8609,7 +8840,7 @@ static char *__pyx_f_2AS_2AS_strtokX(char *__pyx_v_str, char const *__pyx_v_deli
     __pyx_v_str = (__pyx_v_str + 1);
   }
 
-  /* "AS.pyx":398
+  /* "AS.pyx":403
  * 
  *         # If the end of the string is reached, NULL is returned.
  *         if not str[0]:             # <<<<<<<<<<<<<<
@@ -8619,7 +8850,7 @@ static char *__pyx_f_2AS_2AS_strtokX(char *__pyx_v_str, char const *__pyx_v_deli
   __pyx_t_1 = (!((__pyx_v_str[0]) != 0));
   if (__pyx_t_1) {
 
-    /* "AS.pyx":399
+    /* "AS.pyx":404
  *         # If the end of the string is reached, NULL is returned.
  *         if not str[0]:
  *             return NULL             # <<<<<<<<<<<<<<
@@ -8629,7 +8860,7 @@ static char *__pyx_f_2AS_2AS_strtokX(char *__pyx_v_str, char const *__pyx_v_deli
     __pyx_r = NULL;
     goto __pyx_L0;
 
-    /* "AS.pyx":398
+    /* "AS.pyx":403
  * 
  *         # If the end of the string is reached, NULL is returned.
  *         if not str[0]:             # <<<<<<<<<<<<<<
@@ -8638,7 +8869,7 @@ static char *__pyx_f_2AS_2AS_strtokX(char *__pyx_v_str, char const *__pyx_v_deli
 */
   }
 
-  /* "AS.pyx":402
+  /* "AS.pyx":407
  * 
  *         # Find the delimiter or end of string
  *         end = str             # <<<<<<<<<<<<<<
@@ -8647,7 +8878,7 @@ static char *__pyx_f_2AS_2AS_strtokX(char *__pyx_v_str, char const *__pyx_v_deli
 */
   __pyx_v_end = __pyx_v_str;
 
-  /* "AS.pyx":403
+  /* "AS.pyx":408
  *         # Find the delimiter or end of string
  *         end = str
  *         while end[0] and not strchr(delim, end[0]):             # <<<<<<<<<<<<<<
@@ -8666,7 +8897,7 @@ static char *__pyx_f_2AS_2AS_strtokX(char *__pyx_v_str, char const *__pyx_v_deli
     __pyx_L12_bool_binop_done:;
     if (!__pyx_t_1) break;
 
-    /* "AS.pyx":404
+    /* "AS.pyx":409
  *         end = str
  *         while end[0] and not strchr(delim, end[0]):
  *             end += 1             # <<<<<<<<<<<<<<
@@ -8676,7 +8907,7 @@ static char *__pyx_f_2AS_2AS_strtokX(char *__pyx_v_str, char const *__pyx_v_deli
     __pyx_v_end = (__pyx_v_end + 1);
   }
 
-  /* "AS.pyx":407
+  /* "AS.pyx":412
  * 
  *         # If the end of the string is reached, set savePtr to NULL
  *         if not end[0]:             # <<<<<<<<<<<<<<
@@ -8686,7 +8917,7 @@ static char *__pyx_f_2AS_2AS_strtokX(char *__pyx_v_str, char const *__pyx_v_deli
   __pyx_t_1 = (!((__pyx_v_end[0]) != 0));
   if (__pyx_t_1) {
 
-    /* "AS.pyx":408
+    /* "AS.pyx":413
  *         # If the end of the string is reached, set savePtr to NULL
  *         if not end[0]:
  *             savePtr[0] = NULL             # <<<<<<<<<<<<<<
@@ -8695,7 +8926,7 @@ static char *__pyx_f_2AS_2AS_strtokX(char *__pyx_v_str, char const *__pyx_v_deli
 */
     (__pyx_v_savePtr[0]) = NULL;
 
-    /* "AS.pyx":407
+    /* "AS.pyx":412
  * 
  *         # If the end of the string is reached, set savePtr to NULL
  *         if not end[0]:             # <<<<<<<<<<<<<<
@@ -8705,7 +8936,7 @@ static char *__pyx_f_2AS_2AS_strtokX(char *__pyx_v_str, char const *__pyx_v_deli
     goto __pyx_L14;
   }
 
-  /* "AS.pyx":410
+  /* "AS.pyx":415
  *             savePtr[0] = NULL
  *         else:
  *             end[0] = '\0'             # <<<<<<<<<<<<<<
@@ -8715,7 +8946,7 @@ static char *__pyx_f_2AS_2AS_strtokX(char *__pyx_v_str, char const *__pyx_v_deli
   /*else*/ {
     (__pyx_v_end[0]) = '\x00';
 
-    /* "AS.pyx":411
+    /* "AS.pyx":416
  *         else:
  *             end[0] = '\0'
  *             savePtr[0] = end + 1             # <<<<<<<<<<<<<<
@@ -8726,7 +8957,7 @@ static char *__pyx_f_2AS_2AS_strtokX(char *__pyx_v_str, char const *__pyx_v_deli
   }
   __pyx_L14:;
 
-  /* "AS.pyx":413
+  /* "AS.pyx":418
  *             savePtr[0] = end + 1
  * 
  *         return str             # <<<<<<<<<<<<<<
@@ -8736,7 +8967,7 @@ static char *__pyx_f_2AS_2AS_strtokX(char *__pyx_v_str, char const *__pyx_v_deli
   __pyx_r = __pyx_v_str;
   goto __pyx_L0;
 
-  /* "AS.pyx":383
+  /* "AS.pyx":388
  *         processor.addMessage(message)
  * 
  *     @staticmethod             # <<<<<<<<<<<<<<
@@ -8749,7 +8980,7 @@ static char *__pyx_f_2AS_2AS_strtokX(char *__pyx_v_str, char const *__pyx_v_deli
   return __pyx_r;
 }
 
-/* "AS.pyx":415
+/* "AS.pyx":420
  *         return str
  * 
  *     @staticmethod             # <<<<<<<<<<<<<<
@@ -8766,7 +8997,7 @@ static bool __pyx_f_2AS_2AS_inASPath(std::string const &__pyx_v_ASN, std::string
   bool __pyx_r;
   int __pyx_t_1;
 
-  /* "AS.pyx":419
+  /* "AS.pyx":424
  *         cdef:
  *             char* token
  *             const char* cASN = ASN.c_str()             # <<<<<<<<<<<<<<
@@ -8775,7 +9006,7 @@ static bool __pyx_f_2AS_2AS_inASPath(std::string const &__pyx_v_ASN, std::string
 */
   __pyx_v_cASN = __pyx_v_ASN.c_str();
 
-  /* "AS.pyx":420
+  /* "AS.pyx":425
  *             char* token
  *             const char* cASN = ASN.c_str()
  *             const char* cASPath = ASPath.c_str()             # <<<<<<<<<<<<<<
@@ -8784,7 +9015,7 @@ static bool __pyx_f_2AS_2AS_inASPath(std::string const &__pyx_v_ASN, std::string
 */
   __pyx_v_cASPath = __pyx_v_ASPath.c_str();
 
-  /* "AS.pyx":421
+  /* "AS.pyx":426
  *             const char* cASN = ASN.c_str()
  *             const char* cASPath = ASPath.c_str()
  *             char* savePtr = NULL             # <<<<<<<<<<<<<<
@@ -8793,7 +9024,7 @@ static bool __pyx_f_2AS_2AS_inASPath(std::string const &__pyx_v_ASN, std::string
 */
   __pyx_v_savePtr = NULL;
 
-  /* "AS.pyx":422
+  /* "AS.pyx":427
  *             const char* cASPath = ASPath.c_str()
  *             char* savePtr = NULL
  *             char* tmp = strdup(cASPath)             # <<<<<<<<<<<<<<
@@ -8802,7 +9033,7 @@ static bool __pyx_f_2AS_2AS_inASPath(std::string const &__pyx_v_ASN, std::string
 */
   __pyx_v_tmp = strdup(__pyx_v_cASPath);
 
-  /* "AS.pyx":425
+  /* "AS.pyx":430
  * 
  *         # Splitting the string
  *         token = AS.strtokX(tmp, " ", &savePtr)             # <<<<<<<<<<<<<<
@@ -8811,7 +9042,7 @@ static bool __pyx_f_2AS_2AS_inASPath(std::string const &__pyx_v_ASN, std::string
 */
   __pyx_v_token = __pyx_f_2AS_2AS_strtokX(__pyx_v_tmp, __pyx_k__4, (&__pyx_v_savePtr));
 
-  /* "AS.pyx":427
+  /* "AS.pyx":432
  *         token = AS.strtokX(tmp, " ", &savePtr)
  * 
  *         while token != NULL:             # <<<<<<<<<<<<<<
@@ -8822,7 +9053,7 @@ static bool __pyx_f_2AS_2AS_inASPath(std::string const &__pyx_v_ASN, std::string
     __pyx_t_1 = (__pyx_v_token != NULL);
     if (!__pyx_t_1) break;
 
-    /* "AS.pyx":428
+    /* "AS.pyx":433
  * 
  *         while token != NULL:
  *             if strcmp(token, cASN) == 0:             # <<<<<<<<<<<<<<
@@ -8832,7 +9063,7 @@ static bool __pyx_f_2AS_2AS_inASPath(std::string const &__pyx_v_ASN, std::string
     __pyx_t_1 = (strcmp(__pyx_v_token, __pyx_v_cASN) == 0);
     if (__pyx_t_1) {
 
-      /* "AS.pyx":429
+      /* "AS.pyx":434
  *         while token != NULL:
  *             if strcmp(token, cASN) == 0:
  *                 free(tmp)             # <<<<<<<<<<<<<<
@@ -8841,7 +9072,7 @@ static bool __pyx_f_2AS_2AS_inASPath(std::string const &__pyx_v_ASN, std::string
 */
       free(__pyx_v_tmp);
 
-      /* "AS.pyx":430
+      /* "AS.pyx":435
  *             if strcmp(token, cASN) == 0:
  *                 free(tmp)
  *                 return True             # <<<<<<<<<<<<<<
@@ -8851,7 +9082,7 @@ static bool __pyx_f_2AS_2AS_inASPath(std::string const &__pyx_v_ASN, std::string
       __pyx_r = 1;
       goto __pyx_L0;
 
-      /* "AS.pyx":428
+      /* "AS.pyx":433
  * 
  *         while token != NULL:
  *             if strcmp(token, cASN) == 0:             # <<<<<<<<<<<<<<
@@ -8860,7 +9091,7 @@ static bool __pyx_f_2AS_2AS_inASPath(std::string const &__pyx_v_ASN, std::string
 */
     }
 
-    /* "AS.pyx":432
+    /* "AS.pyx":437
  *                 return True
  * 
  *             token = AS.strtokX(NULL, " ", &savePtr)             # <<<<<<<<<<<<<<
@@ -8870,7 +9101,7 @@ static bool __pyx_f_2AS_2AS_inASPath(std::string const &__pyx_v_ASN, std::string
     __pyx_v_token = __pyx_f_2AS_2AS_strtokX(NULL, __pyx_k__4, (&__pyx_v_savePtr));
   }
 
-  /* "AS.pyx":434
+  /* "AS.pyx":439
  *             token = AS.strtokX(NULL, " ", &savePtr)
  * 
  *         free(tmp)             # <<<<<<<<<<<<<<
@@ -8879,7 +9110,7 @@ static bool __pyx_f_2AS_2AS_inASPath(std::string const &__pyx_v_ASN, std::string
 */
   free(__pyx_v_tmp);
 
-  /* "AS.pyx":436
+  /* "AS.pyx":441
  *         free(tmp)
  * 
  *         return False             # <<<<<<<<<<<<<<
@@ -8889,7 +9120,7 @@ static bool __pyx_f_2AS_2AS_inASPath(std::string const &__pyx_v_ASN, std::string
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "AS.pyx":415
+  /* "AS.pyx":420
  *         return str
  * 
  *     @staticmethod             # <<<<<<<<<<<<<<
@@ -8902,7 +9133,7 @@ static bool __pyx_f_2AS_2AS_inASPath(std::string const &__pyx_v_ASN, std::string
   return __pyx_r;
 }
 
-/* "AS.pyx":438
+/* "AS.pyx":443
  *         return False
  * 
  *     @staticmethod             # <<<<<<<<<<<<<<
@@ -8919,7 +9150,7 @@ static bool __pyx_f_2AS_2AS_inCommunity(std::string const &__pyx_v_community, st
   bool __pyx_r;
   int __pyx_t_1;
 
-  /* "AS.pyx":442
+  /* "AS.pyx":447
  *         cdef:
  *             char* token
  *             const char* cCommunity = community.c_str()             # <<<<<<<<<<<<<<
@@ -8928,7 +9159,7 @@ static bool __pyx_f_2AS_2AS_inCommunity(std::string const &__pyx_v_community, st
 */
   __pyx_v_cCommunity = __pyx_v_community.c_str();
 
-  /* "AS.pyx":443
+  /* "AS.pyx":448
  *             char* token
  *             const char* cCommunity = community.c_str()
  *             const char* cCommunitySet = communitySet.c_str()             # <<<<<<<<<<<<<<
@@ -8937,7 +9168,7 @@ static bool __pyx_f_2AS_2AS_inCommunity(std::string const &__pyx_v_community, st
 */
   __pyx_v_cCommunitySet = __pyx_v_communitySet.c_str();
 
-  /* "AS.pyx":444
+  /* "AS.pyx":449
  *             const char* cCommunity = community.c_str()
  *             const char* cCommunitySet = communitySet.c_str()
  *             char* savePtr = NULL             # <<<<<<<<<<<<<<
@@ -8946,7 +9177,7 @@ static bool __pyx_f_2AS_2AS_inCommunity(std::string const &__pyx_v_community, st
 */
   __pyx_v_savePtr = NULL;
 
-  /* "AS.pyx":445
+  /* "AS.pyx":450
  *             const char* cCommunitySet = communitySet.c_str()
  *             char* savePtr = NULL
  *             char* tmp = strdup(cCommunitySet)             # <<<<<<<<<<<<<<
@@ -8955,7 +9186,7 @@ static bool __pyx_f_2AS_2AS_inCommunity(std::string const &__pyx_v_community, st
 */
   __pyx_v_tmp = strdup(__pyx_v_cCommunitySet);
 
-  /* "AS.pyx":448
+  /* "AS.pyx":453
  * 
  *         # Splitting the string
  *         token = AS.strtokX(tmp, " ", &savePtr)             # <<<<<<<<<<<<<<
@@ -8964,7 +9195,7 @@ static bool __pyx_f_2AS_2AS_inCommunity(std::string const &__pyx_v_community, st
 */
   __pyx_v_token = __pyx_f_2AS_2AS_strtokX(__pyx_v_tmp, __pyx_k__4, (&__pyx_v_savePtr));
 
-  /* "AS.pyx":450
+  /* "AS.pyx":455
  *         token = AS.strtokX(tmp, " ", &savePtr)
  * 
  *         while token != NULL:             # <<<<<<<<<<<<<<
@@ -8975,7 +9206,7 @@ static bool __pyx_f_2AS_2AS_inCommunity(std::string const &__pyx_v_community, st
     __pyx_t_1 = (__pyx_v_token != NULL);
     if (!__pyx_t_1) break;
 
-    /* "AS.pyx":451
+    /* "AS.pyx":456
  * 
  *         while token != NULL:
  *             if strcmp(token, cCommunity) == 0:             # <<<<<<<<<<<<<<
@@ -8985,7 +9216,7 @@ static bool __pyx_f_2AS_2AS_inCommunity(std::string const &__pyx_v_community, st
     __pyx_t_1 = (strcmp(__pyx_v_token, __pyx_v_cCommunity) == 0);
     if (__pyx_t_1) {
 
-      /* "AS.pyx":452
+      /* "AS.pyx":457
  *         while token != NULL:
  *             if strcmp(token, cCommunity) == 0:
  *                 free(tmp)             # <<<<<<<<<<<<<<
@@ -8994,7 +9225,7 @@ static bool __pyx_f_2AS_2AS_inCommunity(std::string const &__pyx_v_community, st
 */
       free(__pyx_v_tmp);
 
-      /* "AS.pyx":453
+      /* "AS.pyx":458
  *             if strcmp(token, cCommunity) == 0:
  *                 free(tmp)
  *                 return True             # <<<<<<<<<<<<<<
@@ -9004,7 +9235,7 @@ static bool __pyx_f_2AS_2AS_inCommunity(std::string const &__pyx_v_community, st
       __pyx_r = 1;
       goto __pyx_L0;
 
-      /* "AS.pyx":451
+      /* "AS.pyx":456
  * 
  *         while token != NULL:
  *             if strcmp(token, cCommunity) == 0:             # <<<<<<<<<<<<<<
@@ -9013,7 +9244,7 @@ static bool __pyx_f_2AS_2AS_inCommunity(std::string const &__pyx_v_community, st
 */
     }
 
-    /* "AS.pyx":455
+    /* "AS.pyx":460
  *                 return True
  * 
  *             token = AS.strtokX(NULL, " ", &savePtr)             # <<<<<<<<<<<<<<
@@ -9023,7 +9254,7 @@ static bool __pyx_f_2AS_2AS_inCommunity(std::string const &__pyx_v_community, st
     __pyx_v_token = __pyx_f_2AS_2AS_strtokX(NULL, __pyx_k__4, (&__pyx_v_savePtr));
   }
 
-  /* "AS.pyx":457
+  /* "AS.pyx":462
  *             token = AS.strtokX(NULL, " ", &savePtr)
  * 
  *         free(tmp)             # <<<<<<<<<<<<<<
@@ -9032,7 +9263,7 @@ static bool __pyx_f_2AS_2AS_inCommunity(std::string const &__pyx_v_community, st
 */
   free(__pyx_v_tmp);
 
-  /* "AS.pyx":459
+  /* "AS.pyx":464
  *         free(tmp)
  * 
  *         return False             # <<<<<<<<<<<<<<
@@ -9042,7 +9273,7 @@ static bool __pyx_f_2AS_2AS_inCommunity(std::string const &__pyx_v_community, st
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "AS.pyx":438
+  /* "AS.pyx":443
  *         return False
  * 
  *     @staticmethod             # <<<<<<<<<<<<<<
@@ -9055,7 +9286,7 @@ static bool __pyx_f_2AS_2AS_inCommunity(std::string const &__pyx_v_community, st
   return __pyx_r;
 }
 
-/* "AS.pyx":461
+/* "AS.pyx":466
  *         return False
  * 
  *     @staticmethod             # <<<<<<<<<<<<<<
@@ -9080,7 +9311,7 @@ static std::string __pyx_f_2AS_2AS_removeCommunity(std::string const &__pyx_v_co
   int __pyx_clineno = 0;
   PyGILState_STATE __pyx_gilstate_save;
 
-  /* "AS.pyx":465
+  /* "AS.pyx":470
  *         cdef:
  *             char* token
  *             string result = string("")             # <<<<<<<<<<<<<<
@@ -9093,11 +9324,11 @@ static std::string __pyx_f_2AS_2AS_removeCommunity(std::string const &__pyx_v_co
     PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
     __Pyx_CppExn2PyErr();
     __Pyx_PyGILState_Release(__pyx_gilstate_save);
-    __PYX_ERR(0, 465, __pyx_L1_error)
+    __PYX_ERR(0, 470, __pyx_L1_error)
   }
   __pyx_v_result = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_1);
 
-  /* "AS.pyx":466
+  /* "AS.pyx":471
  *             char* token
  *             string result = string("")
  *             const char* cCommunity = community.c_str()             # <<<<<<<<<<<<<<
@@ -9106,7 +9337,7 @@ static std::string __pyx_f_2AS_2AS_removeCommunity(std::string const &__pyx_v_co
 */
   __pyx_v_cCommunity = __pyx_v_community.c_str();
 
-  /* "AS.pyx":467
+  /* "AS.pyx":472
  *             string result = string("")
  *             const char* cCommunity = community.c_str()
  *             const char* cTarget = target.c_str()             # <<<<<<<<<<<<<<
@@ -9115,7 +9346,7 @@ static std::string __pyx_f_2AS_2AS_removeCommunity(std::string const &__pyx_v_co
 */
   __pyx_v_cTarget = __pyx_v_target.c_str();
 
-  /* "AS.pyx":468
+  /* "AS.pyx":473
  *             const char* cCommunity = community.c_str()
  *             const char* cTarget = target.c_str()
  *             char* savePtr = NULL             # <<<<<<<<<<<<<<
@@ -9124,7 +9355,7 @@ static std::string __pyx_f_2AS_2AS_removeCommunity(std::string const &__pyx_v_co
 */
   __pyx_v_savePtr = NULL;
 
-  /* "AS.pyx":469
+  /* "AS.pyx":474
  *             const char* cTarget = target.c_str()
  *             char* savePtr = NULL
  *             char* tmp = strdup(cCommunity)             # <<<<<<<<<<<<<<
@@ -9133,7 +9364,7 @@ static std::string __pyx_f_2AS_2AS_removeCommunity(std::string const &__pyx_v_co
 */
   __pyx_v_tmp = strdup(__pyx_v_cCommunity);
 
-  /* "AS.pyx":472
+  /* "AS.pyx":477
  * 
  *         # Splitting the string
  *         token = AS.strtokX(tmp, " ", &savePtr)             # <<<<<<<<<<<<<<
@@ -9142,7 +9373,7 @@ static std::string __pyx_f_2AS_2AS_removeCommunity(std::string const &__pyx_v_co
 */
   __pyx_v_token = __pyx_f_2AS_2AS_strtokX(__pyx_v_tmp, __pyx_k__4, (&__pyx_v_savePtr));
 
-  /* "AS.pyx":474
+  /* "AS.pyx":479
  *         token = AS.strtokX(tmp, " ", &savePtr)
  * 
  *         while token != NULL:             # <<<<<<<<<<<<<<
@@ -9153,7 +9384,7 @@ static std::string __pyx_f_2AS_2AS_removeCommunity(std::string const &__pyx_v_co
     __pyx_t_2 = (__pyx_v_token != NULL);
     if (!__pyx_t_2) break;
 
-    /* "AS.pyx":475
+    /* "AS.pyx":480
  * 
  *         while token != NULL:
  *             if strcmp(token, cTarget) != 0:             # <<<<<<<<<<<<<<
@@ -9163,7 +9394,7 @@ static std::string __pyx_f_2AS_2AS_removeCommunity(std::string const &__pyx_v_co
     __pyx_t_2 = (strcmp(__pyx_v_token, __pyx_v_cTarget) != 0);
     if (__pyx_t_2) {
 
-      /* "AS.pyx":476
+      /* "AS.pyx":481
  *         while token != NULL:
  *             if strcmp(token, cTarget) != 0:
  *                 if (result == ""):             # <<<<<<<<<<<<<<
@@ -9173,7 +9404,7 @@ static std::string __pyx_f_2AS_2AS_removeCommunity(std::string const &__pyx_v_co
       __pyx_t_2 = (__pyx_v_result == __pyx_k_);
       if (__pyx_t_2) {
 
-        /* "AS.pyx":477
+        /* "AS.pyx":482
  *             if strcmp(token, cTarget) != 0:
  *                 if (result == ""):
  *                     result = string(token)             # <<<<<<<<<<<<<<
@@ -9186,11 +9417,11 @@ static std::string __pyx_f_2AS_2AS_removeCommunity(std::string const &__pyx_v_co
           PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
           __Pyx_CppExn2PyErr();
           __Pyx_PyGILState_Release(__pyx_gilstate_save);
-          __PYX_ERR(0, 477, __pyx_L1_error)
+          __PYX_ERR(0, 482, __pyx_L1_error)
         }
         __pyx_v_result = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_1);
 
-        /* "AS.pyx":476
+        /* "AS.pyx":481
  *         while token != NULL:
  *             if strcmp(token, cTarget) != 0:
  *                 if (result == ""):             # <<<<<<<<<<<<<<
@@ -9200,7 +9431,7 @@ static std::string __pyx_f_2AS_2AS_removeCommunity(std::string const &__pyx_v_co
         goto __pyx_L6;
       }
 
-      /* "AS.pyx":479
+      /* "AS.pyx":484
  *                     result = string(token)
  *                 else:
  *                     result += string(" ") + string(token)             # <<<<<<<<<<<<<<
@@ -9214,7 +9445,7 @@ static std::string __pyx_f_2AS_2AS_removeCommunity(std::string const &__pyx_v_co
           PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
           __Pyx_CppExn2PyErr();
           __Pyx_PyGILState_Release(__pyx_gilstate_save);
-          __PYX_ERR(0, 479, __pyx_L1_error)
+          __PYX_ERR(0, 484, __pyx_L1_error)
         }
         try {
           __pyx_t_3 = std::string(__pyx_v_token);
@@ -9222,7 +9453,7 @@ static std::string __pyx_f_2AS_2AS_removeCommunity(std::string const &__pyx_v_co
           PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
           __Pyx_CppExn2PyErr();
           __Pyx_PyGILState_Release(__pyx_gilstate_save);
-          __PYX_ERR(0, 479, __pyx_L1_error)
+          __PYX_ERR(0, 484, __pyx_L1_error)
         }
         try {
           __pyx_t_4 = (__pyx_t_1 + __pyx_t_3);
@@ -9230,13 +9461,13 @@ static std::string __pyx_f_2AS_2AS_removeCommunity(std::string const &__pyx_v_co
           PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
           __Pyx_CppExn2PyErr();
           __Pyx_PyGILState_Release(__pyx_gilstate_save);
-          __PYX_ERR(0, 479, __pyx_L1_error)
+          __PYX_ERR(0, 484, __pyx_L1_error)
         }
         __pyx_v_result += __pyx_t_4;
       }
       __pyx_L6:;
 
-      /* "AS.pyx":475
+      /* "AS.pyx":480
  * 
  *         while token != NULL:
  *             if strcmp(token, cTarget) != 0:             # <<<<<<<<<<<<<<
@@ -9245,7 +9476,7 @@ static std::string __pyx_f_2AS_2AS_removeCommunity(std::string const &__pyx_v_co
 */
     }
 
-    /* "AS.pyx":481
+    /* "AS.pyx":486
  *                     result += string(" ") + string(token)
  * 
  *             token = AS.strtokX(NULL, " ", &savePtr)             # <<<<<<<<<<<<<<
@@ -9255,7 +9486,7 @@ static std::string __pyx_f_2AS_2AS_removeCommunity(std::string const &__pyx_v_co
     __pyx_v_token = __pyx_f_2AS_2AS_strtokX(NULL, __pyx_k__4, (&__pyx_v_savePtr));
   }
 
-  /* "AS.pyx":483
+  /* "AS.pyx":488
  *             token = AS.strtokX(NULL, " ", &savePtr)
  * 
  *         free(tmp)             # <<<<<<<<<<<<<<
@@ -9264,7 +9495,7 @@ static std::string __pyx_f_2AS_2AS_removeCommunity(std::string const &__pyx_v_co
 */
   free(__pyx_v_tmp);
 
-  /* "AS.pyx":485
+  /* "AS.pyx":490
  *         free(tmp)
  * 
  *         return result             # <<<<<<<<<<<<<<
@@ -9274,7 +9505,7 @@ static std::string __pyx_f_2AS_2AS_removeCommunity(std::string const &__pyx_v_co
   __pyx_r = __pyx_v_result;
   goto __pyx_L0;
 
-  /* "AS.pyx":461
+  /* "AS.pyx":466
  *         return False
  * 
  *     @staticmethod             # <<<<<<<<<<<<<<
@@ -9292,7 +9523,7 @@ static std::string __pyx_f_2AS_2AS_removeCommunity(std::string const &__pyx_v_co
   return __pyx_r;
 }
 
-/* "AS.pyx":487
+/* "AS.pyx":492
  *         return result
  * 
  *     @staticmethod             # <<<<<<<<<<<<<<
@@ -9324,7 +9555,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_inAction(std::forward_list<std::p
   int __pyx_clineno = 0;
   PyGILState_STATE __pyx_gilstate_save;
 
-  /* "AS.pyx":491
+  /* "AS.pyx":496
  *         cdef:
  *             shared_ptr[Route] route
  *             Message* message = msg.get()             # <<<<<<<<<<<<<<
@@ -9333,7 +9564,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_inAction(std::forward_list<std::p
 */
   __pyx_v_message = __pyx_v_msg.get();
 
-  /* "AS.pyx":493
+  /* "AS.pyx":498
  *             Message* message = msg.get()
  *             smatch result
  *             unsigned short localPref = 100             # <<<<<<<<<<<<<<
@@ -9342,7 +9573,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_inAction(std::forward_list<std::p
 */
   __pyx_v_localPref = 0x64;
 
-  /* "AS.pyx":494
+  /* "AS.pyx":499
  *             smatch result
  *             unsigned short localPref = 100
  *             string ASPath = message.ASPath             # <<<<<<<<<<<<<<
@@ -9352,7 +9583,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_inAction(std::forward_list<std::p
   __pyx_t_1 = __pyx_v_message->ASPath;
   __pyx_v_ASPath = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_1);
 
-  /* "AS.pyx":495
+  /* "AS.pyx":500
  *             unsigned short localPref = 100
  *             string ASPath = message.ASPath
  *             string community = message.community             # <<<<<<<<<<<<<<
@@ -9362,7 +9593,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_inAction(std::forward_list<std::p
   __pyx_t_1 = __pyx_v_message->community;
   __pyx_v_community = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_1);
 
-  /* "AS.pyx":497
+  /* "AS.pyx":502
  *             string community = message.community
  * 
  *         for action in actions:             # <<<<<<<<<<<<<<
@@ -9374,7 +9605,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_inAction(std::forward_list<std::p
     __pyx_t_3 = *__pyx_t_2;
     __pyx_v_action = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_3);
 
-    /* "AS.pyx":499
+    /* "AS.pyx":504
  *         for action in actions:
  * 
  *             if (action.first == ACCEPT):             # <<<<<<<<<<<<<<
@@ -9384,7 +9615,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_inAction(std::forward_list<std::p
     __pyx_t_4 = (__pyx_v_action.first == ACCEPT);
     if (__pyx_t_4) {
 
-      /* "AS.pyx":500
+      /* "AS.pyx":505
  * 
  *             if (action.first == ACCEPT):
  *                 break             # <<<<<<<<<<<<<<
@@ -9393,7 +9624,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_inAction(std::forward_list<std::p
 */
       goto __pyx_L4_break;
 
-      /* "AS.pyx":499
+      /* "AS.pyx":504
  *         for action in actions:
  * 
  *             if (action.first == ACCEPT):             # <<<<<<<<<<<<<<
@@ -9402,7 +9633,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_inAction(std::forward_list<std::p
 */
     }
 
-    /* "AS.pyx":502
+    /* "AS.pyx":507
  *                 break
  * 
  *             if (action.first == DENY):             # <<<<<<<<<<<<<<
@@ -9412,7 +9643,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_inAction(std::forward_list<std::p
     switch (__pyx_v_action.first) {
       case DENY:
 
-      /* "AS.pyx":504
+      /* "AS.pyx":509
  *             if (action.first == DENY):
  * 
  *                 return shared_ptr[Route]()             # <<<<<<<<<<<<<<
@@ -9422,7 +9653,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_inAction(std::forward_list<std::p
       __pyx_r = std::shared_ptr<Route> ();
       goto __pyx_L0;
 
-      /* "AS.pyx":502
+      /* "AS.pyx":507
  *                 break
  * 
  *             if (action.first == DENY):             # <<<<<<<<<<<<<<
@@ -9432,7 +9663,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_inAction(std::forward_list<std::p
       break;
       case LOCAL_PREF:
 
-      /* "AS.pyx":508
+      /* "AS.pyx":513
  *             elif (action.first == LOCAL_PREF):
  * 
  *                 localPref = stoi(action.second)             # <<<<<<<<<<<<<<
@@ -9445,11 +9676,11 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_inAction(std::forward_list<std::p
         PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
         __Pyx_CppExn2PyErr();
         __Pyx_PyGILState_Release(__pyx_gilstate_save);
-        __PYX_ERR(0, 508, __pyx_L1_error)
+        __PYX_ERR(0, 513, __pyx_L1_error)
       }
       __pyx_v_localPref = __pyx_t_5;
 
-      /* "AS.pyx":506
+      /* "AS.pyx":511
  *                 return shared_ptr[Route]()
  * 
  *             elif (action.first == LOCAL_PREF):             # <<<<<<<<<<<<<<
@@ -9459,7 +9690,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_inAction(std::forward_list<std::p
       break;
       case COMMUNITY_ADD:
 
-      /* "AS.pyx":512
+      /* "AS.pyx":517
  *             elif (action.first == COMMUNITY_ADD):
  * 
  *                 if (community != ""):             # <<<<<<<<<<<<<<
@@ -9469,7 +9700,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_inAction(std::forward_list<std::p
       __pyx_t_4 = (__pyx_v_community != __pyx_k_);
       if (__pyx_t_4) {
 
-        /* "AS.pyx":513
+        /* "AS.pyx":518
  * 
  *                 if (community != ""):
  *                     community += string(" ")             # <<<<<<<<<<<<<<
@@ -9482,11 +9713,11 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_inAction(std::forward_list<std::p
           PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
           __Pyx_CppExn2PyErr();
           __Pyx_PyGILState_Release(__pyx_gilstate_save);
-          __PYX_ERR(0, 513, __pyx_L1_error)
+          __PYX_ERR(0, 518, __pyx_L1_error)
         }
         __pyx_v_community += __pyx_t_1;
 
-        /* "AS.pyx":512
+        /* "AS.pyx":517
  *             elif (action.first == COMMUNITY_ADD):
  * 
  *                 if (community != ""):             # <<<<<<<<<<<<<<
@@ -9495,7 +9726,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_inAction(std::forward_list<std::p
 */
       }
 
-      /* "AS.pyx":514
+      /* "AS.pyx":519
  *                 if (community != ""):
  *                     community += string(" ")
  *                 community += action.second             # <<<<<<<<<<<<<<
@@ -9504,7 +9735,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_inAction(std::forward_list<std::p
 */
       __pyx_v_community += __pyx_v_action.second;
 
-      /* "AS.pyx":510
+      /* "AS.pyx":515
  *                 localPref = stoi(action.second)
  * 
  *             elif (action.first == COMMUNITY_ADD):             # <<<<<<<<<<<<<<
@@ -9514,7 +9745,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_inAction(std::forward_list<std::p
       break;
       case COMMUNITY_STRIP:
 
-      /* "AS.pyx":518
+      /* "AS.pyx":523
  *             elif (action.first == COMMUNITY_STRIP):
  * 
  *                 community = string("")             # <<<<<<<<<<<<<<
@@ -9527,11 +9758,11 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_inAction(std::forward_list<std::p
         PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
         __Pyx_CppExn2PyErr();
         __Pyx_PyGILState_Release(__pyx_gilstate_save);
-        __PYX_ERR(0, 518, __pyx_L1_error)
+        __PYX_ERR(0, 523, __pyx_L1_error)
       }
       __pyx_v_community = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_1);
 
-      /* "AS.pyx":516
+      /* "AS.pyx":521
  *                 community += action.second
  * 
  *             elif (action.first == COMMUNITY_STRIP):             # <<<<<<<<<<<<<<
@@ -9541,7 +9772,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_inAction(std::forward_list<std::p
       break;
       case COMMUNITY_REMOVE:
 
-      /* "AS.pyx":522
+      /* "AS.pyx":527
  *             elif (action.first == COMMUNITY_REMOVE):
  * 
  *                 community = AS.removeCommunity(community, action.second)             # <<<<<<<<<<<<<<
@@ -9550,7 +9781,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_inAction(std::forward_list<std::p
 */
       __pyx_v_community = __pyx_f_2AS_2AS_removeCommunity(__pyx_v_community, __pyx_v_action.second);
 
-      /* "AS.pyx":520
+      /* "AS.pyx":525
  *                 community = string("")
  * 
  *             elif (action.first == COMMUNITY_REMOVE):             # <<<<<<<<<<<<<<
@@ -9560,7 +9791,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_inAction(std::forward_list<std::p
       break;
       case PREPEND:
 
-      /* "AS.pyx":526
+      /* "AS.pyx":531
  *             elif (action.first == PREPEND):
  * 
  *                 for i in range(stoi(action.second)):             # <<<<<<<<<<<<<<
@@ -9573,13 +9804,13 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_inAction(std::forward_list<std::p
         PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
         __Pyx_CppExn2PyErr();
         __Pyx_PyGILState_Release(__pyx_gilstate_save);
-        __PYX_ERR(0, 526, __pyx_L1_error)
+        __PYX_ERR(0, 531, __pyx_L1_error)
       }
       __pyx_t_6 = __pyx_t_5;
       for (__pyx_t_7 = 0; __pyx_t_7 < __pyx_t_6; __pyx_t_7+=1) {
         __pyx_v_i = __pyx_t_7;
 
-        /* "AS.pyx":527
+        /* "AS.pyx":532
  * 
  *                 for i in range(stoi(action.second)):
  *                     ASPath = to_string(ASN) + string(" ") + ASPath             # <<<<<<<<<<<<<<
@@ -9592,7 +9823,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_inAction(std::forward_list<std::p
           PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
           __Pyx_CppExn2PyErr();
           __Pyx_PyGILState_Release(__pyx_gilstate_save);
-          __PYX_ERR(0, 527, __pyx_L1_error)
+          __PYX_ERR(0, 532, __pyx_L1_error)
         }
         try {
           __pyx_t_8 = std::string(__pyx_k__4);
@@ -9600,7 +9831,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_inAction(std::forward_list<std::p
           PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
           __Pyx_CppExn2PyErr();
           __Pyx_PyGILState_Release(__pyx_gilstate_save);
-          __PYX_ERR(0, 527, __pyx_L1_error)
+          __PYX_ERR(0, 532, __pyx_L1_error)
         }
         try {
           __pyx_t_9 = (__pyx_t_1 + __pyx_t_8);
@@ -9608,7 +9839,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_inAction(std::forward_list<std::p
           PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
           __Pyx_CppExn2PyErr();
           __Pyx_PyGILState_Release(__pyx_gilstate_save);
-          __PYX_ERR(0, 527, __pyx_L1_error)
+          __PYX_ERR(0, 532, __pyx_L1_error)
         }
         try {
           __pyx_t_8 = (__pyx_t_9 + __pyx_v_ASPath);
@@ -9616,12 +9847,12 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_inAction(std::forward_list<std::p
           PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
           __Pyx_CppExn2PyErr();
           __Pyx_PyGILState_Release(__pyx_gilstate_save);
-          __PYX_ERR(0, 527, __pyx_L1_error)
+          __PYX_ERR(0, 532, __pyx_L1_error)
         }
         __pyx_v_ASPath = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_8);
       }
 
-      /* "AS.pyx":524
+      /* "AS.pyx":529
  *                 community = AS.removeCommunity(community, action.second)
  * 
  *             elif (action.first == PREPEND):             # <<<<<<<<<<<<<<
@@ -9631,7 +9862,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_inAction(std::forward_list<std::p
       break;
       default:
 
-      /* "AS.pyx":530
+      /* "AS.pyx":535
  * 
  *             else:
  *                 printf("error: filterIn action not found!\n")             # <<<<<<<<<<<<<<
@@ -9642,7 +9873,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_inAction(std::forward_list<std::p
       break;
     }
 
-    /* "AS.pyx":497
+    /* "AS.pyx":502
  *             string community = message.community
  * 
  *         for action in actions:             # <<<<<<<<<<<<<<
@@ -9655,7 +9886,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_inAction(std::forward_list<std::p
   goto __pyx_L9_for_end;
   __pyx_L9_for_end:;
 
-  /* "AS.pyx":532
+  /* "AS.pyx":537
  *                 printf("error: filterIn action not found!\n")
  * 
  *         route = make_shared[Route](Route(message.prefix, localPref, ASPath, "IGP", community))             # <<<<<<<<<<<<<<
@@ -9668,11 +9899,11 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_inAction(std::forward_list<std::p
     PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
     __Pyx_CppExn2PyErr();
     __Pyx_PyGILState_Release(__pyx_gilstate_save);
-    __PYX_ERR(0, 532, __pyx_L1_error)
+    __PYX_ERR(0, 537, __pyx_L1_error)
   }
   __pyx_v_route = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_10);
 
-  /* "AS.pyx":534
+  /* "AS.pyx":539
  *         route = make_shared[Route](Route(message.prefix, localPref, ASPath, "IGP", community))
  * 
  *         return route             # <<<<<<<<<<<<<<
@@ -9682,7 +9913,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_inAction(std::forward_list<std::p
   __pyx_r = __pyx_v_route;
   goto __pyx_L0;
 
-  /* "AS.pyx":487
+  /* "AS.pyx":492
  *         return result
  * 
  *     @staticmethod             # <<<<<<<<<<<<<<
@@ -9700,7 +9931,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_inAction(std::forward_list<std::p
   return __pyx_r;
 }
 
-/* "AS.pyx":536
+/* "AS.pyx":541
  *         return route
  * 
  *     @staticmethod             # <<<<<<<<<<<<<<
@@ -9732,7 +9963,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_outAction(std::forward_list<std
   int __pyx_clineno = 0;
   PyGILState_STATE __pyx_gilstate_save;
 
-  /* "AS.pyx":540
+  /* "AS.pyx":545
  *         cdef:
  *             shared_ptr[Message] message
  *             Route* route = rt.get()             # <<<<<<<<<<<<<<
@@ -9741,7 +9972,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_outAction(std::forward_list<std
 */
   __pyx_v_route = __pyx_v_rt.get();
 
-  /* "AS.pyx":542
+  /* "AS.pyx":547
  *             Route* route = rt.get()
  *             smatch result
  *             string ASPath = to_string(ASN) + string(" ") + route.ASPath             # <<<<<<<<<<<<<<
@@ -9754,7 +9985,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_outAction(std::forward_list<std
     PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
     __Pyx_CppExn2PyErr();
     __Pyx_PyGILState_Release(__pyx_gilstate_save);
-    __PYX_ERR(0, 542, __pyx_L1_error)
+    __PYX_ERR(0, 547, __pyx_L1_error)
   }
   try {
     __pyx_t_2 = std::string(__pyx_k__4);
@@ -9762,7 +9993,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_outAction(std::forward_list<std
     PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
     __Pyx_CppExn2PyErr();
     __Pyx_PyGILState_Release(__pyx_gilstate_save);
-    __PYX_ERR(0, 542, __pyx_L1_error)
+    __PYX_ERR(0, 547, __pyx_L1_error)
   }
   try {
     __pyx_t_3 = (__pyx_t_1 + __pyx_t_2);
@@ -9770,7 +10001,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_outAction(std::forward_list<std
     PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
     __Pyx_CppExn2PyErr();
     __Pyx_PyGILState_Release(__pyx_gilstate_save);
-    __PYX_ERR(0, 542, __pyx_L1_error)
+    __PYX_ERR(0, 547, __pyx_L1_error)
   }
   try {
     __pyx_t_2 = (__pyx_t_3 + __pyx_v_route->ASPath);
@@ -9778,11 +10009,11 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_outAction(std::forward_list<std
     PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
     __Pyx_CppExn2PyErr();
     __Pyx_PyGILState_Release(__pyx_gilstate_save);
-    __PYX_ERR(0, 542, __pyx_L1_error)
+    __PYX_ERR(0, 547, __pyx_L1_error)
   }
   __pyx_v_ASPath = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_2);
 
-  /* "AS.pyx":543
+  /* "AS.pyx":548
  *             smatch result
  *             string ASPath = to_string(ASN) + string(" ") + route.ASPath
  *             string community = route.community             # <<<<<<<<<<<<<<
@@ -9792,7 +10023,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_outAction(std::forward_list<std
   __pyx_t_2 = __pyx_v_route->community;
   __pyx_v_community = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_2);
 
-  /* "AS.pyx":545
+  /* "AS.pyx":550
  *             string community = route.community
  * 
  *         for action in actions:             # <<<<<<<<<<<<<<
@@ -9804,7 +10035,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_outAction(std::forward_list<std
     __pyx_t_5 = *__pyx_t_4;
     __pyx_v_action = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_5);
 
-    /* "AS.pyx":547
+    /* "AS.pyx":552
  *         for action in actions:
  * 
  *             if (action.first == ACCEPT):             # <<<<<<<<<<<<<<
@@ -9814,7 +10045,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_outAction(std::forward_list<std
     switch (__pyx_v_action.first) {
       case ACCEPT:
 
-      /* "AS.pyx":548
+      /* "AS.pyx":553
  * 
  *             if (action.first == ACCEPT):
  *                 break             # <<<<<<<<<<<<<<
@@ -9823,7 +10054,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_outAction(std::forward_list<std
 */
       goto __pyx_L4_break;
 
-      /* "AS.pyx":547
+      /* "AS.pyx":552
  *         for action in actions:
  * 
  *             if (action.first == ACCEPT):             # <<<<<<<<<<<<<<
@@ -9833,7 +10064,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_outAction(std::forward_list<std
       break;
       case DENY:
 
-      /* "AS.pyx":552
+      /* "AS.pyx":557
  *             elif (action.first == DENY):
  * 
  *                 return shared_ptr[Message]()             # <<<<<<<<<<<<<<
@@ -9843,7 +10074,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_outAction(std::forward_list<std
       __pyx_r = std::shared_ptr<Message> ();
       goto __pyx_L0;
 
-      /* "AS.pyx":550
+      /* "AS.pyx":555
  *                 break
  * 
  *             elif (action.first == DENY):             # <<<<<<<<<<<<<<
@@ -9853,7 +10084,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_outAction(std::forward_list<std
       break;
       case LOCAL_PREF:
 
-      /* "AS.pyx":556
+      /* "AS.pyx":561
  *             elif (action.first == LOCAL_PREF):
  * 
  *                 localPref = stoi(action.second)             # <<<<<<<<<<<<<<
@@ -9866,11 +10097,11 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_outAction(std::forward_list<std
         PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
         __Pyx_CppExn2PyErr();
         __Pyx_PyGILState_Release(__pyx_gilstate_save);
-        __PYX_ERR(0, 556, __pyx_L1_error)
+        __PYX_ERR(0, 561, __pyx_L1_error)
       }
       __pyx_v_localPref = __pyx_t_6;
 
-      /* "AS.pyx":554
+      /* "AS.pyx":559
  *                 return shared_ptr[Message]()
  * 
  *             elif (action.first == LOCAL_PREF):             # <<<<<<<<<<<<<<
@@ -9880,7 +10111,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_outAction(std::forward_list<std
       break;
       case COMMUNITY_ADD:
 
-      /* "AS.pyx":560
+      /* "AS.pyx":565
  *             elif (action.first == COMMUNITY_ADD):
  * 
  *                 if (community != ""):             # <<<<<<<<<<<<<<
@@ -9890,7 +10121,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_outAction(std::forward_list<std
       __pyx_t_7 = (__pyx_v_community != __pyx_k_);
       if (__pyx_t_7) {
 
-        /* "AS.pyx":561
+        /* "AS.pyx":566
  * 
  *                 if (community != ""):
  *                     community += string(" ")             # <<<<<<<<<<<<<<
@@ -9903,11 +10134,11 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_outAction(std::forward_list<std
           PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
           __Pyx_CppExn2PyErr();
           __Pyx_PyGILState_Release(__pyx_gilstate_save);
-          __PYX_ERR(0, 561, __pyx_L1_error)
+          __PYX_ERR(0, 566, __pyx_L1_error)
         }
         __pyx_v_community += __pyx_t_2;
 
-        /* "AS.pyx":560
+        /* "AS.pyx":565
  *             elif (action.first == COMMUNITY_ADD):
  * 
  *                 if (community != ""):             # <<<<<<<<<<<<<<
@@ -9916,7 +10147,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_outAction(std::forward_list<std
 */
       }
 
-      /* "AS.pyx":562
+      /* "AS.pyx":567
  *                 if (community != ""):
  *                     community += string(" ")
  *                 community += action.second             # <<<<<<<<<<<<<<
@@ -9925,7 +10156,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_outAction(std::forward_list<std
 */
       __pyx_v_community += __pyx_v_action.second;
 
-      /* "AS.pyx":558
+      /* "AS.pyx":563
  *                 localPref = stoi(action.second)
  * 
  *             elif (action.first == COMMUNITY_ADD):             # <<<<<<<<<<<<<<
@@ -9935,7 +10166,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_outAction(std::forward_list<std
       break;
       case COMMUNITY_STRIP:
 
-      /* "AS.pyx":566
+      /* "AS.pyx":571
  *             elif (action.first == COMMUNITY_STRIP):
  * 
  *                 community = string("")             # <<<<<<<<<<<<<<
@@ -9948,11 +10179,11 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_outAction(std::forward_list<std
         PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
         __Pyx_CppExn2PyErr();
         __Pyx_PyGILState_Release(__pyx_gilstate_save);
-        __PYX_ERR(0, 566, __pyx_L1_error)
+        __PYX_ERR(0, 571, __pyx_L1_error)
       }
       __pyx_v_community = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_2);
 
-      /* "AS.pyx":564
+      /* "AS.pyx":569
  *                 community += action.second
  * 
  *             elif (action.first == COMMUNITY_STRIP):             # <<<<<<<<<<<<<<
@@ -9962,7 +10193,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_outAction(std::forward_list<std
       break;
       case COMMUNITY_REMOVE:
 
-      /* "AS.pyx":570
+      /* "AS.pyx":575
  *             elif (action.first == COMMUNITY_REMOVE):
  * 
  *                 community = AS.removeCommunity(community, action.second)             # <<<<<<<<<<<<<<
@@ -9971,7 +10202,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_outAction(std::forward_list<std
 */
       __pyx_v_community = __pyx_f_2AS_2AS_removeCommunity(__pyx_v_community, __pyx_v_action.second);
 
-      /* "AS.pyx":568
+      /* "AS.pyx":573
  *                 community = string("")
  * 
  *             elif (action.first == COMMUNITY_REMOVE):             # <<<<<<<<<<<<<<
@@ -9981,7 +10212,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_outAction(std::forward_list<std
       break;
       case PREPEND:
 
-      /* "AS.pyx":574
+      /* "AS.pyx":579
  *             elif (action.first == PREPEND):
  * 
  *                 for i in range(1, stoi(action.second)):             # <<<<<<<<<<<<<<
@@ -9994,13 +10225,13 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_outAction(std::forward_list<std
         PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
         __Pyx_CppExn2PyErr();
         __Pyx_PyGILState_Release(__pyx_gilstate_save);
-        __PYX_ERR(0, 574, __pyx_L1_error)
+        __PYX_ERR(0, 579, __pyx_L1_error)
       }
       __pyx_t_8 = __pyx_t_6;
       for (__pyx_t_9 = 1; __pyx_t_9 < __pyx_t_8; __pyx_t_9+=1) {
         __pyx_v_i = __pyx_t_9;
 
-        /* "AS.pyx":575
+        /* "AS.pyx":580
  * 
  *                 for i in range(1, stoi(action.second)):
  *                     ASPath = to_string(ASN) + string(" ") + ASPath             # <<<<<<<<<<<<<<
@@ -10013,7 +10244,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_outAction(std::forward_list<std
           PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
           __Pyx_CppExn2PyErr();
           __Pyx_PyGILState_Release(__pyx_gilstate_save);
-          __PYX_ERR(0, 575, __pyx_L1_error)
+          __PYX_ERR(0, 580, __pyx_L1_error)
         }
         try {
           __pyx_t_3 = std::string(__pyx_k__4);
@@ -10021,7 +10252,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_outAction(std::forward_list<std
           PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
           __Pyx_CppExn2PyErr();
           __Pyx_PyGILState_Release(__pyx_gilstate_save);
-          __PYX_ERR(0, 575, __pyx_L1_error)
+          __PYX_ERR(0, 580, __pyx_L1_error)
         }
         try {
           __pyx_t_1 = (__pyx_t_2 + __pyx_t_3);
@@ -10029,7 +10260,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_outAction(std::forward_list<std
           PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
           __Pyx_CppExn2PyErr();
           __Pyx_PyGILState_Release(__pyx_gilstate_save);
-          __PYX_ERR(0, 575, __pyx_L1_error)
+          __PYX_ERR(0, 580, __pyx_L1_error)
         }
         try {
           __pyx_t_3 = (__pyx_t_1 + __pyx_v_ASPath);
@@ -10037,12 +10268,12 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_outAction(std::forward_list<std
           PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
           __Pyx_CppExn2PyErr();
           __Pyx_PyGILState_Release(__pyx_gilstate_save);
-          __PYX_ERR(0, 575, __pyx_L1_error)
+          __PYX_ERR(0, 580, __pyx_L1_error)
         }
         __pyx_v_ASPath = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_3);
       }
 
-      /* "AS.pyx":572
+      /* "AS.pyx":577
  *                 community = AS.removeCommunity(community, action.second)
  * 
  *             elif (action.first == PREPEND):             # <<<<<<<<<<<<<<
@@ -10052,7 +10283,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_outAction(std::forward_list<std
       break;
       default:
 
-      /* "AS.pyx":578
+      /* "AS.pyx":583
  * 
  *             else:
  *                 printf("error: filterOut action not found!\n")             # <<<<<<<<<<<<<<
@@ -10063,7 +10294,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_outAction(std::forward_list<std
       break;
     }
 
-    /* "AS.pyx":545
+    /* "AS.pyx":550
  *             string community = route.community
  * 
  *         for action in actions:             # <<<<<<<<<<<<<<
@@ -10076,7 +10307,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_outAction(std::forward_list<std
   goto __pyx_L8_for_end;
   __pyx_L8_for_end:;
 
-  /* "AS.pyx":580
+  /* "AS.pyx":585
  *                 printf("error: filterOut action not found!\n")
  * 
  *         message = make_shared[Message](Message("A", peer, ASN, route.prefix, ASPath, "IGP", community))             # <<<<<<<<<<<<<<
@@ -10089,11 +10320,11 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_outAction(std::forward_list<std
     PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
     __Pyx_CppExn2PyErr();
     __Pyx_PyGILState_Release(__pyx_gilstate_save);
-    __PYX_ERR(0, 580, __pyx_L1_error)
+    __PYX_ERR(0, 585, __pyx_L1_error)
   }
   __pyx_v_message = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_10);
 
-  /* "AS.pyx":582
+  /* "AS.pyx":587
  *         message = make_shared[Message](Message("A", peer, ASN, route.prefix, ASPath, "IGP", community))
  * 
  *         return message             # <<<<<<<<<<<<<<
@@ -10103,7 +10334,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_outAction(std::forward_list<std
   __pyx_r = __pyx_v_message;
   goto __pyx_L0;
 
-  /* "AS.pyx":536
+  /* "AS.pyx":541
  *         return route
  * 
  *     @staticmethod             # <<<<<<<<<<<<<<
@@ -10121,7 +10352,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_outAction(std::forward_list<std
   return __pyx_r;
 }
 
-/* "AS.pyx":584
+/* "AS.pyx":589
  *         return message
  * 
  *     @staticmethod             # <<<<<<<<<<<<<<
@@ -10148,7 +10379,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
   int __pyx_clineno = 0;
   PyGILState_STATE __pyx_gilstate_save;
 
-  /* "AS.pyx":590
+  /* "AS.pyx":595
  *             pair[int, int] p
  *             Filter* ptr
  *             Message* message = msg.get()             # <<<<<<<<<<<<<<
@@ -10157,7 +10388,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
 */
   __pyx_v_message = __pyx_v_msg.get();
 
-  /* "AS.pyx":592
+  /* "AS.pyx":597
  *             Message* message = msg.get()
  *             smatch result
  *             int l = 0             # <<<<<<<<<<<<<<
@@ -10166,7 +10397,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
 */
   __pyx_v_l = 0;
 
-  /* "AS.pyx":594
+  /* "AS.pyx":599
  *             int l = 0
  * 
  *         if (Extension.ROV(ASN, message.prefix, message.ASPath) == False):             # <<<<<<<<<<<<<<
@@ -10176,7 +10407,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
   __pyx_t_1 = (__pyx_vtabptr_9Extension_Extension->ROV(__pyx_v_ASN, __pyx_v_message->prefix, __pyx_v_message->ASPath) == 0);
   if (__pyx_t_1) {
 
-    /* "AS.pyx":595
+    /* "AS.pyx":600
  * 
  *         if (Extension.ROV(ASN, message.prefix, message.ASPath) == False):
  *             return shared_ptr[Route]()             # <<<<<<<<<<<<<<
@@ -10186,7 +10417,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
     __pyx_r = std::shared_ptr<Route> ();
     goto __pyx_L0;
 
-    /* "AS.pyx":594
+    /* "AS.pyx":599
  *             int l = 0
  * 
  *         if (Extension.ROV(ASN, message.prefix, message.ASPath) == False):             # <<<<<<<<<<<<<<
@@ -10195,7 +10426,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
 */
   }
 
-  /* "AS.pyx":597
+  /* "AS.pyx":602
  *             return shared_ptr[Route]()
  * 
  *         p.first = ASN             # <<<<<<<<<<<<<<
@@ -10204,7 +10435,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
 */
   __pyx_v_p.first = __pyx_v_ASN;
 
-  /* "AS.pyx":598
+  /* "AS.pyx":603
  * 
  *         p.first = ASN
  *         p.second = message.lastAS             # <<<<<<<<<<<<<<
@@ -10214,7 +10445,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
   __pyx_t_2 = __pyx_v_message->lastAS;
   __pyx_v_p.second = __pyx_t_2;
 
-  /* "AS.pyx":600
+  /* "AS.pyx":605
  *         p.second = message.lastAS
  * 
  *         if filterIn.find(p) != filterIn.end():             # <<<<<<<<<<<<<<
@@ -10224,7 +10455,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
   __pyx_t_1 = (__pyx_v_2AS_filterIn.find(__pyx_v_p) != __pyx_v_2AS_filterIn.end());
   if (__pyx_t_1) {
 
-    /* "AS.pyx":602
+    /* "AS.pyx":607
  *         if filterIn.find(p) != filterIn.end():
  * 
  *             ptr = filterIn[p].nextFt             # <<<<<<<<<<<<<<
@@ -10234,7 +10465,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
     __pyx_t_3 = (__pyx_v_2AS_filterIn[__pyx_v_p]).nextFt;
     __pyx_v_ptr = __pyx_t_3;
 
-    /* "AS.pyx":604
+    /* "AS.pyx":609
  *             ptr = filterIn[p].nextFt
  * 
  *             while (ptr != NULL):             # <<<<<<<<<<<<<<
@@ -10245,7 +10476,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
       __pyx_t_1 = (__pyx_v_ptr != NULL);
       if (!__pyx_t_1) break;
 
-      /* "AS.pyx":605
+      /* "AS.pyx":610
  * 
  *             while (ptr != NULL):
  *                 if (ptr.matchType == ANY):             # <<<<<<<<<<<<<<
@@ -10255,7 +10486,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
       switch (__pyx_v_ptr->matchType) {
         case ANY:
 
-        /* "AS.pyx":607
+        /* "AS.pyx":612
  *                 if (ptr.matchType == ANY):
  * 
  *                     return AS.inAction(ptr.actions, msg, ASN)             # <<<<<<<<<<<<<<
@@ -10265,7 +10496,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
         __pyx_r = __pyx_f_2AS_2AS_inAction(__pyx_v_ptr->actions, __pyx_v_msg, __pyx_v_ASN);
         goto __pyx_L0;
 
-        /* "AS.pyx":605
+        /* "AS.pyx":610
  * 
  *             while (ptr != NULL):
  *                 if (ptr.matchType == ANY):             # <<<<<<<<<<<<<<
@@ -10275,7 +10506,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
         break;
         case AS_SET:
 
-        /* "AS.pyx":611
+        /* "AS.pyx":616
  *                 elif (ptr.matchType == AS_SET):
  * 
  *                     originAS = stoi(message.ASPath.substr(message.ASPath.rfind(' ') + 1))             # <<<<<<<<<<<<<<
@@ -10288,7 +10519,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
           PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
           __Pyx_CppExn2PyErr();
           __Pyx_PyGILState_Release(__pyx_gilstate_save);
-          __PYX_ERR(0, 611, __pyx_L1_error)
+          __PYX_ERR(0, 616, __pyx_L1_error)
         }
         try {
           __pyx_t_2 = std::stoi(__pyx_t_4);
@@ -10296,11 +10527,11 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
           PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
           __Pyx_CppExn2PyErr();
           __Pyx_PyGILState_Release(__pyx_gilstate_save);
-          __PYX_ERR(0, 611, __pyx_L1_error)
+          __PYX_ERR(0, 616, __pyx_L1_error)
         }
         __pyx_v_originAS = __pyx_t_2;
 
-        /* "AS.pyx":612
+        /* "AS.pyx":617
  * 
  *                     originAS = stoi(message.ASPath.substr(message.ASPath.rfind(' ') + 1))
  *                     if (ASSet[ptr.matchValue].find(originAS) != ASSet[ptr.matchValue].end()):             # <<<<<<<<<<<<<<
@@ -10310,7 +10541,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
         __pyx_t_1 = ((__pyx_v_2AS_ASSet[__pyx_v_ptr->matchValue]).find(__pyx_v_originAS) != (__pyx_v_2AS_ASSet[__pyx_v_ptr->matchValue]).end());
         if (__pyx_t_1) {
 
-          /* "AS.pyx":613
+          /* "AS.pyx":618
  *                     originAS = stoi(message.ASPath.substr(message.ASPath.rfind(' ') + 1))
  *                     if (ASSet[ptr.matchValue].find(originAS) != ASSet[ptr.matchValue].end()):
  *                         return AS.inAction(ptr.actions, msg, ASN)             # <<<<<<<<<<<<<<
@@ -10320,7 +10551,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
           __pyx_r = __pyx_f_2AS_2AS_inAction(__pyx_v_ptr->actions, __pyx_v_msg, __pyx_v_ASN);
           goto __pyx_L0;
 
-          /* "AS.pyx":612
+          /* "AS.pyx":617
  * 
  *                     originAS = stoi(message.ASPath.substr(message.ASPath.rfind(' ') + 1))
  *                     if (ASSet[ptr.matchValue].find(originAS) != ASSet[ptr.matchValue].end()):             # <<<<<<<<<<<<<<
@@ -10329,7 +10560,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
 */
         }
 
-        /* "AS.pyx":609
+        /* "AS.pyx":614
  *                     return AS.inAction(ptr.actions, msg, ASN)
  * 
  *                 elif (ptr.matchType == AS_SET):             # <<<<<<<<<<<<<<
@@ -10339,7 +10570,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
         break;
         case PATH:
 
-        /* "AS.pyx":617
+        /* "AS.pyx":622
  *                 elif (ptr.matchType == PATH):
  * 
  *                     if (regex_match(message.ASPath, regex(ptr.matchValue))):             # <<<<<<<<<<<<<<
@@ -10352,7 +10583,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
           PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
           __Pyx_CppExn2PyErr();
           __Pyx_PyGILState_Release(__pyx_gilstate_save);
-          __PYX_ERR(0, 617, __pyx_L1_error)
+          __PYX_ERR(0, 622, __pyx_L1_error)
         }
         try {
           __pyx_t_1 = std::regex_match(__pyx_v_message->ASPath, __pyx_t_5);
@@ -10360,11 +10591,11 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
           PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
           __Pyx_CppExn2PyErr();
           __Pyx_PyGILState_Release(__pyx_gilstate_save);
-          __PYX_ERR(0, 617, __pyx_L1_error)
+          __PYX_ERR(0, 622, __pyx_L1_error)
         }
         if (__pyx_t_1) {
 
-          /* "AS.pyx":618
+          /* "AS.pyx":623
  * 
  *                     if (regex_match(message.ASPath, regex(ptr.matchValue))):
  *                         return AS.inAction(ptr.actions, msg, ASN)             # <<<<<<<<<<<<<<
@@ -10374,7 +10605,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
           __pyx_r = __pyx_f_2AS_2AS_inAction(__pyx_v_ptr->actions, __pyx_v_msg, __pyx_v_ASN);
           goto __pyx_L0;
 
-          /* "AS.pyx":617
+          /* "AS.pyx":622
  *                 elif (ptr.matchType == PATH):
  * 
  *                     if (regex_match(message.ASPath, regex(ptr.matchValue))):             # <<<<<<<<<<<<<<
@@ -10383,7 +10614,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
 */
         }
 
-        /* "AS.pyx":615
+        /* "AS.pyx":620
  *                         return AS.inAction(ptr.actions, msg, ASN)
  * 
  *                 elif (ptr.matchType == PATH):             # <<<<<<<<<<<<<<
@@ -10393,7 +10624,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
         break;
         case COMMUNITY_CONTAINS:
 
-        /* "AS.pyx":622
+        /* "AS.pyx":627
  *                 elif (ptr.matchType == COMMUNITY_CONTAINS):
  * 
  *                     if (AS.inCommunity(ptr.matchValue, message.community)):             # <<<<<<<<<<<<<<
@@ -10403,7 +10634,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
         __pyx_t_1 = (__pyx_f_2AS_2AS_inCommunity(__pyx_v_ptr->matchValue, __pyx_v_message->community) != 0);
         if (__pyx_t_1) {
 
-          /* "AS.pyx":623
+          /* "AS.pyx":628
  * 
  *                     if (AS.inCommunity(ptr.matchValue, message.community)):
  *                         return AS.inAction(ptr.actions, msg, ASN)             # <<<<<<<<<<<<<<
@@ -10413,7 +10644,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
           __pyx_r = __pyx_f_2AS_2AS_inAction(__pyx_v_ptr->actions, __pyx_v_msg, __pyx_v_ASN);
           goto __pyx_L0;
 
-          /* "AS.pyx":622
+          /* "AS.pyx":627
  *                 elif (ptr.matchType == COMMUNITY_CONTAINS):
  * 
  *                     if (AS.inCommunity(ptr.matchValue, message.community)):             # <<<<<<<<<<<<<<
@@ -10422,7 +10653,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
 */
         }
 
-        /* "AS.pyx":620
+        /* "AS.pyx":625
  *                         return AS.inAction(ptr.actions, msg, ASN)
  * 
  *                 elif (ptr.matchType == COMMUNITY_CONTAINS):             # <<<<<<<<<<<<<<
@@ -10432,7 +10663,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
         break;
         case PREFIX_IS:
 
-        /* "AS.pyx":627
+        /* "AS.pyx":632
  *                 elif (ptr.matchType == PREFIX_IS):
  * 
  *                     if (message.prefix == ptr.matchValue):             # <<<<<<<<<<<<<<
@@ -10442,7 +10673,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
         __pyx_t_1 = (__pyx_v_message->prefix == __pyx_v_ptr->matchValue);
         if (__pyx_t_1) {
 
-          /* "AS.pyx":628
+          /* "AS.pyx":633
  * 
  *                     if (message.prefix == ptr.matchValue):
  *                         return AS.inAction(ptr.actions, msg, ASN)             # <<<<<<<<<<<<<<
@@ -10452,7 +10683,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
           __pyx_r = __pyx_f_2AS_2AS_inAction(__pyx_v_ptr->actions, __pyx_v_msg, __pyx_v_ASN);
           goto __pyx_L0;
 
-          /* "AS.pyx":627
+          /* "AS.pyx":632
  *                 elif (ptr.matchType == PREFIX_IS):
  * 
  *                     if (message.prefix == ptr.matchValue):             # <<<<<<<<<<<<<<
@@ -10461,7 +10692,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
 */
         }
 
-        /* "AS.pyx":625
+        /* "AS.pyx":630
  *                         return AS.inAction(ptr.actions, msg, ASN)
  * 
  *                 elif (ptr.matchType == PREFIX_IS):             # <<<<<<<<<<<<<<
@@ -10471,7 +10702,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
         break;
         case PREFIX_IN:
 
-        /* "AS.pyx":632
+        /* "AS.pyx":637
  *                 elif (ptr.matchType == PREFIX_IN):
  * 
  *                     l = RouteTable.matchLen(ptr.matchValue, message.prefix)             # <<<<<<<<<<<<<<
@@ -10480,7 +10711,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
 */
         __pyx_v_l = RouteTable::matchLen(__pyx_v_ptr->matchValue, __pyx_v_message->prefix);
 
-        /* "AS.pyx":633
+        /* "AS.pyx":638
  * 
  *                     l = RouteTable.matchLen(ptr.matchValue, message.prefix)
  *                     if (l > 0):             # <<<<<<<<<<<<<<
@@ -10490,7 +10721,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
         __pyx_t_1 = (__pyx_v_l > 0);
         if (__pyx_t_1) {
 
-          /* "AS.pyx":634
+          /* "AS.pyx":639
  *                     l = RouteTable.matchLen(ptr.matchValue, message.prefix)
  *                     if (l > 0):
  *                         return AS.inAction(ptr.actions, msg, ASN)             # <<<<<<<<<<<<<<
@@ -10500,7 +10731,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
           __pyx_r = __pyx_f_2AS_2AS_inAction(__pyx_v_ptr->actions, __pyx_v_msg, __pyx_v_ASN);
           goto __pyx_L0;
 
-          /* "AS.pyx":633
+          /* "AS.pyx":638
  * 
  *                     l = RouteTable.matchLen(ptr.matchValue, message.prefix)
  *                     if (l > 0):             # <<<<<<<<<<<<<<
@@ -10509,7 +10740,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
 */
         }
 
-        /* "AS.pyx":630
+        /* "AS.pyx":635
  *                         return AS.inAction(ptr.actions, msg, ASN)
  * 
  *                 elif (ptr.matchType == PREFIX_IN):             # <<<<<<<<<<<<<<
@@ -10519,7 +10750,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
         break;
         default:
 
-        /* "AS.pyx":637
+        /* "AS.pyx":642
  * 
  *                 else:
  *                     printf("error: filterIn match not found!\n")             # <<<<<<<<<<<<<<
@@ -10530,7 +10761,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
         break;
       }
 
-      /* "AS.pyx":639
+      /* "AS.pyx":644
  *                     printf("error: filterIn match not found!\n")
  * 
  *                 ptr = ptr.nextFt             # <<<<<<<<<<<<<<
@@ -10541,7 +10772,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
       __pyx_v_ptr = __pyx_t_3;
     }
 
-    /* "AS.pyx":600
+    /* "AS.pyx":605
  *         p.second = message.lastAS
  * 
  *         if filterIn.find(p) != filterIn.end():             # <<<<<<<<<<<<<<
@@ -10550,7 +10781,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
 */
   }
 
-  /* "AS.pyx":642
+  /* "AS.pyx":647
  * 
  *         # Use typical policy by default, localPref: customer > peer > provider
  *         if message.peer.second == -1:             # <<<<<<<<<<<<<<
@@ -10560,7 +10791,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
   switch (__pyx_v_message->peer.second) {
     case -1L:
 
-    /* "AS.pyx":643
+    /* "AS.pyx":648
  *         # Use typical policy by default, localPref: customer > peer > provider
  *         if message.peer.second == -1:
  *             route = make_shared[Route](Route(message.prefix, 60, message.ASPath, "IGP", message.community))             # <<<<<<<<<<<<<<
@@ -10573,11 +10804,11 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
       PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
       __Pyx_CppExn2PyErr();
       __Pyx_PyGILState_Release(__pyx_gilstate_save);
-      __PYX_ERR(0, 643, __pyx_L1_error)
+      __PYX_ERR(0, 648, __pyx_L1_error)
     }
     __pyx_v_route = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_6);
 
-    /* "AS.pyx":642
+    /* "AS.pyx":647
  * 
  *         # Use typical policy by default, localPref: customer > peer > provider
  *         if message.peer.second == -1:             # <<<<<<<<<<<<<<
@@ -10587,7 +10818,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
     break;
     case 0:
 
-    /* "AS.pyx":646
+    /* "AS.pyx":651
  * 
  *         elif message.peer.second == 0:
  *             route = make_shared[Route](Route(message.prefix, 80, message.ASPath, "IGP", message.community))             # <<<<<<<<<<<<<<
@@ -10600,11 +10831,11 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
       PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
       __Pyx_CppExn2PyErr();
       __Pyx_PyGILState_Release(__pyx_gilstate_save);
-      __PYX_ERR(0, 646, __pyx_L1_error)
+      __PYX_ERR(0, 651, __pyx_L1_error)
     }
     __pyx_v_route = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_6);
 
-    /* "AS.pyx":645
+    /* "AS.pyx":650
  *             route = make_shared[Route](Route(message.prefix, 60, message.ASPath, "IGP", message.community))
  * 
  *         elif message.peer.second == 0:             # <<<<<<<<<<<<<<
@@ -10614,7 +10845,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
     break;
     default:
 
-    /* "AS.pyx":649
+    /* "AS.pyx":654
  * 
  *         else:
  *             route = make_shared[Route](Route(message.prefix, 100, message.ASPath, "IGP", message.community))             # <<<<<<<<<<<<<<
@@ -10627,13 +10858,13 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
       PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
       __Pyx_CppExn2PyErr();
       __Pyx_PyGILState_Release(__pyx_gilstate_save);
-      __PYX_ERR(0, 649, __pyx_L1_error)
+      __PYX_ERR(0, 654, __pyx_L1_error)
     }
     __pyx_v_route = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_6);
     break;
   }
 
-  /* "AS.pyx":651
+  /* "AS.pyx":656
  *             route = make_shared[Route](Route(message.prefix, 100, message.ASPath, "IGP", message.community))
  * 
  *         return route             # <<<<<<<<<<<<<<
@@ -10643,7 +10874,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
   __pyx_r = __pyx_v_route;
   goto __pyx_L0;
 
-  /* "AS.pyx":584
+  /* "AS.pyx":589
  *         return message
  * 
  *     @staticmethod             # <<<<<<<<<<<<<<
@@ -10661,7 +10892,7 @@ static std::shared_ptr<Route>  __pyx_f_2AS_2AS_filterIn(int __pyx_v_ASN, std::sh
   return __pyx_r;
 }
 
-/* "AS.pyx":653
+/* "AS.pyx":658
  *         return route
  * 
  *     @staticmethod             # <<<<<<<<<<<<<<
@@ -10691,7 +10922,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
   int __pyx_clineno = 0;
   PyGILState_STATE __pyx_gilstate_save;
 
-  /* "AS.pyx":659
+  /* "AS.pyx":664
  *             pair[int, int] p
  *             Filter* ptr
  *             Route* route = rt.get()             # <<<<<<<<<<<<<<
@@ -10700,7 +10931,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
 */
   __pyx_v_route = __pyx_v_rt.get();
 
-  /* "AS.pyx":662
+  /* "AS.pyx":667
  *             smatch result
  *             string x
  *             int l = 0             # <<<<<<<<<<<<<<
@@ -10709,7 +10940,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
 */
   __pyx_v_l = 0;
 
-  /* "AS.pyx":664
+  /* "AS.pyx":669
  *             int l = 0
  * 
  *         p.first = ASN             # <<<<<<<<<<<<<<
@@ -10718,7 +10949,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
 */
   __pyx_v_p.first = __pyx_v_ASN;
 
-  /* "AS.pyx":665
+  /* "AS.pyx":670
  * 
  *         p.first = ASN
  *         p.second = peer.first             # <<<<<<<<<<<<<<
@@ -10728,7 +10959,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
   __pyx_t_1 = __pyx_v_peer.first;
   __pyx_v_p.second = __pyx_t_1;
 
-  /* "AS.pyx":667
+  /* "AS.pyx":672
  *         p.second = peer.first
  * 
  *         if filterOut.find(p) != filterOut.end():             # <<<<<<<<<<<<<<
@@ -10738,7 +10969,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
   __pyx_t_2 = (__pyx_v_2AS_filterOut.find(__pyx_v_p) != __pyx_v_2AS_filterOut.end());
   if (__pyx_t_2) {
 
-    /* "AS.pyx":669
+    /* "AS.pyx":674
  *         if filterOut.find(p) != filterOut.end():
  * 
  *             ptr = filterOut[p].nextFt             # <<<<<<<<<<<<<<
@@ -10748,7 +10979,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
     __pyx_t_3 = (__pyx_v_2AS_filterOut[__pyx_v_p]).nextFt;
     __pyx_v_ptr = __pyx_t_3;
 
-    /* "AS.pyx":671
+    /* "AS.pyx":676
  *             ptr = filterOut[p].nextFt
  * 
  *             while (ptr != NULL):             # <<<<<<<<<<<<<<
@@ -10759,7 +10990,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
       __pyx_t_2 = (__pyx_v_ptr != NULL);
       if (!__pyx_t_2) break;
 
-      /* "AS.pyx":672
+      /* "AS.pyx":677
  * 
  *             while (ptr != NULL):
  *                 if (ptr.matchType == ANY):             # <<<<<<<<<<<<<<
@@ -10769,7 +11000,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
       switch (__pyx_v_ptr->matchType) {
         case ANY:
 
-        /* "AS.pyx":674
+        /* "AS.pyx":679
  *                 if (ptr.matchType == ANY):
  * 
  *                     return AS.outAction(ptr.actions, rt, peer, ASN)             # <<<<<<<<<<<<<<
@@ -10779,7 +11010,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
         __pyx_r = __pyx_f_2AS_2AS_outAction(__pyx_v_ptr->actions, __pyx_v_rt, __pyx_v_peer, __pyx_v_ASN);
         goto __pyx_L0;
 
-        /* "AS.pyx":672
+        /* "AS.pyx":677
  * 
  *             while (ptr != NULL):
  *                 if (ptr.matchType == ANY):             # <<<<<<<<<<<<<<
@@ -10789,7 +11020,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
         break;
         case AS_SET:
 
-        /* "AS.pyx":678
+        /* "AS.pyx":683
  *                 elif (ptr.matchType == AS_SET):
  * 
  *                     originAS = stoi(route.ASPath.substr(route.ASPath.rfind(' ') + 1))             # <<<<<<<<<<<<<<
@@ -10802,7 +11033,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
           PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
           __Pyx_CppExn2PyErr();
           __Pyx_PyGILState_Release(__pyx_gilstate_save);
-          __PYX_ERR(0, 678, __pyx_L1_error)
+          __PYX_ERR(0, 683, __pyx_L1_error)
         }
         try {
           __pyx_t_1 = std::stoi(__pyx_t_4);
@@ -10810,11 +11041,11 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
           PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
           __Pyx_CppExn2PyErr();
           __Pyx_PyGILState_Release(__pyx_gilstate_save);
-          __PYX_ERR(0, 678, __pyx_L1_error)
+          __PYX_ERR(0, 683, __pyx_L1_error)
         }
         __pyx_v_originAS = __pyx_t_1;
 
-        /* "AS.pyx":679
+        /* "AS.pyx":684
  * 
  *                     originAS = stoi(route.ASPath.substr(route.ASPath.rfind(' ') + 1))
  *                     if (ASSet[ptr.matchValue].find(originAS) != ASSet[ptr.matchValue].end()):             # <<<<<<<<<<<<<<
@@ -10824,7 +11055,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
         __pyx_t_2 = ((__pyx_v_2AS_ASSet[__pyx_v_ptr->matchValue]).find(__pyx_v_originAS) != (__pyx_v_2AS_ASSet[__pyx_v_ptr->matchValue]).end());
         if (__pyx_t_2) {
 
-          /* "AS.pyx":680
+          /* "AS.pyx":685
  *                     originAS = stoi(route.ASPath.substr(route.ASPath.rfind(' ') + 1))
  *                     if (ASSet[ptr.matchValue].find(originAS) != ASSet[ptr.matchValue].end()):
  *                         return AS.outAction(ptr.actions, rt, peer, ASN)             # <<<<<<<<<<<<<<
@@ -10834,7 +11065,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
           __pyx_r = __pyx_f_2AS_2AS_outAction(__pyx_v_ptr->actions, __pyx_v_rt, __pyx_v_peer, __pyx_v_ASN);
           goto __pyx_L0;
 
-          /* "AS.pyx":679
+          /* "AS.pyx":684
  * 
  *                     originAS = stoi(route.ASPath.substr(route.ASPath.rfind(' ') + 1))
  *                     if (ASSet[ptr.matchValue].find(originAS) != ASSet[ptr.matchValue].end()):             # <<<<<<<<<<<<<<
@@ -10843,7 +11074,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
 */
         }
 
-        /* "AS.pyx":676
+        /* "AS.pyx":681
  *                     return AS.outAction(ptr.actions, rt, peer, ASN)
  * 
  *                 elif (ptr.matchType == AS_SET):             # <<<<<<<<<<<<<<
@@ -10853,7 +11084,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
         break;
         case PATH:
 
-        /* "AS.pyx":683
+        /* "AS.pyx":688
  * 
  *                 elif (ptr.matchType == PATH):
  *                     if (regex_match(route.ASPath, regex(ptr.matchValue))):             # <<<<<<<<<<<<<<
@@ -10866,7 +11097,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
           PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
           __Pyx_CppExn2PyErr();
           __Pyx_PyGILState_Release(__pyx_gilstate_save);
-          __PYX_ERR(0, 683, __pyx_L1_error)
+          __PYX_ERR(0, 688, __pyx_L1_error)
         }
         try {
           __pyx_t_2 = std::regex_match(__pyx_v_route->ASPath, __pyx_t_5);
@@ -10874,11 +11105,11 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
           PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
           __Pyx_CppExn2PyErr();
           __Pyx_PyGILState_Release(__pyx_gilstate_save);
-          __PYX_ERR(0, 683, __pyx_L1_error)
+          __PYX_ERR(0, 688, __pyx_L1_error)
         }
         if (__pyx_t_2) {
 
-          /* "AS.pyx":684
+          /* "AS.pyx":689
  *                 elif (ptr.matchType == PATH):
  *                     if (regex_match(route.ASPath, regex(ptr.matchValue))):
  *                         return AS.outAction(ptr.actions, rt, peer, ASN)             # <<<<<<<<<<<<<<
@@ -10888,7 +11119,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
           __pyx_r = __pyx_f_2AS_2AS_outAction(__pyx_v_ptr->actions, __pyx_v_rt, __pyx_v_peer, __pyx_v_ASN);
           goto __pyx_L0;
 
-          /* "AS.pyx":683
+          /* "AS.pyx":688
  * 
  *                 elif (ptr.matchType == PATH):
  *                     if (regex_match(route.ASPath, regex(ptr.matchValue))):             # <<<<<<<<<<<<<<
@@ -10897,7 +11128,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
 */
         }
 
-        /* "AS.pyx":682
+        /* "AS.pyx":687
  *                         return AS.outAction(ptr.actions, rt, peer, ASN)
  * 
  *                 elif (ptr.matchType == PATH):             # <<<<<<<<<<<<<<
@@ -10907,7 +11138,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
         break;
         case COMMUNITY_CONTAINS:
 
-        /* "AS.pyx":687
+        /* "AS.pyx":692
  * 
  *                 elif (ptr.matchType == COMMUNITY_CONTAINS):
  *                     if (AS.inCommunity(ptr.matchValue, route.community)):             # <<<<<<<<<<<<<<
@@ -10917,7 +11148,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
         __pyx_t_2 = (__pyx_f_2AS_2AS_inCommunity(__pyx_v_ptr->matchValue, __pyx_v_route->community) != 0);
         if (__pyx_t_2) {
 
-          /* "AS.pyx":688
+          /* "AS.pyx":693
  *                 elif (ptr.matchType == COMMUNITY_CONTAINS):
  *                     if (AS.inCommunity(ptr.matchValue, route.community)):
  *                         return AS.outAction(ptr.actions, rt, peer, ASN)             # <<<<<<<<<<<<<<
@@ -10927,7 +11158,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
           __pyx_r = __pyx_f_2AS_2AS_outAction(__pyx_v_ptr->actions, __pyx_v_rt, __pyx_v_peer, __pyx_v_ASN);
           goto __pyx_L0;
 
-          /* "AS.pyx":687
+          /* "AS.pyx":692
  * 
  *                 elif (ptr.matchType == COMMUNITY_CONTAINS):
  *                     if (AS.inCommunity(ptr.matchValue, route.community)):             # <<<<<<<<<<<<<<
@@ -10936,7 +11167,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
 */
         }
 
-        /* "AS.pyx":686
+        /* "AS.pyx":691
  *                         return AS.outAction(ptr.actions, rt, peer, ASN)
  * 
  *                 elif (ptr.matchType == COMMUNITY_CONTAINS):             # <<<<<<<<<<<<<<
@@ -10946,7 +11177,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
         break;
         case PREFIX_IS:
 
-        /* "AS.pyx":691
+        /* "AS.pyx":696
  * 
  *                 elif (ptr.matchType == PREFIX_IS):
  *                     if (route.prefix == ptr.matchValue):             # <<<<<<<<<<<<<<
@@ -10956,7 +11187,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
         __pyx_t_2 = (__pyx_v_route->prefix == __pyx_v_ptr->matchValue);
         if (__pyx_t_2) {
 
-          /* "AS.pyx":692
+          /* "AS.pyx":697
  *                 elif (ptr.matchType == PREFIX_IS):
  *                     if (route.prefix == ptr.matchValue):
  *                         return AS.outAction(ptr.actions, rt, peer, ASN)             # <<<<<<<<<<<<<<
@@ -10966,7 +11197,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
           __pyx_r = __pyx_f_2AS_2AS_outAction(__pyx_v_ptr->actions, __pyx_v_rt, __pyx_v_peer, __pyx_v_ASN);
           goto __pyx_L0;
 
-          /* "AS.pyx":691
+          /* "AS.pyx":696
  * 
  *                 elif (ptr.matchType == PREFIX_IS):
  *                     if (route.prefix == ptr.matchValue):             # <<<<<<<<<<<<<<
@@ -10975,7 +11206,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
 */
         }
 
-        /* "AS.pyx":690
+        /* "AS.pyx":695
  *                         return AS.outAction(ptr.actions, rt, peer, ASN)
  * 
  *                 elif (ptr.matchType == PREFIX_IS):             # <<<<<<<<<<<<<<
@@ -10985,7 +11216,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
         break;
         case PREFIX_IN:
 
-        /* "AS.pyx":695
+        /* "AS.pyx":700
  * 
  *                 elif (ptr.matchType == PREFIX_IN):
  *                     l = RouteTable.matchLen(ptr.matchValue, route.prefix)             # <<<<<<<<<<<<<<
@@ -10994,7 +11225,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
 */
         __pyx_v_l = RouteTable::matchLen(__pyx_v_ptr->matchValue, __pyx_v_route->prefix);
 
-        /* "AS.pyx":696
+        /* "AS.pyx":701
  *                 elif (ptr.matchType == PREFIX_IN):
  *                     l = RouteTable.matchLen(ptr.matchValue, route.prefix)
  *                     if (l > 0):             # <<<<<<<<<<<<<<
@@ -11004,7 +11235,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
         __pyx_t_2 = (__pyx_v_l > 0);
         if (__pyx_t_2) {
 
-          /* "AS.pyx":697
+          /* "AS.pyx":702
  *                     l = RouteTable.matchLen(ptr.matchValue, route.prefix)
  *                     if (l > 0):
  *                         return AS.outAction(ptr.actions, rt, peer, ASN)             # <<<<<<<<<<<<<<
@@ -11014,7 +11245,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
           __pyx_r = __pyx_f_2AS_2AS_outAction(__pyx_v_ptr->actions, __pyx_v_rt, __pyx_v_peer, __pyx_v_ASN);
           goto __pyx_L0;
 
-          /* "AS.pyx":696
+          /* "AS.pyx":701
  *                 elif (ptr.matchType == PREFIX_IN):
  *                     l = RouteTable.matchLen(ptr.matchValue, route.prefix)
  *                     if (l > 0):             # <<<<<<<<<<<<<<
@@ -11023,7 +11254,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
 */
         }
 
-        /* "AS.pyx":694
+        /* "AS.pyx":699
  *                         return AS.outAction(ptr.actions, rt, peer, ASN)
  * 
  *                 elif (ptr.matchType == PREFIX_IN):             # <<<<<<<<<<<<<<
@@ -11033,7 +11264,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
         break;
         default:
 
-        /* "AS.pyx":700
+        /* "AS.pyx":705
  * 
  *                 else:
  *                     printf("error: filterOut match not found!\n")             # <<<<<<<<<<<<<<
@@ -11044,7 +11275,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
         break;
       }
 
-      /* "AS.pyx":702
+      /* "AS.pyx":707
  *                     printf("error: filterOut match not found!\n")
  * 
  *                 ptr = ptr.nextFt             # <<<<<<<<<<<<<<
@@ -11055,7 +11286,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
       __pyx_v_ptr = __pyx_t_3;
     }
 
-    /* "AS.pyx":667
+    /* "AS.pyx":672
  *         p.second = peer.first
  * 
  *         if filterOut.find(p) != filterOut.end():             # <<<<<<<<<<<<<<
@@ -11064,7 +11295,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
 */
   }
 
-  /* "AS.pyx":705
+  /* "AS.pyx":710
  * 
  *         # Use valley-free by default, from provider and peer not announce to provider and peer
  *         if (lastPeer.second < 1) and (peer.second > -1):             # <<<<<<<<<<<<<<
@@ -11082,7 +11313,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
   __pyx_L12_bool_binop_done:;
   if (__pyx_t_2) {
 
-    /* "AS.pyx":706
+    /* "AS.pyx":711
  *         # Use valley-free by default, from provider and peer not announce to provider and peer
  *         if (lastPeer.second < 1) and (peer.second > -1):
  *             message = make_shared[Message](Message("V"))             # <<<<<<<<<<<<<<
@@ -11095,11 +11326,11 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
       PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
       __Pyx_CppExn2PyErr();
       __Pyx_PyGILState_Release(__pyx_gilstate_save);
-      __PYX_ERR(0, 706, __pyx_L1_error)
+      __PYX_ERR(0, 711, __pyx_L1_error)
     }
     __pyx_v_message = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_7);
 
-    /* "AS.pyx":705
+    /* "AS.pyx":710
  * 
  *         # Use valley-free by default, from provider and peer not announce to provider and peer
  *         if (lastPeer.second < 1) and (peer.second > -1):             # <<<<<<<<<<<<<<
@@ -11109,7 +11340,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
     goto __pyx_L11;
   }
 
-  /* "AS.pyx":709
+  /* "AS.pyx":714
  * 
  *         else:
  *             message = make_shared[Message](Message("A", peer, ASN, route.prefix,  to_string(ASN) + string(' ') + route.ASPath, "IGP", route.community))             # <<<<<<<<<<<<<<
@@ -11123,7 +11354,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
       PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
       __Pyx_CppExn2PyErr();
       __Pyx_PyGILState_Release(__pyx_gilstate_save);
-      __PYX_ERR(0, 709, __pyx_L1_error)
+      __PYX_ERR(0, 714, __pyx_L1_error)
     }
     try {
       __pyx_t_8 = std::string(__pyx_k__4);
@@ -11131,7 +11362,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
       PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
       __Pyx_CppExn2PyErr();
       __Pyx_PyGILState_Release(__pyx_gilstate_save);
-      __PYX_ERR(0, 709, __pyx_L1_error)
+      __PYX_ERR(0, 714, __pyx_L1_error)
     }
     try {
       __pyx_t_9 = (__pyx_t_4 + __pyx_t_8);
@@ -11139,7 +11370,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
       PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
       __Pyx_CppExn2PyErr();
       __Pyx_PyGILState_Release(__pyx_gilstate_save);
-      __PYX_ERR(0, 709, __pyx_L1_error)
+      __PYX_ERR(0, 714, __pyx_L1_error)
     }
     try {
       __pyx_t_8 = (__pyx_t_9 + __pyx_v_route->ASPath);
@@ -11147,7 +11378,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
       PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
       __Pyx_CppExn2PyErr();
       __Pyx_PyGILState_Release(__pyx_gilstate_save);
-      __PYX_ERR(0, 709, __pyx_L1_error)
+      __PYX_ERR(0, 714, __pyx_L1_error)
     }
     try {
       __pyx_t_7 = std::make_shared<Message>(Message(((char *)"A"), __pyx_v_peer, __pyx_v_ASN, __pyx_v_route->prefix, __pyx_t_8, ((std::string const &)"IGP"), __pyx_v_route->community));
@@ -11155,13 +11386,13 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
       PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
       __Pyx_CppExn2PyErr();
       __Pyx_PyGILState_Release(__pyx_gilstate_save);
-      __PYX_ERR(0, 709, __pyx_L1_error)
+      __PYX_ERR(0, 714, __pyx_L1_error)
     }
     __pyx_v_message = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_7);
   }
   __pyx_L11:;
 
-  /* "AS.pyx":711
+  /* "AS.pyx":716
  *             message = make_shared[Message](Message("A", peer, ASN, route.prefix,  to_string(ASN) + string(' ') + route.ASPath, "IGP", route.community))
  * 
  *         return message             # <<<<<<<<<<<<<<
@@ -11171,7 +11402,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
   __pyx_r = __pyx_v_message;
   goto __pyx_L0;
 
-  /* "AS.pyx":653
+  /* "AS.pyx":658
  *         return route
  * 
  *     @staticmethod             # <<<<<<<<<<<<<<
@@ -11189,7 +11420,7 @@ static std::shared_ptr<Message>  __pyx_f_2AS_2AS_filterOut(int __pyx_v_ASN, std:
   return __pyx_r;
 }
 
-/* "AS.pyx":713
+/* "AS.pyx":718
  *         return message
  * 
  *     @staticmethod             # <<<<<<<<<<<<<<
@@ -11210,7 +11441,7 @@ static void __pyx_f_2AS_2AS_announce(int __pyx_v_ASN, std::pair<int,char>  __pyx
   int __pyx_clineno = 0;
   PyGILState_STATE __pyx_gilstate_save;
 
-  /* "AS.pyx":718
+  /* "AS.pyx":723
  *             shared_ptr[Message] message
  * 
  *         for peer in peers[ASN]:             # <<<<<<<<<<<<<<
@@ -11223,7 +11454,7 @@ static void __pyx_f_2AS_2AS_announce(int __pyx_v_ASN, std::pair<int,char>  __pyx
     __pyx_t_3 = *__pyx_t_1;
     __pyx_v_peer = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_3);
 
-    /* "AS.pyx":720
+    /* "AS.pyx":725
  *         for peer in peers[ASN]:
  * 
  *             if (route == NULL):             # <<<<<<<<<<<<<<
@@ -11233,7 +11464,7 @@ static void __pyx_f_2AS_2AS_announce(int __pyx_v_ASN, std::pair<int,char>  __pyx
     __pyx_t_4 = ((__pyx_v_route == NULL) != 0);
     if (__pyx_t_4) {
 
-      /* "AS.pyx":721
+      /* "AS.pyx":726
  * 
  *             if (route == NULL):
  *                 message = make_shared[Message](Message("X", peer, ASN, prefix))             # <<<<<<<<<<<<<<
@@ -11246,11 +11477,11 @@ static void __pyx_f_2AS_2AS_announce(int __pyx_v_ASN, std::pair<int,char>  __pyx
         PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
         __Pyx_CppExn2PyErr();
         __Pyx_PyGILState_Release(__pyx_gilstate_save);
-        __PYX_ERR(0, 721, __pyx_L1_error)
+        __PYX_ERR(0, 726, __pyx_L1_error)
       }
       __pyx_v_message = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_5);
 
-      /* "AS.pyx":720
+      /* "AS.pyx":725
  *         for peer in peers[ASN]:
  * 
  *             if (route == NULL):             # <<<<<<<<<<<<<<
@@ -11260,7 +11491,7 @@ static void __pyx_f_2AS_2AS_announce(int __pyx_v_ASN, std::pair<int,char>  __pyx
       goto __pyx_L5;
     }
 
-    /* "AS.pyx":725
+    /* "AS.pyx":730
  *             else:
  * 
  *                 message = AS.filterOut(ASN, peer, lastPeer, route)             # <<<<<<<<<<<<<<
@@ -11270,7 +11501,7 @@ static void __pyx_f_2AS_2AS_announce(int __pyx_v_ASN, std::pair<int,char>  __pyx
     /*else*/ {
       __pyx_v_message = __pyx_f_2AS_2AS_filterOut(__pyx_v_ASN, __pyx_v_peer, __pyx_v_lastPeer, __pyx_v_route);
 
-      /* "AS.pyx":727
+      /* "AS.pyx":732
  *                 message = AS.filterOut(ASN, peer, lastPeer, route)
  * 
  *                 if (message == NULL):             # <<<<<<<<<<<<<<
@@ -11280,7 +11511,7 @@ static void __pyx_f_2AS_2AS_announce(int __pyx_v_ASN, std::pair<int,char>  __pyx
       __pyx_t_4 = ((__pyx_v_message == NULL) != 0);
       if (__pyx_t_4) {
 
-        /* "AS.pyx":728
+        /* "AS.pyx":733
  * 
  *                 if (message == NULL):
  *                     message = make_shared[Message](Message("X", peer, ASN, prefix))             # <<<<<<<<<<<<<<
@@ -11293,11 +11524,11 @@ static void __pyx_f_2AS_2AS_announce(int __pyx_v_ASN, std::pair<int,char>  __pyx
           PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
           __Pyx_CppExn2PyErr();
           __Pyx_PyGILState_Release(__pyx_gilstate_save);
-          __PYX_ERR(0, 728, __pyx_L1_error)
+          __PYX_ERR(0, 733, __pyx_L1_error)
         }
         __pyx_v_message = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_5);
 
-        /* "AS.pyx":727
+        /* "AS.pyx":732
  *                 message = AS.filterOut(ASN, peer, lastPeer, route)
  * 
  *                 if (message == NULL):             # <<<<<<<<<<<<<<
@@ -11307,7 +11538,7 @@ static void __pyx_f_2AS_2AS_announce(int __pyx_v_ASN, std::pair<int,char>  __pyx
         goto __pyx_L6;
       }
 
-      /* "AS.pyx":730
+      /* "AS.pyx":735
  *                     message = make_shared[Message](Message("X", peer, ASN, prefix))
  * 
  *                 elif (strcmp(message.get().type, "V") == 0):             # <<<<<<<<<<<<<<
@@ -11317,7 +11548,7 @@ static void __pyx_f_2AS_2AS_announce(int __pyx_v_ASN, std::pair<int,char>  __pyx
       __pyx_t_4 = (strcmp(__pyx_v_message.get()->type, __pyx_k_V) == 0);
       if (__pyx_t_4) {
 
-        /* "AS.pyx":731
+        /* "AS.pyx":736
  * 
  *                 elif (strcmp(message.get().type, "V") == 0):
  *                     continue             # <<<<<<<<<<<<<<
@@ -11326,7 +11557,7 @@ static void __pyx_f_2AS_2AS_announce(int __pyx_v_ASN, std::pair<int,char>  __pyx
 */
         goto __pyx_L3_continue;
 
-        /* "AS.pyx":730
+        /* "AS.pyx":735
  *                     message = make_shared[Message](Message("X", peer, ASN, prefix))
  * 
  *                 elif (strcmp(message.get().type, "V") == 0):             # <<<<<<<<<<<<<<
@@ -11338,7 +11569,7 @@ static void __pyx_f_2AS_2AS_announce(int __pyx_v_ASN, std::pair<int,char>  __pyx
     }
     __pyx_L5:;
 
-    /* "AS.pyx":733
+    /* "AS.pyx":738
  *                     continue
  * 
  *             processor.addMessage(message)             # <<<<<<<<<<<<<<
@@ -11347,7 +11578,7 @@ static void __pyx_f_2AS_2AS_announce(int __pyx_v_ASN, std::pair<int,char>  __pyx
 */
     ((struct __pyx_vtabstruct_9Processor_Processor *)__pyx_v_processor->__pyx_vtab)->addMessage(__pyx_v_processor, __pyx_v_message);
 
-    /* "AS.pyx":718
+    /* "AS.pyx":723
  *             shared_ptr[Message] message
  * 
  *         for peer in peers[ASN]:             # <<<<<<<<<<<<<<
@@ -11357,7 +11588,7 @@ static void __pyx_f_2AS_2AS_announce(int __pyx_v_ASN, std::pair<int,char>  __pyx
     __pyx_L3_continue:;
   }
 
-  /* "AS.pyx":713
+  /* "AS.pyx":718
  *         return message
  * 
  *     @staticmethod             # <<<<<<<<<<<<<<
@@ -11374,7 +11605,7 @@ static void __pyx_f_2AS_2AS_announce(int __pyx_v_ASN, std::pair<int,char>  __pyx
   __pyx_L0:;
 }
 
-/* "AS.pyx":735
+/* "AS.pyx":740
  *             processor.addMessage(message)
  * 
  *     @staticmethod             # <<<<<<<<<<<<<<
@@ -11395,7 +11626,7 @@ static void __pyx_f_2AS_2AS_withdraw(int __pyx_v_ASN, int __pyx_v_lastAS, std::s
   int __pyx_clineno = 0;
   PyGILState_STATE __pyx_gilstate_save;
 
-  /* "AS.pyx":740
+  /* "AS.pyx":745
  *             shared_ptr[Message] message
  * 
  *         for peer in peers[ASN]:             # <<<<<<<<<<<<<<
@@ -11408,7 +11639,7 @@ static void __pyx_f_2AS_2AS_withdraw(int __pyx_v_ASN, int __pyx_v_lastAS, std::s
     __pyx_t_3 = *__pyx_t_1;
     __pyx_v_peer = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_3);
 
-    /* "AS.pyx":741
+    /* "AS.pyx":746
  * 
  *         for peer in peers[ASN]:
  *             if (peer.first == lastAS):             # <<<<<<<<<<<<<<
@@ -11418,7 +11649,7 @@ static void __pyx_f_2AS_2AS_withdraw(int __pyx_v_ASN, int __pyx_v_lastAS, std::s
     __pyx_t_4 = (__pyx_v_peer.first == __pyx_v_lastAS);
     if (__pyx_t_4) {
 
-      /* "AS.pyx":742
+      /* "AS.pyx":747
  *         for peer in peers[ASN]:
  *             if (peer.first == lastAS):
  *                 continue             # <<<<<<<<<<<<<<
@@ -11427,7 +11658,7 @@ static void __pyx_f_2AS_2AS_withdraw(int __pyx_v_ASN, int __pyx_v_lastAS, std::s
 */
       goto __pyx_L3_continue;
 
-      /* "AS.pyx":741
+      /* "AS.pyx":746
  * 
  *         for peer in peers[ASN]:
  *             if (peer.first == lastAS):             # <<<<<<<<<<<<<<
@@ -11436,7 +11667,7 @@ static void __pyx_f_2AS_2AS_withdraw(int __pyx_v_ASN, int __pyx_v_lastAS, std::s
 */
     }
 
-    /* "AS.pyx":744
+    /* "AS.pyx":749
  *                 continue
  * 
  *             message = make_shared[Message](Message("W", peer, ASN, prefix))             # <<<<<<<<<<<<<<
@@ -11449,11 +11680,11 @@ static void __pyx_f_2AS_2AS_withdraw(int __pyx_v_ASN, int __pyx_v_lastAS, std::s
       PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
       __Pyx_CppExn2PyErr();
       __Pyx_PyGILState_Release(__pyx_gilstate_save);
-      __PYX_ERR(0, 744, __pyx_L1_error)
+      __PYX_ERR(0, 749, __pyx_L1_error)
     }
     __pyx_v_message = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_5);
 
-    /* "AS.pyx":745
+    /* "AS.pyx":750
  * 
  *             message = make_shared[Message](Message("W", peer, ASN, prefix))
  *             processor.addMessage(message)             # <<<<<<<<<<<<<<
@@ -11462,7 +11693,7 @@ static void __pyx_f_2AS_2AS_withdraw(int __pyx_v_ASN, int __pyx_v_lastAS, std::s
 */
     ((struct __pyx_vtabstruct_9Processor_Processor *)__pyx_v_processor->__pyx_vtab)->addMessage(__pyx_v_processor, __pyx_v_message);
 
-    /* "AS.pyx":740
+    /* "AS.pyx":745
  *             shared_ptr[Message] message
  * 
  *         for peer in peers[ASN]:             # <<<<<<<<<<<<<<
@@ -11472,7 +11703,7 @@ static void __pyx_f_2AS_2AS_withdraw(int __pyx_v_ASN, int __pyx_v_lastAS, std::s
     __pyx_L3_continue:;
   }
 
-  /* "AS.pyx":735
+  /* "AS.pyx":740
  *             processor.addMessage(message)
  * 
  *     @staticmethod             # <<<<<<<<<<<<<<
@@ -11489,7 +11720,7 @@ static void __pyx_f_2AS_2AS_withdraw(int __pyx_v_ASN, int __pyx_v_lastAS, std::s
   __pyx_L0:;
 }
 
-/* "AS.pyx":747
+/* "AS.pyx":752
  *             processor.addMessage(message)
  * 
  *     @staticmethod             # <<<<<<<<<<<<<<
@@ -11506,7 +11737,7 @@ static void __pyx_f_2AS_2AS_updateBestRoute(int __pyx_v_ASN, std::pair<int,char>
   int __pyx_t_4;
   int __pyx_t_5;
 
-  /* "AS.pyx":752
+  /* "AS.pyx":757
  *             shared_ptr[Message] message
  * 
  *         for peer in peers[ASN]:             # <<<<<<<<<<<<<<
@@ -11519,7 +11750,7 @@ static void __pyx_f_2AS_2AS_updateBestRoute(int __pyx_v_ASN, std::pair<int,char>
     __pyx_t_3 = *__pyx_t_1;
     __pyx_v_peer = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_3);
 
-    /* "AS.pyx":753
+    /* "AS.pyx":758
  * 
  *         for peer in peers[ASN]:
  *             if (peer.first == lastPeer.first):             # <<<<<<<<<<<<<<
@@ -11529,7 +11760,7 @@ static void __pyx_f_2AS_2AS_updateBestRoute(int __pyx_v_ASN, std::pair<int,char>
     __pyx_t_4 = (__pyx_v_peer.first == __pyx_v_lastPeer.first);
     if (__pyx_t_4) {
 
-      /* "AS.pyx":754
+      /* "AS.pyx":759
  *         for peer in peers[ASN]:
  *             if (peer.first == lastPeer.first):
  *                 continue             # <<<<<<<<<<<<<<
@@ -11538,7 +11769,7 @@ static void __pyx_f_2AS_2AS_updateBestRoute(int __pyx_v_ASN, std::pair<int,char>
 */
       goto __pyx_L3_continue;
 
-      /* "AS.pyx":753
+      /* "AS.pyx":758
  * 
  *         for peer in peers[ASN]:
  *             if (peer.first == lastPeer.first):             # <<<<<<<<<<<<<<
@@ -11547,7 +11778,7 @@ static void __pyx_f_2AS_2AS_updateBestRoute(int __pyx_v_ASN, std::pair<int,char>
 */
     }
 
-    /* "AS.pyx":756
+    /* "AS.pyx":761
  *                 continue
  * 
  *             message = AS.filterOut(ASN, peer, lastPeer, route)             # <<<<<<<<<<<<<<
@@ -11556,7 +11787,7 @@ static void __pyx_f_2AS_2AS_updateBestRoute(int __pyx_v_ASN, std::pair<int,char>
 */
     __pyx_v_message = __pyx_f_2AS_2AS_filterOut(__pyx_v_ASN, __pyx_v_peer, __pyx_v_lastPeer, __pyx_v_route);
 
-    /* "AS.pyx":758
+    /* "AS.pyx":763
  *             message = AS.filterOut(ASN, peer, lastPeer, route)
  * 
  *             if (message != NULL and strcmp(message.get().type, "V") != 0):             # <<<<<<<<<<<<<<
@@ -11574,7 +11805,7 @@ static void __pyx_f_2AS_2AS_updateBestRoute(int __pyx_v_ASN, std::pair<int,char>
     __pyx_L7_bool_binop_done:;
     if (__pyx_t_4) {
 
-      /* "AS.pyx":759
+      /* "AS.pyx":764
  * 
  *             if (message != NULL and strcmp(message.get().type, "V") != 0):
  *                 message.get().type = "U"             # <<<<<<<<<<<<<<
@@ -11583,7 +11814,7 @@ static void __pyx_f_2AS_2AS_updateBestRoute(int __pyx_v_ASN, std::pair<int,char>
 */
       __pyx_v_message.get()->type = ((char *)"U");
 
-      /* "AS.pyx":760
+      /* "AS.pyx":765
  *             if (message != NULL and strcmp(message.get().type, "V") != 0):
  *                 message.get().type = "U"
  *                 processor.addMessage(message)             # <<<<<<<<<<<<<<
@@ -11592,7 +11823,7 @@ static void __pyx_f_2AS_2AS_updateBestRoute(int __pyx_v_ASN, std::pair<int,char>
 */
       ((struct __pyx_vtabstruct_9Processor_Processor *)__pyx_v_processor->__pyx_vtab)->addMessage(__pyx_v_processor, __pyx_v_message);
 
-      /* "AS.pyx":758
+      /* "AS.pyx":763
  *             message = AS.filterOut(ASN, peer, lastPeer, route)
  * 
  *             if (message != NULL and strcmp(message.get().type, "V") != 0):             # <<<<<<<<<<<<<<
@@ -11601,7 +11832,7 @@ static void __pyx_f_2AS_2AS_updateBestRoute(int __pyx_v_ASN, std::pair<int,char>
 */
     }
 
-    /* "AS.pyx":752
+    /* "AS.pyx":757
  *             shared_ptr[Message] message
  * 
  *         for peer in peers[ASN]:             # <<<<<<<<<<<<<<
@@ -11611,7 +11842,7 @@ static void __pyx_f_2AS_2AS_updateBestRoute(int __pyx_v_ASN, std::pair<int,char>
     __pyx_L3_continue:;
   }
 
-  /* "AS.pyx":747
+  /* "AS.pyx":752
  *             processor.addMessage(message)
  * 
  *     @staticmethod             # <<<<<<<<<<<<<<
@@ -11622,7 +11853,7 @@ static void __pyx_f_2AS_2AS_updateBestRoute(int __pyx_v_ASN, std::pair<int,char>
   /* function exit code */
 }
 
-/* "AS.pyx":762
+/* "AS.pyx":767
  *                 processor.addMessage(message)
  * 
  *     @staticmethod             # <<<<<<<<<<<<<<
@@ -11650,7 +11881,7 @@ static void __pyx_f_2AS_2AS_updateBest(int __pyx_v_ASN, int __pyx_v_lastAS, std:
   int __pyx_clineno = 0;
   PyGILState_STATE __pyx_gilstate_save;
 
-  /* "AS.pyx":770
+  /* "AS.pyx":775
  *             pair[int, char] lastPeer
  * 
  *         route = make_shared[Route]()             # <<<<<<<<<<<<<<
@@ -11663,11 +11894,11 @@ static void __pyx_f_2AS_2AS_updateBest(int __pyx_v_ASN, int __pyx_v_lastAS, std:
     PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
     __Pyx_CppExn2PyErr();
     __Pyx_PyGILState_Release(__pyx_gilstate_save);
-    __PYX_ERR(0, 770, __pyx_L1_error)
+    __PYX_ERR(0, 775, __pyx_L1_error)
   }
   __pyx_v_route = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_1);
 
-  /* "AS.pyx":771
+  /* "AS.pyx":776
  * 
  *         route = make_shared[Route]()
  *         route.get().prefix = prefix             # <<<<<<<<<<<<<<
@@ -11676,7 +11907,7 @@ static void __pyx_f_2AS_2AS_updateBest(int __pyx_v_ASN, int __pyx_v_lastAS, std:
 */
   __pyx_v_route.get()->prefix = __pyx_v_prefix;
 
-  /* "AS.pyx":772
+  /* "AS.pyx":777
  *         route = make_shared[Route]()
  *         route.get().prefix = prefix
  *         route.get().ASPath = string("")             # <<<<<<<<<<<<<<
@@ -11689,11 +11920,11 @@ static void __pyx_f_2AS_2AS_updateBest(int __pyx_v_ASN, int __pyx_v_lastAS, std:
     PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
     __Pyx_CppExn2PyErr();
     __Pyx_PyGILState_Release(__pyx_gilstate_save);
-    __PYX_ERR(0, 772, __pyx_L1_error)
+    __PYX_ERR(0, 777, __pyx_L1_error)
   }
   __pyx_v_route.get()->ASPath = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_2);
 
-  /* "AS.pyx":773
+  /* "AS.pyx":778
  *         route.get().prefix = prefix
  *         route.get().ASPath = string("")
  *         locks[ASN].lock()             # <<<<<<<<<<<<<<
@@ -11702,7 +11933,7 @@ static void __pyx_f_2AS_2AS_updateBest(int __pyx_v_ASN, int __pyx_v_lastAS, std:
 */
   (__pyx_v_2AS_locks[__pyx_v_ASN])->lock();
 
-  /* "AS.pyx":774
+  /* "AS.pyx":779
  *         route.get().ASPath = string("")
  *         locks[ASN].lock()
  *         route = routeTables[ASN].updateBestRoute(route)             # <<<<<<<<<<<<<<
@@ -11711,7 +11942,7 @@ static void __pyx_f_2AS_2AS_updateBest(int __pyx_v_ASN, int __pyx_v_lastAS, std:
 */
   __pyx_v_route = (__pyx_v_2AS_routeTables[__pyx_v_ASN])->updateBestRoute(__pyx_v_route);
 
-  /* "AS.pyx":775
+  /* "AS.pyx":780
  *         locks[ASN].lock()
  *         route = routeTables[ASN].updateBestRoute(route)
  *         locks[ASN].unlock()             # <<<<<<<<<<<<<<
@@ -11720,7 +11951,7 @@ static void __pyx_f_2AS_2AS_updateBest(int __pyx_v_ASN, int __pyx_v_lastAS, std:
 */
   (__pyx_v_2AS_locks[__pyx_v_ASN])->unlock();
 
-  /* "AS.pyx":777
+  /* "AS.pyx":782
  *         locks[ASN].unlock()
  * 
  *         if (route == NULL):             # <<<<<<<<<<<<<<
@@ -11730,7 +11961,7 @@ static void __pyx_f_2AS_2AS_updateBest(int __pyx_v_ASN, int __pyx_v_lastAS, std:
   __pyx_t_3 = ((__pyx_v_route == NULL) != 0);
   if (__pyx_t_3) {
 
-    /* "AS.pyx":778
+    /* "AS.pyx":783
  * 
  *         if (route == NULL):
  *             for p in peers[ASN]:             # <<<<<<<<<<<<<<
@@ -11743,7 +11974,7 @@ static void __pyx_f_2AS_2AS_updateBest(int __pyx_v_ASN, int __pyx_v_lastAS, std:
       __pyx_t_6 = *__pyx_t_4;
       __pyx_v_p = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_6);
 
-      /* "AS.pyx":779
+      /* "AS.pyx":784
  *         if (route == NULL):
  *             for p in peers[ASN]:
  *                 if (p.first == lastAS):             # <<<<<<<<<<<<<<
@@ -11753,7 +11984,7 @@ static void __pyx_f_2AS_2AS_updateBest(int __pyx_v_ASN, int __pyx_v_lastAS, std:
       __pyx_t_3 = (__pyx_v_p.first == __pyx_v_lastAS);
       if (__pyx_t_3) {
 
-        /* "AS.pyx":780
+        /* "AS.pyx":785
  *             for p in peers[ASN]:
  *                 if (p.first == lastAS):
  *                     continue             # <<<<<<<<<<<<<<
@@ -11762,7 +11993,7 @@ static void __pyx_f_2AS_2AS_updateBest(int __pyx_v_ASN, int __pyx_v_lastAS, std:
 */
         goto __pyx_L4_continue;
 
-        /* "AS.pyx":779
+        /* "AS.pyx":784
  *         if (route == NULL):
  *             for p in peers[ASN]:
  *                 if (p.first == lastAS):             # <<<<<<<<<<<<<<
@@ -11771,7 +12002,7 @@ static void __pyx_f_2AS_2AS_updateBest(int __pyx_v_ASN, int __pyx_v_lastAS, std:
 */
       }
 
-      /* "AS.pyx":782
+      /* "AS.pyx":787
  *                     continue
  * 
  *                 message = make_shared[Message](Message("T", p, ASN, prefix)) # Only as a notification to update the best route             # <<<<<<<<<<<<<<
@@ -11784,11 +12015,11 @@ static void __pyx_f_2AS_2AS_updateBest(int __pyx_v_ASN, int __pyx_v_lastAS, std:
         PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
         __Pyx_CppExn2PyErr();
         __Pyx_PyGILState_Release(__pyx_gilstate_save);
-        __PYX_ERR(0, 782, __pyx_L1_error)
+        __PYX_ERR(0, 787, __pyx_L1_error)
       }
       __pyx_v_message = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_7);
 
-      /* "AS.pyx":783
+      /* "AS.pyx":788
  * 
  *                 message = make_shared[Message](Message("T", p, ASN, prefix)) # Only as a notification to update the best route
  *                 processor.addMessage(message)             # <<<<<<<<<<<<<<
@@ -11797,7 +12028,7 @@ static void __pyx_f_2AS_2AS_updateBest(int __pyx_v_ASN, int __pyx_v_lastAS, std:
 */
       ((struct __pyx_vtabstruct_9Processor_Processor *)__pyx_v_processor->__pyx_vtab)->addMessage(__pyx_v_processor, __pyx_v_message);
 
-      /* "AS.pyx":778
+      /* "AS.pyx":783
  * 
  *         if (route == NULL):
  *             for p in peers[ASN]:             # <<<<<<<<<<<<<<
@@ -11807,7 +12038,7 @@ static void __pyx_f_2AS_2AS_updateBest(int __pyx_v_ASN, int __pyx_v_lastAS, std:
       __pyx_L4_continue:;
     }
 
-    /* "AS.pyx":785
+    /* "AS.pyx":790
  *                 processor.addMessage(message)
  * 
  *             return             # <<<<<<<<<<<<<<
@@ -11816,7 +12047,7 @@ static void __pyx_f_2AS_2AS_updateBest(int __pyx_v_ASN, int __pyx_v_lastAS, std:
 */
     goto __pyx_L0;
 
-    /* "AS.pyx":777
+    /* "AS.pyx":782
  *         locks[ASN].unlock()
  * 
  *         if (route == NULL):             # <<<<<<<<<<<<<<
@@ -11825,7 +12056,7 @@ static void __pyx_f_2AS_2AS_updateBest(int __pyx_v_ASN, int __pyx_v_lastAS, std:
 */
   }
 
-  /* "AS.pyx":787
+  /* "AS.pyx":792
  *             return
  * 
  *         rt = route.get()             # <<<<<<<<<<<<<<
@@ -11834,7 +12065,7 @@ static void __pyx_f_2AS_2AS_updateBest(int __pyx_v_ASN, int __pyx_v_lastAS, std:
 */
   __pyx_v_rt = __pyx_v_route.get();
 
-  /* "AS.pyx":788
+  /* "AS.pyx":793
  * 
  *         rt = route.get()
  *         if (rt.ASPath == ""):             # <<<<<<<<<<<<<<
@@ -11844,7 +12075,7 @@ static void __pyx_f_2AS_2AS_updateBest(int __pyx_v_ASN, int __pyx_v_lastAS, std:
   __pyx_t_3 = (__pyx_v_rt->ASPath == __pyx_k_);
   if (__pyx_t_3) {
 
-    /* "AS.pyx":789
+    /* "AS.pyx":794
  *         rt = route.get()
  *         if (rt.ASPath == ""):
  *             return             # <<<<<<<<<<<<<<
@@ -11853,7 +12084,7 @@ static void __pyx_f_2AS_2AS_updateBest(int __pyx_v_ASN, int __pyx_v_lastAS, std:
 */
     goto __pyx_L0;
 
-    /* "AS.pyx":788
+    /* "AS.pyx":793
  * 
  *         rt = route.get()
  *         if (rt.ASPath == ""):             # <<<<<<<<<<<<<<
@@ -11862,7 +12093,7 @@ static void __pyx_f_2AS_2AS_updateBest(int __pyx_v_ASN, int __pyx_v_lastAS, std:
 */
   }
 
-  /* "AS.pyx":791
+  /* "AS.pyx":796
  *             return
  * 
  *         lastAS = stoi(rt.ASPath.substr(0, rt.ASPath.find(' ')))             # <<<<<<<<<<<<<<
@@ -11875,7 +12106,7 @@ static void __pyx_f_2AS_2AS_updateBest(int __pyx_v_ASN, int __pyx_v_lastAS, std:
     PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
     __Pyx_CppExn2PyErr();
     __Pyx_PyGILState_Release(__pyx_gilstate_save);
-    __PYX_ERR(0, 791, __pyx_L1_error)
+    __PYX_ERR(0, 796, __pyx_L1_error)
   }
   try {
     __pyx_t_8 = std::stoi(__pyx_t_2);
@@ -11883,11 +12114,11 @@ static void __pyx_f_2AS_2AS_updateBest(int __pyx_v_ASN, int __pyx_v_lastAS, std:
     PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
     __Pyx_CppExn2PyErr();
     __Pyx_PyGILState_Release(__pyx_gilstate_save);
-    __PYX_ERR(0, 791, __pyx_L1_error)
+    __PYX_ERR(0, 796, __pyx_L1_error)
   }
   __pyx_v_lastAS = __pyx_t_8;
 
-  /* "AS.pyx":793
+  /* "AS.pyx":798
  *         lastAS = stoi(rt.ASPath.substr(0, rt.ASPath.find(' ')))
  * 
  *         for p in peers[lastAS]:             # <<<<<<<<<<<<<<
@@ -11900,7 +12131,7 @@ static void __pyx_f_2AS_2AS_updateBest(int __pyx_v_ASN, int __pyx_v_lastAS, std:
     __pyx_t_6 = *__pyx_t_4;
     __pyx_v_p = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_6);
 
-    /* "AS.pyx":794
+    /* "AS.pyx":799
  * 
  *         for p in peers[lastAS]:
  *             if (p.first == ASN):             # <<<<<<<<<<<<<<
@@ -11910,7 +12141,7 @@ static void __pyx_f_2AS_2AS_updateBest(int __pyx_v_ASN, int __pyx_v_lastAS, std:
     __pyx_t_3 = (__pyx_v_p.first == __pyx_v_ASN);
     if (__pyx_t_3) {
 
-      /* "AS.pyx":795
+      /* "AS.pyx":800
  *         for p in peers[lastAS]:
  *             if (p.first == ASN):
  *                 lastPeer = p             # <<<<<<<<<<<<<<
@@ -11919,7 +12150,7 @@ static void __pyx_f_2AS_2AS_updateBest(int __pyx_v_ASN, int __pyx_v_lastAS, std:
 */
       __pyx_v_lastPeer = __pyx_v_p;
 
-      /* "AS.pyx":796
+      /* "AS.pyx":801
  *             if (p.first == ASN):
  *                 lastPeer = p
  *                 break             # <<<<<<<<<<<<<<
@@ -11928,7 +12159,7 @@ static void __pyx_f_2AS_2AS_updateBest(int __pyx_v_ASN, int __pyx_v_lastAS, std:
 */
       goto __pyx_L10_break;
 
-      /* "AS.pyx":794
+      /* "AS.pyx":799
  * 
  *         for p in peers[lastAS]:
  *             if (p.first == ASN):             # <<<<<<<<<<<<<<
@@ -11937,7 +12168,7 @@ static void __pyx_f_2AS_2AS_updateBest(int __pyx_v_ASN, int __pyx_v_lastAS, std:
 */
     }
 
-    /* "AS.pyx":793
+    /* "AS.pyx":798
  *         lastAS = stoi(rt.ASPath.substr(0, rt.ASPath.find(' ')))
  * 
  *         for p in peers[lastAS]:             # <<<<<<<<<<<<<<
@@ -11950,7 +12181,7 @@ static void __pyx_f_2AS_2AS_updateBest(int __pyx_v_ASN, int __pyx_v_lastAS, std:
   goto __pyx_L12_for_end;
   __pyx_L12_for_end:;
 
-  /* "AS.pyx":798
+  /* "AS.pyx":803
  *                 break
  * 
  *         for p in peers[ASN]:             # <<<<<<<<<<<<<<
@@ -11963,7 +12194,7 @@ static void __pyx_f_2AS_2AS_updateBest(int __pyx_v_ASN, int __pyx_v_lastAS, std:
     __pyx_t_6 = *__pyx_t_4;
     __pyx_v_p = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_6);
 
-    /* "AS.pyx":799
+    /* "AS.pyx":804
  * 
  *         for p in peers[ASN]:
  *             if (p.first == lastAS):             # <<<<<<<<<<<<<<
@@ -11973,7 +12204,7 @@ static void __pyx_f_2AS_2AS_updateBest(int __pyx_v_ASN, int __pyx_v_lastAS, std:
     __pyx_t_3 = (__pyx_v_p.first == __pyx_v_lastAS);
     if (__pyx_t_3) {
 
-      /* "AS.pyx":800
+      /* "AS.pyx":805
  *         for p in peers[ASN]:
  *             if (p.first == lastAS):
  *                 continue             # <<<<<<<<<<<<<<
@@ -11982,7 +12213,7 @@ static void __pyx_f_2AS_2AS_updateBest(int __pyx_v_ASN, int __pyx_v_lastAS, std:
 */
       goto __pyx_L13_continue;
 
-      /* "AS.pyx":799
+      /* "AS.pyx":804
  * 
  *         for p in peers[ASN]:
  *             if (p.first == lastAS):             # <<<<<<<<<<<<<<
@@ -11991,7 +12222,7 @@ static void __pyx_f_2AS_2AS_updateBest(int __pyx_v_ASN, int __pyx_v_lastAS, std:
 */
     }
 
-    /* "AS.pyx":802
+    /* "AS.pyx":807
  *                 continue
  * 
  *             message = AS.filterOut(ASN, p, lastPeer, route)             # <<<<<<<<<<<<<<
@@ -12000,7 +12231,7 @@ static void __pyx_f_2AS_2AS_updateBest(int __pyx_v_ASN, int __pyx_v_lastAS, std:
 */
     __pyx_v_message = __pyx_f_2AS_2AS_filterOut(__pyx_v_ASN, __pyx_v_p, __pyx_v_lastPeer, __pyx_v_route);
 
-    /* "AS.pyx":804
+    /* "AS.pyx":809
  *             message = AS.filterOut(ASN, p, lastPeer, route)
  * 
  *             if (message != NULL and strcmp(message.get().type, "V") != 0):             # <<<<<<<<<<<<<<
@@ -12018,7 +12249,7 @@ static void __pyx_f_2AS_2AS_updateBest(int __pyx_v_ASN, int __pyx_v_lastAS, std:
     __pyx_L17_bool_binop_done:;
     if (__pyx_t_3) {
 
-      /* "AS.pyx":805
+      /* "AS.pyx":810
  * 
  *             if (message != NULL and strcmp(message.get().type, "V") != 0):
  *                 message.get().type = "U"             # <<<<<<<<<<<<<<
@@ -12027,7 +12258,7 @@ static void __pyx_f_2AS_2AS_updateBest(int __pyx_v_ASN, int __pyx_v_lastAS, std:
 */
       __pyx_v_message.get()->type = ((char *)"U");
 
-      /* "AS.pyx":806
+      /* "AS.pyx":811
  *             if (message != NULL and strcmp(message.get().type, "V") != 0):
  *                 message.get().type = "U"
  *                 processor.addMessage(message)             # <<<<<<<<<<<<<<
@@ -12036,7 +12267,7 @@ static void __pyx_f_2AS_2AS_updateBest(int __pyx_v_ASN, int __pyx_v_lastAS, std:
 */
       ((struct __pyx_vtabstruct_9Processor_Processor *)__pyx_v_processor->__pyx_vtab)->addMessage(__pyx_v_processor, __pyx_v_message);
 
-      /* "AS.pyx":804
+      /* "AS.pyx":809
  *             message = AS.filterOut(ASN, p, lastPeer, route)
  * 
  *             if (message != NULL and strcmp(message.get().type, "V") != 0):             # <<<<<<<<<<<<<<
@@ -12046,7 +12277,7 @@ static void __pyx_f_2AS_2AS_updateBest(int __pyx_v_ASN, int __pyx_v_lastAS, std:
       goto __pyx_L16;
     }
 
-    /* "AS.pyx":810
+    /* "AS.pyx":815
  *             else:
  * 
  *                 message = make_shared[Message](Message("T", p, ASN, prefix))             # <<<<<<<<<<<<<<
@@ -12060,11 +12291,11 @@ static void __pyx_f_2AS_2AS_updateBest(int __pyx_v_ASN, int __pyx_v_lastAS, std:
         PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
         __Pyx_CppExn2PyErr();
         __Pyx_PyGILState_Release(__pyx_gilstate_save);
-        __PYX_ERR(0, 810, __pyx_L1_error)
+        __PYX_ERR(0, 815, __pyx_L1_error)
       }
       __pyx_v_message = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_7);
 
-      /* "AS.pyx":811
+      /* "AS.pyx":816
  * 
  *                 message = make_shared[Message](Message("T", p, ASN, prefix))
  *                 processor.addMessage(message)             # <<<<<<<<<<<<<<
@@ -12075,7 +12306,7 @@ static void __pyx_f_2AS_2AS_updateBest(int __pyx_v_ASN, int __pyx_v_lastAS, std:
     }
     __pyx_L16:;
 
-    /* "AS.pyx":798
+    /* "AS.pyx":803
  *                 break
  * 
  *         for p in peers[ASN]:             # <<<<<<<<<<<<<<
@@ -12085,7 +12316,7 @@ static void __pyx_f_2AS_2AS_updateBest(int __pyx_v_ASN, int __pyx_v_lastAS, std:
     __pyx_L13_continue:;
   }
 
-  /* "AS.pyx":762
+  /* "AS.pyx":767
  *                 processor.addMessage(message)
  * 
  *     @staticmethod             # <<<<<<<<<<<<<<
@@ -12102,12 +12333,12 @@ static void __pyx_f_2AS_2AS_updateBest(int __pyx_v_ASN, int __pyx_v_lastAS, std:
   __pyx_L0:;
 }
 
-/* "AS.pyx":813
+/* "AS.pyx":818
  *                 processor.addMessage(message)
  * 
  *     @staticmethod             # <<<<<<<<<<<<<<
  *     cdef void receive(int ASN, shared_ptr[Message] msg, Processor processor) noexcept nogil:
- *         cdef:
+ *         global BGP_UPDATE_COUNTER
 */
 
 static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  __pyx_v_msg, struct __pyx_obj_9Processor_Processor *__pyx_v_processor) {
@@ -12119,15 +12350,18 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
   std::string __pyx_v_ASPath;
   std::pair<int,char>  __pyx_v_p;
   std::pair<int,int>  __pyx_v_q;
-  int __pyx_t_1;
-  std::string __pyx_t_2;
+  char *__pyx_v_t;
+  char *__pyx_t_1;
+  int __pyx_t_2;
   int __pyx_t_3;
+  int __pyx_t_4;
+  std::string __pyx_t_5;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   PyGILState_STATE __pyx_gilstate_save;
 
-  /* "AS.pyx":817
+  /* "AS.pyx":823
  *         cdef:
  *             shared_ptr[Route] route
  *             bool flag = False             # <<<<<<<<<<<<<<
@@ -12136,7 +12370,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
   __pyx_v_flag = 0;
 
-  /* "AS.pyx":819
+  /* "AS.pyx":825
  *             bool flag = False
  *             int lastAS
  *             Message* message = msg.get()             # <<<<<<<<<<<<<<
@@ -12145,7 +12379,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
   __pyx_v_message = __pyx_v_msg.get();
 
-  /* "AS.pyx":820
+  /* "AS.pyx":826
  *             int lastAS
  *             Message* message = msg.get()
  *             Route* rt = NULL             # <<<<<<<<<<<<<<
@@ -12154,17 +12388,72 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
   __pyx_v_rt = NULL;
 
-  /* "AS.pyx":825
+  /* "AS.pyx":831
  *             pair[int, int] q
  * 
+ *         cdef char* t = message.type             # <<<<<<<<<<<<<<
+ * 
+ *         if t[0] == b'A'[0] or t[0] == b'U'[0] or t[0] == b'W'[0]:
+*/
+  __pyx_t_1 = __pyx_v_message->type;
+  __pyx_v_t = __pyx_t_1;
+
+  /* "AS.pyx":833
+ *         cdef char* t = message.type
+ * 
+ *         if t[0] == b'A'[0] or t[0] == b'U'[0] or t[0] == b'W'[0]:             # <<<<<<<<<<<<<<
+ *             BGP_UPDATE_COUNTER += 1
+ *         if strcmp(message.type, 'A') == 0:
+*/
+  __pyx_t_3 = __Pyx_GetItemInt_Bytes(__pyx_mstate_global->__pyx_n_b_A, 0, long, 1, __Pyx_PyLong_From_long, 0, 0, 1, 0, __Pyx_ReferenceSharing_SharedReference); if (unlikely(__pyx_t_3 == -1)) __PYX_ERR(0, 833, __pyx_L1_error)
+  __pyx_t_4 = ((__pyx_v_t[0]) == __pyx_t_3);
+  if (!__pyx_t_4) {
+  } else {
+    __pyx_t_2 = __pyx_t_4;
+    goto __pyx_L4_bool_binop_done;
+  }
+  __pyx_t_3 = __Pyx_GetItemInt_Bytes(__pyx_mstate_global->__pyx_n_b_U, 0, long, 1, __Pyx_PyLong_From_long, 0, 0, 1, 0, __Pyx_ReferenceSharing_SharedReference); if (unlikely(__pyx_t_3 == -1)) __PYX_ERR(0, 833, __pyx_L1_error)
+  __pyx_t_4 = ((__pyx_v_t[0]) == __pyx_t_3);
+  if (!__pyx_t_4) {
+  } else {
+    __pyx_t_2 = __pyx_t_4;
+    goto __pyx_L4_bool_binop_done;
+  }
+  __pyx_t_3 = __Pyx_GetItemInt_Bytes(__pyx_mstate_global->__pyx_n_b_W, 0, long, 1, __Pyx_PyLong_From_long, 0, 0, 1, 0, __Pyx_ReferenceSharing_SharedReference); if (unlikely(__pyx_t_3 == -1)) __PYX_ERR(0, 833, __pyx_L1_error)
+  __pyx_t_4 = ((__pyx_v_t[0]) == __pyx_t_3);
+  __pyx_t_2 = __pyx_t_4;
+  __pyx_L4_bool_binop_done:;
+  if (__pyx_t_2) {
+
+    /* "AS.pyx":834
+ * 
+ *         if t[0] == b'A'[0] or t[0] == b'U'[0] or t[0] == b'W'[0]:
+ *             BGP_UPDATE_COUNTER += 1             # <<<<<<<<<<<<<<
+ *         if strcmp(message.type, 'A') == 0:
+ * 
+*/
+    BGP_UPDATE_COUNTER = (BGP_UPDATE_COUNTER + 1);
+
+    /* "AS.pyx":833
+ *         cdef char* t = message.type
+ * 
+ *         if t[0] == b'A'[0] or t[0] == b'U'[0] or t[0] == b'W'[0]:             # <<<<<<<<<<<<<<
+ *             BGP_UPDATE_COUNTER += 1
+ *         if strcmp(message.type, 'A') == 0:
+*/
+  }
+
+  /* "AS.pyx":835
+ *         if t[0] == b'A'[0] or t[0] == b'U'[0] or t[0] == b'W'[0]:
+ *             BGP_UPDATE_COUNTER += 1
  *         if strcmp(message.type, 'A') == 0:             # <<<<<<<<<<<<<<
  * 
  *             # Discard loop
 */
-  __pyx_t_1 = (strcmp(__pyx_v_message->type, __pyx_k_A) == 0);
-  if (__pyx_t_1) {
+  __pyx_t_2 = (strcmp(__pyx_v_message->type, __pyx_k_A) == 0);
+  if (__pyx_t_2) {
 
-    /* "AS.pyx":828
+    /* "AS.pyx":838
  * 
  *             # Discard loop
  *             if AS.inASPath(to_string(ASN), message.ASPath):             # <<<<<<<<<<<<<<
@@ -12172,17 +12461,17 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
  *                 routeTables[ASN].deleteRouteByPeerAS(to_string(message.lastAS), message.prefix)
 */
     try {
-      __pyx_t_2 = std::to_string(__pyx_v_ASN);
+      __pyx_t_5 = std::to_string(__pyx_v_ASN);
     } catch(...) {
       PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
       __Pyx_CppExn2PyErr();
       __Pyx_PyGILState_Release(__pyx_gilstate_save);
-      __PYX_ERR(0, 828, __pyx_L1_error)
+      __PYX_ERR(0, 838, __pyx_L1_error)
     }
-    __pyx_t_1 = (__pyx_f_2AS_2AS_inASPath(__pyx_t_2, __pyx_v_message->ASPath) != 0);
-    if (__pyx_t_1) {
+    __pyx_t_2 = (__pyx_f_2AS_2AS_inASPath(__pyx_t_5, __pyx_v_message->ASPath) != 0);
+    if (__pyx_t_2) {
 
-      /* "AS.pyx":829
+      /* "AS.pyx":839
  *             # Discard loop
  *             if AS.inASPath(to_string(ASN), message.ASPath):
  *                 locks[ASN].lock()             # <<<<<<<<<<<<<<
@@ -12191,7 +12480,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
       (__pyx_v_2AS_locks[__pyx_v_ASN])->lock();
 
-      /* "AS.pyx":830
+      /* "AS.pyx":840
  *             if AS.inASPath(to_string(ASN), message.ASPath):
  *                 locks[ASN].lock()
  *                 routeTables[ASN].deleteRouteByPeerAS(to_string(message.lastAS), message.prefix)             # <<<<<<<<<<<<<<
@@ -12199,16 +12488,16 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
  *                 return
 */
       try {
-        __pyx_t_2 = std::to_string(__pyx_v_message->lastAS);
+        __pyx_t_5 = std::to_string(__pyx_v_message->lastAS);
       } catch(...) {
         PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
         __Pyx_CppExn2PyErr();
         __Pyx_PyGILState_Release(__pyx_gilstate_save);
-        __PYX_ERR(0, 830, __pyx_L1_error)
+        __PYX_ERR(0, 840, __pyx_L1_error)
       }
-      (__pyx_v_2AS_routeTables[__pyx_v_ASN])->deleteRouteByPeerAS(__pyx_t_2, __pyx_v_message->prefix);
+      (__pyx_v_2AS_routeTables[__pyx_v_ASN])->deleteRouteByPeerAS(__pyx_t_5, __pyx_v_message->prefix);
 
-      /* "AS.pyx":831
+      /* "AS.pyx":841
  *                 locks[ASN].lock()
  *                 routeTables[ASN].deleteRouteByPeerAS(to_string(message.lastAS), message.prefix)
  *                 locks[ASN].unlock()             # <<<<<<<<<<<<<<
@@ -12217,7 +12506,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
       (__pyx_v_2AS_locks[__pyx_v_ASN])->unlock();
 
-      /* "AS.pyx":832
+      /* "AS.pyx":842
  *                 routeTables[ASN].deleteRouteByPeerAS(to_string(message.lastAS), message.prefix)
  *                 locks[ASN].unlock()
  *                 return             # <<<<<<<<<<<<<<
@@ -12226,7 +12515,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
       goto __pyx_L0;
 
-      /* "AS.pyx":828
+      /* "AS.pyx":838
  * 
  *             # Discard loop
  *             if AS.inASPath(to_string(ASN), message.ASPath):             # <<<<<<<<<<<<<<
@@ -12235,7 +12524,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
     }
 
-    /* "AS.pyx":834
+    /* "AS.pyx":844
  *                 return
  * 
  *             route = AS.filterIn(ASN, msg)             # <<<<<<<<<<<<<<
@@ -12244,17 +12533,17 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
     __pyx_v_route = __pyx_f_2AS_2AS_filterIn(__pyx_v_ASN, __pyx_v_msg);
 
-    /* "AS.pyx":836
+    /* "AS.pyx":846
  *             route = AS.filterIn(ASN, msg)
  * 
  *             if (route == NULL):             # <<<<<<<<<<<<<<
  *                 locks[ASN].lock()
  *                 route = routeTables[ASN].getBestRoute(message.prefix)
 */
-    __pyx_t_1 = ((__pyx_v_route == NULL) != 0);
-    if (__pyx_t_1) {
+    __pyx_t_2 = ((__pyx_v_route == NULL) != 0);
+    if (__pyx_t_2) {
 
-      /* "AS.pyx":837
+      /* "AS.pyx":847
  * 
  *             if (route == NULL):
  *                 locks[ASN].lock()             # <<<<<<<<<<<<<<
@@ -12263,7 +12552,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
       (__pyx_v_2AS_locks[__pyx_v_ASN])->lock();
 
-      /* "AS.pyx":838
+      /* "AS.pyx":848
  *             if (route == NULL):
  *                 locks[ASN].lock()
  *                 route = routeTables[ASN].getBestRoute(message.prefix)             # <<<<<<<<<<<<<<
@@ -12272,7 +12561,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
       __pyx_v_route = (__pyx_v_2AS_routeTables[__pyx_v_ASN])->getBestRoute(__pyx_v_message->prefix);
 
-      /* "AS.pyx":839
+      /* "AS.pyx":849
  *                 locks[ASN].lock()
  *                 route = routeTables[ASN].getBestRoute(message.prefix)
  *                 rt = route.get()             # <<<<<<<<<<<<<<
@@ -12281,7 +12570,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
       __pyx_v_rt = __pyx_v_route.get();
 
-      /* "AS.pyx":840
+      /* "AS.pyx":850
  *                 route = routeTables[ASN].getBestRoute(message.prefix)
  *                 rt = route.get()
  *                 routeTables[ASN].deleteRouteByPeerAS(to_string(message.lastAS), message.prefix)             # <<<<<<<<<<<<<<
@@ -12289,26 +12578,26 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
  *                 if (rt.ASPath == ""):
 */
       try {
-        __pyx_t_2 = std::to_string(__pyx_v_message->lastAS);
+        __pyx_t_5 = std::to_string(__pyx_v_message->lastAS);
       } catch(...) {
         PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
         __Pyx_CppExn2PyErr();
         __Pyx_PyGILState_Release(__pyx_gilstate_save);
-        __PYX_ERR(0, 840, __pyx_L1_error)
+        __PYX_ERR(0, 850, __pyx_L1_error)
       }
-      (__pyx_v_2AS_routeTables[__pyx_v_ASN])->deleteRouteByPeerAS(__pyx_t_2, __pyx_v_message->prefix);
+      (__pyx_v_2AS_routeTables[__pyx_v_ASN])->deleteRouteByPeerAS(__pyx_t_5, __pyx_v_message->prefix);
 
-      /* "AS.pyx":842
+      /* "AS.pyx":852
  *                 routeTables[ASN].deleteRouteByPeerAS(to_string(message.lastAS), message.prefix)
  * 
  *                 if (rt.ASPath == ""):             # <<<<<<<<<<<<<<
  *                     locks[ASN].unlock()
  *                     return
 */
-      __pyx_t_1 = (__pyx_v_rt->ASPath == __pyx_k_);
-      if (__pyx_t_1) {
+      __pyx_t_2 = (__pyx_v_rt->ASPath == __pyx_k_);
+      if (__pyx_t_2) {
 
-        /* "AS.pyx":843
+        /* "AS.pyx":853
  * 
  *                 if (rt.ASPath == ""):
  *                     locks[ASN].unlock()             # <<<<<<<<<<<<<<
@@ -12317,7 +12606,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
         (__pyx_v_2AS_locks[__pyx_v_ASN])->unlock();
 
-        /* "AS.pyx":844
+        /* "AS.pyx":854
  *                 if (rt.ASPath == ""):
  *                     locks[ASN].unlock()
  *                     return             # <<<<<<<<<<<<<<
@@ -12326,7 +12615,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
         goto __pyx_L0;
 
-        /* "AS.pyx":842
+        /* "AS.pyx":852
  *                 routeTables[ASN].deleteRouteByPeerAS(to_string(message.lastAS), message.prefix)
  * 
  *                 if (rt.ASPath == ""):             # <<<<<<<<<<<<<<
@@ -12335,7 +12624,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
       }
 
-      /* "AS.pyx":846
+      /* "AS.pyx":856
  *                     return
  * 
  *                 lastAS = stoi(rt.ASPath.substr(0, rt.ASPath.find(' ')))             # <<<<<<<<<<<<<<
@@ -12343,34 +12632,34 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
  *                     route = routeTables[ASN].getBestRoute(message.prefix)
 */
       try {
-        __pyx_t_2 = __pyx_v_rt->ASPath.substr(0, __pyx_v_rt->ASPath.find(__pyx_k__4));
+        __pyx_t_5 = __pyx_v_rt->ASPath.substr(0, __pyx_v_rt->ASPath.find(__pyx_k__4));
       } catch(...) {
         PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
         __Pyx_CppExn2PyErr();
         __Pyx_PyGILState_Release(__pyx_gilstate_save);
-        __PYX_ERR(0, 846, __pyx_L1_error)
+        __PYX_ERR(0, 856, __pyx_L1_error)
       }
       try {
-        __pyx_t_3 = std::stoi(__pyx_t_2);
+        __pyx_t_3 = std::stoi(__pyx_t_5);
       } catch(...) {
         PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
         __Pyx_CppExn2PyErr();
         __Pyx_PyGILState_Release(__pyx_gilstate_save);
-        __PYX_ERR(0, 846, __pyx_L1_error)
+        __PYX_ERR(0, 856, __pyx_L1_error)
       }
       __pyx_v_lastAS = __pyx_t_3;
 
-      /* "AS.pyx":847
+      /* "AS.pyx":857
  * 
  *                 lastAS = stoi(rt.ASPath.substr(0, rt.ASPath.find(' ')))
  *                 if (lastAS == message.lastAS):             # <<<<<<<<<<<<<<
  *                     route = routeTables[ASN].getBestRoute(message.prefix)
  *                     flag = True
 */
-      __pyx_t_1 = (__pyx_v_lastAS == __pyx_v_message->lastAS);
-      if (__pyx_t_1) {
+      __pyx_t_2 = (__pyx_v_lastAS == __pyx_v_message->lastAS);
+      if (__pyx_t_2) {
 
-        /* "AS.pyx":848
+        /* "AS.pyx":858
  *                 lastAS = stoi(rt.ASPath.substr(0, rt.ASPath.find(' ')))
  *                 if (lastAS == message.lastAS):
  *                     route = routeTables[ASN].getBestRoute(message.prefix)             # <<<<<<<<<<<<<<
@@ -12379,7 +12668,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
         __pyx_v_route = (__pyx_v_2AS_routeTables[__pyx_v_ASN])->getBestRoute(__pyx_v_message->prefix);
 
-        /* "AS.pyx":849
+        /* "AS.pyx":859
  *                 if (lastAS == message.lastAS):
  *                     route = routeTables[ASN].getBestRoute(message.prefix)
  *                     flag = True             # <<<<<<<<<<<<<<
@@ -12388,7 +12677,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
         __pyx_v_flag = 1;
 
-        /* "AS.pyx":847
+        /* "AS.pyx":857
  * 
  *                 lastAS = stoi(rt.ASPath.substr(0, rt.ASPath.find(' ')))
  *                 if (lastAS == message.lastAS):             # <<<<<<<<<<<<<<
@@ -12397,7 +12686,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
       }
 
-      /* "AS.pyx":851
+      /* "AS.pyx":861
  *                     flag = True
  * 
  *                 locks[ASN].unlock()             # <<<<<<<<<<<<<<
@@ -12406,37 +12695,37 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
       (__pyx_v_2AS_locks[__pyx_v_ASN])->unlock();
 
-      /* "AS.pyx":853
+      /* "AS.pyx":863
  *                 locks[ASN].unlock()
  * 
  *                 if flag:             # <<<<<<<<<<<<<<
  * 
  *                     if (route != NULL):
 */
-      __pyx_t_1 = (__pyx_v_flag != 0);
-      if (__pyx_t_1) {
+      __pyx_t_2 = (__pyx_v_flag != 0);
+      if (__pyx_t_2) {
 
-        /* "AS.pyx":855
+        /* "AS.pyx":865
  *                 if flag:
  * 
  *                     if (route != NULL):             # <<<<<<<<<<<<<<
  *                         ASPath = route.get().ASPath
  *                         lastAS = stoi(ASPath.substr(0, ASPath.find(' ')))
 */
-        __pyx_t_1 = ((__pyx_v_route != NULL) != 0);
-        if (__pyx_t_1) {
+        __pyx_t_2 = ((__pyx_v_route != NULL) != 0);
+        if (__pyx_t_2) {
 
-          /* "AS.pyx":856
+          /* "AS.pyx":866
  * 
  *                     if (route != NULL):
  *                         ASPath = route.get().ASPath             # <<<<<<<<<<<<<<
  *                         lastAS = stoi(ASPath.substr(0, ASPath.find(' ')))
  * 
 */
-          __pyx_t_2 = __pyx_v_route.get()->ASPath;
-          __pyx_v_ASPath = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_2);
+          __pyx_t_5 = __pyx_v_route.get()->ASPath;
+          __pyx_v_ASPath = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_5);
 
-          /* "AS.pyx":857
+          /* "AS.pyx":867
  *                     if (route != NULL):
  *                         ASPath = route.get().ASPath
  *                         lastAS = stoi(ASPath.substr(0, ASPath.find(' ')))             # <<<<<<<<<<<<<<
@@ -12444,24 +12733,24 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
  *                         p.first = ASN
 */
           try {
-            __pyx_t_2 = __pyx_v_ASPath.substr(0, __pyx_v_ASPath.find(__pyx_k__4));
+            __pyx_t_5 = __pyx_v_ASPath.substr(0, __pyx_v_ASPath.find(__pyx_k__4));
           } catch(...) {
             PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
             __Pyx_CppExn2PyErr();
             __Pyx_PyGILState_Release(__pyx_gilstate_save);
-            __PYX_ERR(0, 857, __pyx_L1_error)
+            __PYX_ERR(0, 867, __pyx_L1_error)
           }
           try {
-            __pyx_t_3 = std::stoi(__pyx_t_2);
+            __pyx_t_3 = std::stoi(__pyx_t_5);
           } catch(...) {
             PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
             __Pyx_CppExn2PyErr();
             __Pyx_PyGILState_Release(__pyx_gilstate_save);
-            __PYX_ERR(0, 857, __pyx_L1_error)
+            __PYX_ERR(0, 867, __pyx_L1_error)
           }
           __pyx_v_lastAS = __pyx_t_3;
 
-          /* "AS.pyx":859
+          /* "AS.pyx":869
  *                         lastAS = stoi(ASPath.substr(0, ASPath.find(' ')))
  * 
  *                         p.first = ASN             # <<<<<<<<<<<<<<
@@ -12470,7 +12759,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
           __pyx_v_p.first = __pyx_v_ASN;
 
-          /* "AS.pyx":860
+          /* "AS.pyx":870
  * 
  *                         p.first = ASN
  *                         q.first = lastAS             # <<<<<<<<<<<<<<
@@ -12479,7 +12768,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
           __pyx_v_q.first = __pyx_v_lastAS;
 
-          /* "AS.pyx":861
+          /* "AS.pyx":871
  *                         p.first = ASN
  *                         q.first = lastAS
  *                         q.second = ASN             # <<<<<<<<<<<<<<
@@ -12488,7 +12777,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
           __pyx_v_q.second = __pyx_v_ASN;
 
-          /* "AS.pyx":862
+          /* "AS.pyx":872
  *                         q.first = lastAS
  *                         q.second = ASN
  *                         p.second = peerType[q]             # <<<<<<<<<<<<<<
@@ -12497,7 +12786,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
           __pyx_v_p.second = (__pyx_v_2AS_peerType[__pyx_v_q]);
 
-          /* "AS.pyx":864
+          /* "AS.pyx":874
  *                         p.second = peerType[q]
  * 
  *                         AS.announce(ASN, p, message.prefix, route, processor)             # <<<<<<<<<<<<<<
@@ -12506,17 +12795,17 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
           __pyx_f_2AS_2AS_announce(__pyx_v_ASN, __pyx_v_p, __pyx_v_message->prefix, __pyx_v_route, __pyx_v_processor);
 
-          /* "AS.pyx":855
+          /* "AS.pyx":865
  *                 if flag:
  * 
  *                     if (route != NULL):             # <<<<<<<<<<<<<<
  *                         ASPath = route.get().ASPath
  *                         lastAS = stoi(ASPath.substr(0, ASPath.find(' ')))
 */
-          goto __pyx_L9;
+          goto __pyx_L13;
         }
 
-        /* "AS.pyx":868
+        /* "AS.pyx":878
  *                     else:
  * 
  *                         AS.announce(ASN, message.peer, message.prefix, route, processor)             # <<<<<<<<<<<<<<
@@ -12526,9 +12815,9 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
         /*else*/ {
           __pyx_f_2AS_2AS_announce(__pyx_v_ASN, __pyx_v_message->peer, __pyx_v_message->prefix, __pyx_v_route, __pyx_v_processor);
         }
-        __pyx_L9:;
+        __pyx_L13:;
 
-        /* "AS.pyx":853
+        /* "AS.pyx":863
  *                 locks[ASN].unlock()
  * 
  *                 if flag:             # <<<<<<<<<<<<<<
@@ -12537,7 +12826,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
       }
 
-      /* "AS.pyx":870
+      /* "AS.pyx":880
  *                         AS.announce(ASN, message.peer, message.prefix, route, processor)
  * 
  *                 return             # <<<<<<<<<<<<<<
@@ -12546,7 +12835,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
       goto __pyx_L0;
 
-      /* "AS.pyx":836
+      /* "AS.pyx":846
  *             route = AS.filterIn(ASN, msg)
  * 
  *             if (route == NULL):             # <<<<<<<<<<<<<<
@@ -12555,7 +12844,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
     }
 
-    /* "AS.pyx":872
+    /* "AS.pyx":882
  *                 return
  * 
  *             locks[ASN].lock()             # <<<<<<<<<<<<<<
@@ -12564,7 +12853,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
     (__pyx_v_2AS_locks[__pyx_v_ASN])->lock();
 
-    /* "AS.pyx":873
+    /* "AS.pyx":883
  * 
  *             locks[ASN].lock()
  *             route = routeTables[ASN].insertRoute(route)             # <<<<<<<<<<<<<<
@@ -12573,7 +12862,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
     __pyx_v_route = (__pyx_v_2AS_routeTables[__pyx_v_ASN])->insertRoute(__pyx_v_route);
 
-    /* "AS.pyx":874
+    /* "AS.pyx":884
  *             locks[ASN].lock()
  *             route = routeTables[ASN].insertRoute(route)
  *             locks[ASN].unlock()             # <<<<<<<<<<<<<<
@@ -12582,27 +12871,27 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
     (__pyx_v_2AS_locks[__pyx_v_ASN])->unlock();
 
-    /* "AS.pyx":876
+    /* "AS.pyx":886
  *             locks[ASN].unlock()
  * 
  *             if (route != NULL):             # <<<<<<<<<<<<<<
  * 
  *                 ASPath = route.get().ASPath
 */
-    __pyx_t_1 = ((__pyx_v_route != NULL) != 0);
-    if (__pyx_t_1) {
+    __pyx_t_2 = ((__pyx_v_route != NULL) != 0);
+    if (__pyx_t_2) {
 
-      /* "AS.pyx":878
+      /* "AS.pyx":888
  *             if (route != NULL):
  * 
  *                 ASPath = route.get().ASPath             # <<<<<<<<<<<<<<
  *                 lastAS = stoi(ASPath.substr(0, ASPath.find(' ')))
  * 
 */
-      __pyx_t_2 = __pyx_v_route.get()->ASPath;
-      __pyx_v_ASPath = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_2);
+      __pyx_t_5 = __pyx_v_route.get()->ASPath;
+      __pyx_v_ASPath = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_5);
 
-      /* "AS.pyx":879
+      /* "AS.pyx":889
  * 
  *                 ASPath = route.get().ASPath
  *                 lastAS = stoi(ASPath.substr(0, ASPath.find(' ')))             # <<<<<<<<<<<<<<
@@ -12610,34 +12899,34 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
  *                 if (lastAS != message.lastAS):
 */
       try {
-        __pyx_t_2 = __pyx_v_ASPath.substr(0, __pyx_v_ASPath.find(__pyx_k__4));
+        __pyx_t_5 = __pyx_v_ASPath.substr(0, __pyx_v_ASPath.find(__pyx_k__4));
       } catch(...) {
         PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
         __Pyx_CppExn2PyErr();
         __Pyx_PyGILState_Release(__pyx_gilstate_save);
-        __PYX_ERR(0, 879, __pyx_L1_error)
+        __PYX_ERR(0, 889, __pyx_L1_error)
       }
       try {
-        __pyx_t_3 = std::stoi(__pyx_t_2);
+        __pyx_t_3 = std::stoi(__pyx_t_5);
       } catch(...) {
         PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
         __Pyx_CppExn2PyErr();
         __Pyx_PyGILState_Release(__pyx_gilstate_save);
-        __PYX_ERR(0, 879, __pyx_L1_error)
+        __PYX_ERR(0, 889, __pyx_L1_error)
       }
       __pyx_v_lastAS = __pyx_t_3;
 
-      /* "AS.pyx":881
+      /* "AS.pyx":891
  *                 lastAS = stoi(ASPath.substr(0, ASPath.find(' ')))
  * 
  *                 if (lastAS != message.lastAS):             # <<<<<<<<<<<<<<
  *                     p.first = ASN
  *                     q.first = lastAS
 */
-      __pyx_t_1 = (__pyx_v_lastAS != __pyx_v_message->lastAS);
-      if (__pyx_t_1) {
+      __pyx_t_2 = (__pyx_v_lastAS != __pyx_v_message->lastAS);
+      if (__pyx_t_2) {
 
-        /* "AS.pyx":882
+        /* "AS.pyx":892
  * 
  *                 if (lastAS != message.lastAS):
  *                     p.first = ASN             # <<<<<<<<<<<<<<
@@ -12646,7 +12935,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
         __pyx_v_p.first = __pyx_v_ASN;
 
-        /* "AS.pyx":883
+        /* "AS.pyx":893
  *                 if (lastAS != message.lastAS):
  *                     p.first = ASN
  *                     q.first = lastAS             # <<<<<<<<<<<<<<
@@ -12655,7 +12944,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
         __pyx_v_q.first = __pyx_v_lastAS;
 
-        /* "AS.pyx":884
+        /* "AS.pyx":894
  *                     p.first = ASN
  *                     q.first = lastAS
  *                     q.second = ASN             # <<<<<<<<<<<<<<
@@ -12664,7 +12953,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
         __pyx_v_q.second = __pyx_v_ASN;
 
-        /* "AS.pyx":885
+        /* "AS.pyx":895
  *                     q.first = lastAS
  *                     q.second = ASN
  *                     p.second = peerType[q]             # <<<<<<<<<<<<<<
@@ -12673,7 +12962,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
         __pyx_v_p.second = (__pyx_v_2AS_peerType[__pyx_v_q]);
 
-        /* "AS.pyx":887
+        /* "AS.pyx":897
  *                     p.second = peerType[q]
  * 
  *                     AS.announce(ASN, p, message.prefix, route, processor)             # <<<<<<<<<<<<<<
@@ -12682,17 +12971,17 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
         __pyx_f_2AS_2AS_announce(__pyx_v_ASN, __pyx_v_p, __pyx_v_message->prefix, __pyx_v_route, __pyx_v_processor);
 
-        /* "AS.pyx":881
+        /* "AS.pyx":891
  *                 lastAS = stoi(ASPath.substr(0, ASPath.find(' ')))
  * 
  *                 if (lastAS != message.lastAS):             # <<<<<<<<<<<<<<
  *                     p.first = ASN
  *                     q.first = lastAS
 */
-        goto __pyx_L11;
+        goto __pyx_L15;
       }
 
-      /* "AS.pyx":891
+      /* "AS.pyx":901
  *                 else:
  * 
  *                     AS.announce(ASN, message.peer, message.prefix, route, processor)             # <<<<<<<<<<<<<<
@@ -12702,9 +12991,9 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
       /*else*/ {
         __pyx_f_2AS_2AS_announce(__pyx_v_ASN, __pyx_v_message->peer, __pyx_v_message->prefix, __pyx_v_route, __pyx_v_processor);
       }
-      __pyx_L11:;
+      __pyx_L15:;
 
-      /* "AS.pyx":876
+      /* "AS.pyx":886
  *             locks[ASN].unlock()
  * 
  *             if (route != NULL):             # <<<<<<<<<<<<<<
@@ -12713,27 +13002,27 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
     }
 
-    /* "AS.pyx":825
- *             pair[int, int] q
- * 
+    /* "AS.pyx":835
+ *         if t[0] == b'A'[0] or t[0] == b'U'[0] or t[0] == b'W'[0]:
+ *             BGP_UPDATE_COUNTER += 1
  *         if strcmp(message.type, 'A') == 0:             # <<<<<<<<<<<<<<
  * 
  *             # Discard loop
 */
-    goto __pyx_L3;
+    goto __pyx_L7;
   }
 
-  /* "AS.pyx":893
+  /* "AS.pyx":903
  *                     AS.announce(ASN, message.peer, message.prefix, route, processor)
  * 
  *         elif (strcmp(message.type, 'X') == 0):             # <<<<<<<<<<<<<<
  * 
  *             locks[ASN].lock()
 */
-  __pyx_t_1 = (strcmp(__pyx_v_message->type, __pyx_k_X) == 0);
-  if (__pyx_t_1) {
+  __pyx_t_2 = (strcmp(__pyx_v_message->type, __pyx_k_X) == 0);
+  if (__pyx_t_2) {
 
-    /* "AS.pyx":895
+    /* "AS.pyx":905
  *         elif (strcmp(message.type, 'X') == 0):
  * 
  *             locks[ASN].lock()             # <<<<<<<<<<<<<<
@@ -12742,7 +13031,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
     (__pyx_v_2AS_locks[__pyx_v_ASN])->lock();
 
-    /* "AS.pyx":896
+    /* "AS.pyx":906
  * 
  *             locks[ASN].lock()
  *             route = routeTables[ASN].getBestRoute(message.prefix)             # <<<<<<<<<<<<<<
@@ -12751,17 +13040,17 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
     __pyx_v_route = (__pyx_v_2AS_routeTables[__pyx_v_ASN])->getBestRoute(__pyx_v_message->prefix);
 
-    /* "AS.pyx":898
+    /* "AS.pyx":908
  *             route = routeTables[ASN].getBestRoute(message.prefix)
  * 
  *             if (route == NULL):             # <<<<<<<<<<<<<<
  *                 locks[ASN].unlock()
  *                 return
 */
-    __pyx_t_1 = ((__pyx_v_route == NULL) != 0);
-    if (__pyx_t_1) {
+    __pyx_t_2 = ((__pyx_v_route == NULL) != 0);
+    if (__pyx_t_2) {
 
-      /* "AS.pyx":899
+      /* "AS.pyx":909
  * 
  *             if (route == NULL):
  *                 locks[ASN].unlock()             # <<<<<<<<<<<<<<
@@ -12770,7 +13059,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
       (__pyx_v_2AS_locks[__pyx_v_ASN])->unlock();
 
-      /* "AS.pyx":900
+      /* "AS.pyx":910
  *             if (route == NULL):
  *                 locks[ASN].unlock()
  *                 return             # <<<<<<<<<<<<<<
@@ -12779,7 +13068,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
       goto __pyx_L0;
 
-      /* "AS.pyx":898
+      /* "AS.pyx":908
  *             route = routeTables[ASN].getBestRoute(message.prefix)
  * 
  *             if (route == NULL):             # <<<<<<<<<<<<<<
@@ -12788,7 +13077,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
     }
 
-    /* "AS.pyx":902
+    /* "AS.pyx":912
  *                 return
  * 
  *             rt = route.get()             # <<<<<<<<<<<<<<
@@ -12797,7 +13086,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
     __pyx_v_rt = __pyx_v_route.get();
 
-    /* "AS.pyx":903
+    /* "AS.pyx":913
  * 
  *             rt = route.get()
  *             routeTables[ASN].deleteRouteByPeerAS(to_string(message.lastAS), message.prefix)             # <<<<<<<<<<<<<<
@@ -12805,26 +13094,26 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
  *             if (rt.ASPath == ""):
 */
     try {
-      __pyx_t_2 = std::to_string(__pyx_v_message->lastAS);
+      __pyx_t_5 = std::to_string(__pyx_v_message->lastAS);
     } catch(...) {
       PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
       __Pyx_CppExn2PyErr();
       __Pyx_PyGILState_Release(__pyx_gilstate_save);
-      __PYX_ERR(0, 903, __pyx_L1_error)
+      __PYX_ERR(0, 913, __pyx_L1_error)
     }
-    (__pyx_v_2AS_routeTables[__pyx_v_ASN])->deleteRouteByPeerAS(__pyx_t_2, __pyx_v_message->prefix);
+    (__pyx_v_2AS_routeTables[__pyx_v_ASN])->deleteRouteByPeerAS(__pyx_t_5, __pyx_v_message->prefix);
 
-    /* "AS.pyx":905
+    /* "AS.pyx":915
  *             routeTables[ASN].deleteRouteByPeerAS(to_string(message.lastAS), message.prefix)
  * 
  *             if (rt.ASPath == ""):             # <<<<<<<<<<<<<<
  *                 locks[ASN].unlock()
  *                 return
 */
-    __pyx_t_1 = (__pyx_v_rt->ASPath == __pyx_k_);
-    if (__pyx_t_1) {
+    __pyx_t_2 = (__pyx_v_rt->ASPath == __pyx_k_);
+    if (__pyx_t_2) {
 
-      /* "AS.pyx":906
+      /* "AS.pyx":916
  * 
  *             if (rt.ASPath == ""):
  *                 locks[ASN].unlock()             # <<<<<<<<<<<<<<
@@ -12833,7 +13122,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
       (__pyx_v_2AS_locks[__pyx_v_ASN])->unlock();
 
-      /* "AS.pyx":907
+      /* "AS.pyx":917
  *             if (rt.ASPath == ""):
  *                 locks[ASN].unlock()
  *                 return             # <<<<<<<<<<<<<<
@@ -12842,7 +13131,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
       goto __pyx_L0;
 
-      /* "AS.pyx":905
+      /* "AS.pyx":915
  *             routeTables[ASN].deleteRouteByPeerAS(to_string(message.lastAS), message.prefix)
  * 
  *             if (rt.ASPath == ""):             # <<<<<<<<<<<<<<
@@ -12851,7 +13140,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
     }
 
-    /* "AS.pyx":909
+    /* "AS.pyx":919
  *                 return
  * 
  *             lastAS = stoi(rt.ASPath.substr(0, rt.ASPath.find(' ')))             # <<<<<<<<<<<<<<
@@ -12859,34 +13148,34 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
  *             if (lastAS == message.lastAS):
 */
     try {
-      __pyx_t_2 = __pyx_v_rt->ASPath.substr(0, __pyx_v_rt->ASPath.find(__pyx_k__4));
+      __pyx_t_5 = __pyx_v_rt->ASPath.substr(0, __pyx_v_rt->ASPath.find(__pyx_k__4));
     } catch(...) {
       PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
       __Pyx_CppExn2PyErr();
       __Pyx_PyGILState_Release(__pyx_gilstate_save);
-      __PYX_ERR(0, 909, __pyx_L1_error)
+      __PYX_ERR(0, 919, __pyx_L1_error)
     }
     try {
-      __pyx_t_3 = std::stoi(__pyx_t_2);
+      __pyx_t_3 = std::stoi(__pyx_t_5);
     } catch(...) {
       PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
       __Pyx_CppExn2PyErr();
       __Pyx_PyGILState_Release(__pyx_gilstate_save);
-      __PYX_ERR(0, 909, __pyx_L1_error)
+      __PYX_ERR(0, 919, __pyx_L1_error)
     }
     __pyx_v_lastAS = __pyx_t_3;
 
-    /* "AS.pyx":911
+    /* "AS.pyx":921
  *             lastAS = stoi(rt.ASPath.substr(0, rt.ASPath.find(' ')))
  * 
  *             if (lastAS == message.lastAS):             # <<<<<<<<<<<<<<
  *                 route = routeTables[ASN].getBestRoute(message.prefix)
  *                 flag = True
 */
-    __pyx_t_1 = (__pyx_v_lastAS == __pyx_v_message->lastAS);
-    if (__pyx_t_1) {
+    __pyx_t_2 = (__pyx_v_lastAS == __pyx_v_message->lastAS);
+    if (__pyx_t_2) {
 
-      /* "AS.pyx":912
+      /* "AS.pyx":922
  * 
  *             if (lastAS == message.lastAS):
  *                 route = routeTables[ASN].getBestRoute(message.prefix)             # <<<<<<<<<<<<<<
@@ -12895,7 +13184,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
       __pyx_v_route = (__pyx_v_2AS_routeTables[__pyx_v_ASN])->getBestRoute(__pyx_v_message->prefix);
 
-      /* "AS.pyx":913
+      /* "AS.pyx":923
  *             if (lastAS == message.lastAS):
  *                 route = routeTables[ASN].getBestRoute(message.prefix)
  *                 flag = True             # <<<<<<<<<<<<<<
@@ -12904,7 +13193,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
       __pyx_v_flag = 1;
 
-      /* "AS.pyx":911
+      /* "AS.pyx":921
  *             lastAS = stoi(rt.ASPath.substr(0, rt.ASPath.find(' ')))
  * 
  *             if (lastAS == message.lastAS):             # <<<<<<<<<<<<<<
@@ -12913,7 +13202,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
     }
 
-    /* "AS.pyx":915
+    /* "AS.pyx":925
  *                 flag = True
  * 
  *             locks[ASN].unlock()             # <<<<<<<<<<<<<<
@@ -12922,37 +13211,37 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
     (__pyx_v_2AS_locks[__pyx_v_ASN])->unlock();
 
-    /* "AS.pyx":917
+    /* "AS.pyx":927
  *             locks[ASN].unlock()
  * 
  *             if flag:             # <<<<<<<<<<<<<<
  * 
  *                 if (route != NULL):
 */
-    __pyx_t_1 = (__pyx_v_flag != 0);
-    if (__pyx_t_1) {
+    __pyx_t_2 = (__pyx_v_flag != 0);
+    if (__pyx_t_2) {
 
-      /* "AS.pyx":919
+      /* "AS.pyx":929
  *             if flag:
  * 
  *                 if (route != NULL):             # <<<<<<<<<<<<<<
  *                     ASPath = route.get().ASPath
  *                     lastAS = stoi(ASPath.substr(0, ASPath.find(' ')))
 */
-      __pyx_t_1 = ((__pyx_v_route != NULL) != 0);
-      if (__pyx_t_1) {
+      __pyx_t_2 = ((__pyx_v_route != NULL) != 0);
+      if (__pyx_t_2) {
 
-        /* "AS.pyx":920
+        /* "AS.pyx":930
  * 
  *                 if (route != NULL):
  *                     ASPath = route.get().ASPath             # <<<<<<<<<<<<<<
  *                     lastAS = stoi(ASPath.substr(0, ASPath.find(' ')))
  * 
 */
-        __pyx_t_2 = __pyx_v_route.get()->ASPath;
-        __pyx_v_ASPath = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_2);
+        __pyx_t_5 = __pyx_v_route.get()->ASPath;
+        __pyx_v_ASPath = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_5);
 
-        /* "AS.pyx":921
+        /* "AS.pyx":931
  *                 if (route != NULL):
  *                     ASPath = route.get().ASPath
  *                     lastAS = stoi(ASPath.substr(0, ASPath.find(' ')))             # <<<<<<<<<<<<<<
@@ -12960,24 +13249,24 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
  *                     p.first = ASN
 */
         try {
-          __pyx_t_2 = __pyx_v_ASPath.substr(0, __pyx_v_ASPath.find(__pyx_k__4));
+          __pyx_t_5 = __pyx_v_ASPath.substr(0, __pyx_v_ASPath.find(__pyx_k__4));
         } catch(...) {
           PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
           __Pyx_CppExn2PyErr();
           __Pyx_PyGILState_Release(__pyx_gilstate_save);
-          __PYX_ERR(0, 921, __pyx_L1_error)
+          __PYX_ERR(0, 931, __pyx_L1_error)
         }
         try {
-          __pyx_t_3 = std::stoi(__pyx_t_2);
+          __pyx_t_3 = std::stoi(__pyx_t_5);
         } catch(...) {
           PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
           __Pyx_CppExn2PyErr();
           __Pyx_PyGILState_Release(__pyx_gilstate_save);
-          __PYX_ERR(0, 921, __pyx_L1_error)
+          __PYX_ERR(0, 931, __pyx_L1_error)
         }
         __pyx_v_lastAS = __pyx_t_3;
 
-        /* "AS.pyx":923
+        /* "AS.pyx":933
  *                     lastAS = stoi(ASPath.substr(0, ASPath.find(' ')))
  * 
  *                     p.first = ASN             # <<<<<<<<<<<<<<
@@ -12986,7 +13275,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
         __pyx_v_p.first = __pyx_v_ASN;
 
-        /* "AS.pyx":924
+        /* "AS.pyx":934
  * 
  *                     p.first = ASN
  *                     q.first = lastAS             # <<<<<<<<<<<<<<
@@ -12995,7 +13284,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
         __pyx_v_q.first = __pyx_v_lastAS;
 
-        /* "AS.pyx":925
+        /* "AS.pyx":935
  *                     p.first = ASN
  *                     q.first = lastAS
  *                     q.second = ASN             # <<<<<<<<<<<<<<
@@ -13004,7 +13293,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
         __pyx_v_q.second = __pyx_v_ASN;
 
-        /* "AS.pyx":926
+        /* "AS.pyx":936
  *                     q.first = lastAS
  *                     q.second = ASN
  *                     p.second = peerType[q]             # <<<<<<<<<<<<<<
@@ -13013,7 +13302,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
         __pyx_v_p.second = (__pyx_v_2AS_peerType[__pyx_v_q]);
 
-        /* "AS.pyx":928
+        /* "AS.pyx":938
  *                     p.second = peerType[q]
  * 
  *                     AS.announce(ASN, p, message.prefix, route, processor)             # <<<<<<<<<<<<<<
@@ -13022,17 +13311,17 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
         __pyx_f_2AS_2AS_announce(__pyx_v_ASN, __pyx_v_p, __pyx_v_message->prefix, __pyx_v_route, __pyx_v_processor);
 
-        /* "AS.pyx":919
+        /* "AS.pyx":929
  *             if flag:
  * 
  *                 if (route != NULL):             # <<<<<<<<<<<<<<
  *                     ASPath = route.get().ASPath
  *                     lastAS = stoi(ASPath.substr(0, ASPath.find(' ')))
 */
-        goto __pyx_L16;
+        goto __pyx_L20;
       }
 
-      /* "AS.pyx":932
+      /* "AS.pyx":942
  *                 else:
  * 
  *                     AS.announce(ASN, message.peer, message.prefix, route, processor)             # <<<<<<<<<<<<<<
@@ -13042,9 +13331,9 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
       /*else*/ {
         __pyx_f_2AS_2AS_announce(__pyx_v_ASN, __pyx_v_message->peer, __pyx_v_message->prefix, __pyx_v_route, __pyx_v_processor);
       }
-      __pyx_L16:;
+      __pyx_L20:;
 
-      /* "AS.pyx":917
+      /* "AS.pyx":927
  *             locks[ASN].unlock()
  * 
  *             if flag:             # <<<<<<<<<<<<<<
@@ -13053,27 +13342,27 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
     }
 
-    /* "AS.pyx":893
+    /* "AS.pyx":903
  *                     AS.announce(ASN, message.peer, message.prefix, route, processor)
  * 
  *         elif (strcmp(message.type, 'X') == 0):             # <<<<<<<<<<<<<<
  * 
  *             locks[ASN].lock()
 */
-    goto __pyx_L3;
+    goto __pyx_L7;
   }
 
-  /* "AS.pyx":934
+  /* "AS.pyx":944
  *                     AS.announce(ASN, message.peer, message.prefix, route, processor)
  * 
  *         elif strcmp(message.type, 'W') == 0:             # <<<<<<<<<<<<<<
  * 
  *             locks[ASN].lock()
 */
-  __pyx_t_1 = (strcmp(__pyx_v_message->type, __pyx_k_W) == 0);
-  if (__pyx_t_1) {
+  __pyx_t_2 = (strcmp(__pyx_v_message->type, __pyx_k_W) == 0);
+  if (__pyx_t_2) {
 
-    /* "AS.pyx":936
+    /* "AS.pyx":946
  *         elif strcmp(message.type, 'W') == 0:
  * 
  *             locks[ASN].lock()             # <<<<<<<<<<<<<<
@@ -13082,7 +13371,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
     (__pyx_v_2AS_locks[__pyx_v_ASN])->lock();
 
-    /* "AS.pyx":937
+    /* "AS.pyx":947
  * 
  *             locks[ASN].lock()
  *             flag = routeTables[ASN].withdrawRoute(to_string(message.lastAS), message.prefix)             # <<<<<<<<<<<<<<
@@ -13090,16 +13379,16 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
  * 
 */
     try {
-      __pyx_t_2 = std::to_string(__pyx_v_message->lastAS);
+      __pyx_t_5 = std::to_string(__pyx_v_message->lastAS);
     } catch(...) {
       PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
       __Pyx_CppExn2PyErr();
       __Pyx_PyGILState_Release(__pyx_gilstate_save);
-      __PYX_ERR(0, 937, __pyx_L1_error)
+      __PYX_ERR(0, 947, __pyx_L1_error)
     }
-    __pyx_v_flag = (__pyx_v_2AS_routeTables[__pyx_v_ASN])->withdrawRoute(__pyx_t_2, __pyx_v_message->prefix);
+    __pyx_v_flag = (__pyx_v_2AS_routeTables[__pyx_v_ASN])->withdrawRoute(__pyx_t_5, __pyx_v_message->prefix);
 
-    /* "AS.pyx":938
+    /* "AS.pyx":948
  *             locks[ASN].lock()
  *             flag = routeTables[ASN].withdrawRoute(to_string(message.lastAS), message.prefix)
  *             locks[ASN].unlock()             # <<<<<<<<<<<<<<
@@ -13108,17 +13397,17 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
     (__pyx_v_2AS_locks[__pyx_v_ASN])->unlock();
 
-    /* "AS.pyx":940
+    /* "AS.pyx":950
  *             locks[ASN].unlock()
  * 
  *             if flag:             # <<<<<<<<<<<<<<
  *                 AS.withdraw(ASN, message.lastAS, message.prefix, processor)
  * 
 */
-    __pyx_t_1 = (__pyx_v_flag != 0);
-    if (__pyx_t_1) {
+    __pyx_t_2 = (__pyx_v_flag != 0);
+    if (__pyx_t_2) {
 
-      /* "AS.pyx":941
+      /* "AS.pyx":951
  * 
  *             if flag:
  *                 AS.withdraw(ASN, message.lastAS, message.prefix, processor)             # <<<<<<<<<<<<<<
@@ -13127,7 +13416,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
       __pyx_f_2AS_2AS_withdraw(__pyx_v_ASN, __pyx_v_message->lastAS, __pyx_v_message->prefix, __pyx_v_processor);
 
-      /* "AS.pyx":940
+      /* "AS.pyx":950
  *             locks[ASN].unlock()
  * 
  *             if flag:             # <<<<<<<<<<<<<<
@@ -13136,27 +13425,27 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
     }
 
-    /* "AS.pyx":934
+    /* "AS.pyx":944
  *                     AS.announce(ASN, message.peer, message.prefix, route, processor)
  * 
  *         elif strcmp(message.type, 'W') == 0:             # <<<<<<<<<<<<<<
  * 
  *             locks[ASN].lock()
 */
-    goto __pyx_L3;
+    goto __pyx_L7;
   }
 
-  /* "AS.pyx":943
+  /* "AS.pyx":953
  *                 AS.withdraw(ASN, message.lastAS, message.prefix, processor)
  * 
  *         elif strcmp(message.type, 'U') == 0:             # <<<<<<<<<<<<<<
  * 
  *             # Discard loop
 */
-  __pyx_t_1 = (strcmp(__pyx_v_message->type, __pyx_k_U) == 0);
-  if (__pyx_t_1) {
+  __pyx_t_2 = (strcmp(__pyx_v_message->type, __pyx_k_U) == 0);
+  if (__pyx_t_2) {
 
-    /* "AS.pyx":946
+    /* "AS.pyx":956
  * 
  *             # Discard loop
  *             if AS.inASPath(to_string(ASN), message.ASPath):             # <<<<<<<<<<<<<<
@@ -13164,17 +13453,17 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
  *                 routeTables[ASN].deleteRouteByPeerAS(to_string(message.lastAS), message.prefix)
 */
     try {
-      __pyx_t_2 = std::to_string(__pyx_v_ASN);
+      __pyx_t_5 = std::to_string(__pyx_v_ASN);
     } catch(...) {
       PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
       __Pyx_CppExn2PyErr();
       __Pyx_PyGILState_Release(__pyx_gilstate_save);
-      __PYX_ERR(0, 946, __pyx_L1_error)
+      __PYX_ERR(0, 956, __pyx_L1_error)
     }
-    __pyx_t_1 = (__pyx_f_2AS_2AS_inASPath(__pyx_t_2, __pyx_v_message->ASPath) != 0);
-    if (__pyx_t_1) {
+    __pyx_t_2 = (__pyx_f_2AS_2AS_inASPath(__pyx_t_5, __pyx_v_message->ASPath) != 0);
+    if (__pyx_t_2) {
 
-      /* "AS.pyx":947
+      /* "AS.pyx":957
  *             # Discard loop
  *             if AS.inASPath(to_string(ASN), message.ASPath):
  *                 locks[ASN].lock()             # <<<<<<<<<<<<<<
@@ -13183,7 +13472,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
       (__pyx_v_2AS_locks[__pyx_v_ASN])->lock();
 
-      /* "AS.pyx":948
+      /* "AS.pyx":958
  *             if AS.inASPath(to_string(ASN), message.ASPath):
  *                 locks[ASN].lock()
  *                 routeTables[ASN].deleteRouteByPeerAS(to_string(message.lastAS), message.prefix)             # <<<<<<<<<<<<<<
@@ -13191,16 +13480,16 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
  *                 return
 */
       try {
-        __pyx_t_2 = std::to_string(__pyx_v_message->lastAS);
+        __pyx_t_5 = std::to_string(__pyx_v_message->lastAS);
       } catch(...) {
         PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
         __Pyx_CppExn2PyErr();
         __Pyx_PyGILState_Release(__pyx_gilstate_save);
-        __PYX_ERR(0, 948, __pyx_L1_error)
+        __PYX_ERR(0, 958, __pyx_L1_error)
       }
-      (__pyx_v_2AS_routeTables[__pyx_v_ASN])->deleteRouteByPeerAS(__pyx_t_2, __pyx_v_message->prefix);
+      (__pyx_v_2AS_routeTables[__pyx_v_ASN])->deleteRouteByPeerAS(__pyx_t_5, __pyx_v_message->prefix);
 
-      /* "AS.pyx":949
+      /* "AS.pyx":959
  *                 locks[ASN].lock()
  *                 routeTables[ASN].deleteRouteByPeerAS(to_string(message.lastAS), message.prefix)
  *                 locks[ASN].unlock()             # <<<<<<<<<<<<<<
@@ -13209,7 +13498,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
       (__pyx_v_2AS_locks[__pyx_v_ASN])->unlock();
 
-      /* "AS.pyx":950
+      /* "AS.pyx":960
  *                 routeTables[ASN].deleteRouteByPeerAS(to_string(message.lastAS), message.prefix)
  *                 locks[ASN].unlock()
  *                 return             # <<<<<<<<<<<<<<
@@ -13218,7 +13507,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
       goto __pyx_L0;
 
-      /* "AS.pyx":946
+      /* "AS.pyx":956
  * 
  *             # Discard loop
  *             if AS.inASPath(to_string(ASN), message.ASPath):             # <<<<<<<<<<<<<<
@@ -13227,7 +13516,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
     }
 
-    /* "AS.pyx":952
+    /* "AS.pyx":962
  *                 return
  * 
  *             route = AS.filterIn(ASN, msg)             # <<<<<<<<<<<<<<
@@ -13236,17 +13525,17 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
     __pyx_v_route = __pyx_f_2AS_2AS_filterIn(__pyx_v_ASN, __pyx_v_msg);
 
-    /* "AS.pyx":954
+    /* "AS.pyx":964
  *             route = AS.filterIn(ASN, msg)
  * 
  *             if (route == NULL):             # <<<<<<<<<<<<<<
  *                 AS.updateBest(ASN, message.lastAS, message.prefix, processor)
  *                 return
 */
-    __pyx_t_1 = ((__pyx_v_route == NULL) != 0);
-    if (__pyx_t_1) {
+    __pyx_t_2 = ((__pyx_v_route == NULL) != 0);
+    if (__pyx_t_2) {
 
-      /* "AS.pyx":955
+      /* "AS.pyx":965
  * 
  *             if (route == NULL):
  *                 AS.updateBest(ASN, message.lastAS, message.prefix, processor)             # <<<<<<<<<<<<<<
@@ -13255,7 +13544,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
       __pyx_f_2AS_2AS_updateBest(__pyx_v_ASN, __pyx_v_message->lastAS, __pyx_v_message->prefix, __pyx_v_processor);
 
-      /* "AS.pyx":956
+      /* "AS.pyx":966
  *             if (route == NULL):
  *                 AS.updateBest(ASN, message.lastAS, message.prefix, processor)
  *                 return             # <<<<<<<<<<<<<<
@@ -13264,7 +13553,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
       goto __pyx_L0;
 
-      /* "AS.pyx":954
+      /* "AS.pyx":964
  *             route = AS.filterIn(ASN, msg)
  * 
  *             if (route == NULL):             # <<<<<<<<<<<<<<
@@ -13273,7 +13562,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
     }
 
-    /* "AS.pyx":958
+    /* "AS.pyx":968
  *                 return
  * 
  *             locks[ASN].lock()             # <<<<<<<<<<<<<<
@@ -13282,7 +13571,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
     (__pyx_v_2AS_locks[__pyx_v_ASN])->lock();
 
-    /* "AS.pyx":959
+    /* "AS.pyx":969
  * 
  *             locks[ASN].lock()
  *             route = routeTables[ASN].updateBestRoute(route)             # <<<<<<<<<<<<<<
@@ -13291,7 +13580,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
     __pyx_v_route = (__pyx_v_2AS_routeTables[__pyx_v_ASN])->updateBestRoute(__pyx_v_route);
 
-    /* "AS.pyx":960
+    /* "AS.pyx":970
  *             locks[ASN].lock()
  *             route = routeTables[ASN].updateBestRoute(route)
  *             locks[ASN].unlock()             # <<<<<<<<<<<<<<
@@ -13300,17 +13589,17 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
     (__pyx_v_2AS_locks[__pyx_v_ASN])->unlock();
 
-    /* "AS.pyx":962
+    /* "AS.pyx":972
  *             locks[ASN].unlock()
  * 
  *             if (route != NULL):             # <<<<<<<<<<<<<<
  *                 AS.updateBestRoute(ASN, message.peer, route, processor)
  * 
 */
-    __pyx_t_1 = ((__pyx_v_route != NULL) != 0);
-    if (__pyx_t_1) {
+    __pyx_t_2 = ((__pyx_v_route != NULL) != 0);
+    if (__pyx_t_2) {
 
-      /* "AS.pyx":963
+      /* "AS.pyx":973
  * 
  *             if (route != NULL):
  *                 AS.updateBestRoute(ASN, message.peer, route, processor)             # <<<<<<<<<<<<<<
@@ -13319,7 +13608,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
       __pyx_f_2AS_2AS_updateBestRoute(__pyx_v_ASN, __pyx_v_message->peer, __pyx_v_route, __pyx_v_processor);
 
-      /* "AS.pyx":962
+      /* "AS.pyx":972
  *             locks[ASN].unlock()
  * 
  *             if (route != NULL):             # <<<<<<<<<<<<<<
@@ -13328,27 +13617,27 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
     }
 
-    /* "AS.pyx":943
+    /* "AS.pyx":953
  *                 AS.withdraw(ASN, message.lastAS, message.prefix, processor)
  * 
  *         elif strcmp(message.type, 'U') == 0:             # <<<<<<<<<<<<<<
  * 
  *             # Discard loop
 */
-    goto __pyx_L3;
+    goto __pyx_L7;
   }
 
-  /* "AS.pyx":965
+  /* "AS.pyx":975
  *                 AS.updateBestRoute(ASN, message.peer, route, processor)
  * 
  *         elif strcmp(message.type, 'T') == 0:             # <<<<<<<<<<<<<<
  * 
  *             AS.updateBest(ASN, message.lastAS, message.prefix, processor)
 */
-  __pyx_t_1 = (strcmp(__pyx_v_message->type, __pyx_k_T) == 0);
-  if (__pyx_t_1) {
+  __pyx_t_2 = (strcmp(__pyx_v_message->type, __pyx_k_T) == 0);
+  if (__pyx_t_2) {
 
-    /* "AS.pyx":967
+    /* "AS.pyx":977
  *         elif strcmp(message.type, 'T') == 0:
  * 
  *             AS.updateBest(ASN, message.lastAS, message.prefix, processor)             # <<<<<<<<<<<<<<
@@ -13357,27 +13646,27 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
     __pyx_f_2AS_2AS_updateBest(__pyx_v_ASN, __pyx_v_message->lastAS, __pyx_v_message->prefix, __pyx_v_processor);
 
-    /* "AS.pyx":965
+    /* "AS.pyx":975
  *                 AS.updateBestRoute(ASN, message.peer, route, processor)
  * 
  *         elif strcmp(message.type, 'T') == 0:             # <<<<<<<<<<<<<<
  * 
  *             AS.updateBest(ASN, message.lastAS, message.prefix, processor)
 */
-    goto __pyx_L3;
+    goto __pyx_L7;
   }
 
-  /* "AS.pyx":969
+  /* "AS.pyx":979
  *             AS.updateBest(ASN, message.lastAS, message.prefix, processor)
  * 
  *         elif strcmp(message.type, 'S') == 0:             # <<<<<<<<<<<<<<
  * 
  *             locks[ASN].lock()
 */
-  __pyx_t_1 = (strcmp(__pyx_v_message->type, __pyx_k_S) == 0);
-  if (__pyx_t_1) {
+  __pyx_t_2 = (strcmp(__pyx_v_message->type, __pyx_k_S) == 0);
+  if (__pyx_t_2) {
 
-    /* "AS.pyx":971
+    /* "AS.pyx":981
  *         elif strcmp(message.type, 'S') == 0:
  * 
  *             locks[ASN].lock()             # <<<<<<<<<<<<<<
@@ -13386,7 +13675,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
     (__pyx_v_2AS_locks[__pyx_v_ASN])->lock();
 
-    /* "AS.pyx":972
+    /* "AS.pyx":982
  * 
  *             locks[ASN].lock()
  *             routeTables[ASN].store2DB()             # <<<<<<<<<<<<<<
@@ -13395,7 +13684,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
     (__pyx_v_2AS_routeTables[__pyx_v_ASN])->store2DB();
 
-    /* "AS.pyx":973
+    /* "AS.pyx":983
  *             locks[ASN].lock()
  *             routeTables[ASN].store2DB()
  *             locks[ASN].unlock()             # <<<<<<<<<<<<<<
@@ -13404,27 +13693,27 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
     (__pyx_v_2AS_locks[__pyx_v_ASN])->unlock();
 
-    /* "AS.pyx":969
+    /* "AS.pyx":979
  *             AS.updateBest(ASN, message.lastAS, message.prefix, processor)
  * 
  *         elif strcmp(message.type, 'S') == 0:             # <<<<<<<<<<<<<<
  * 
  *             locks[ASN].lock()
 */
-    goto __pyx_L3;
+    goto __pyx_L7;
   }
 
-  /* "AS.pyx":975
+  /* "AS.pyx":985
  *             locks[ASN].unlock()
  * 
  *         elif strcmp(message.type, 'F') == 0:             # <<<<<<<<<<<<<<
  * 
  *             locks[ASN].lock()
 */
-  __pyx_t_1 = (strcmp(__pyx_v_message->type, __pyx_k_F) == 0);
-  if (__pyx_t_1) {
+  __pyx_t_2 = (strcmp(__pyx_v_message->type, __pyx_k_F) == 0);
+  if (__pyx_t_2) {
 
-    /* "AS.pyx":977
+    /* "AS.pyx":987
  *         elif strcmp(message.type, 'F') == 0:
  * 
  *             locks[ASN].lock()             # <<<<<<<<<<<<<<
@@ -13433,7 +13722,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
     (__pyx_v_2AS_locks[__pyx_v_ASN])->lock();
 
-    /* "AS.pyx":978
+    /* "AS.pyx":988
  * 
  *             locks[ASN].lock()
  *             routeTables[ASN].fetchFromDB(message.prefixes)             # <<<<<<<<<<<<<<
@@ -13442,7 +13731,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
     (__pyx_v_2AS_routeTables[__pyx_v_ASN])->fetchFromDB(__pyx_v_message->prefixes);
 
-    /* "AS.pyx":979
+    /* "AS.pyx":989
  *             locks[ASN].lock()
  *             routeTables[ASN].fetchFromDB(message.prefixes)
  *             locks[ASN].unlock()             # <<<<<<<<<<<<<<
@@ -13451,7 +13740,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
 */
     (__pyx_v_2AS_locks[__pyx_v_ASN])->unlock();
 
-    /* "AS.pyx":975
+    /* "AS.pyx":985
  *             locks[ASN].unlock()
  * 
  *         elif strcmp(message.type, 'F') == 0:             # <<<<<<<<<<<<<<
@@ -13459,14 +13748,14 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
  *             locks[ASN].lock()
 */
   }
-  __pyx_L3:;
+  __pyx_L7:;
 
-  /* "AS.pyx":813
+  /* "AS.pyx":818
  *                 processor.addMessage(message)
  * 
  *     @staticmethod             # <<<<<<<<<<<<<<
  *     cdef void receive(int ASN, shared_ptr[Message] msg, Processor processor) noexcept nogil:
- *         cdef:
+ *         global BGP_UPDATE_COUNTER
 */
 
   /* function exit code */
@@ -13478,7 +13767,7 @@ static void __pyx_f_2AS_2AS_receive(int __pyx_v_ASN, std::shared_ptr<Message>  _
   __pyx_L0:;
 }
 
-/* "AS.pyx":981
+/* "AS.pyx":991
  *             locks[ASN].unlock()
  * 
  *     cpdef void showRoute(self, prefix):             # <<<<<<<<<<<<<<
@@ -13521,7 +13810,7 @@ static void __pyx_f_2AS_2AS_showRoute(struct __pyx_obj_2AS_AS *__pyx_v_self, PyO
     if (unlikely(!__Pyx_object_dict_version_matches(((PyObject *)__pyx_v_self), __pyx_tp_dict_version, __pyx_obj_dict_version))) {
       PY_UINT64_T __pyx_typedict_guard = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
       #endif
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_mstate_global->__pyx_n_u_showRoute); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 981, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_mstate_global->__pyx_n_u_showRoute); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 991, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       if (!__Pyx_IsSameCFunction(__pyx_t_1, (void(*)(void)) __pyx_pw_2AS_2AS_17showRoute)) {
         __pyx_t_3 = NULL;
@@ -13544,7 +13833,7 @@ static void __pyx_f_2AS_2AS_showRoute(struct __pyx_obj_2AS_AS *__pyx_v_self, PyO
           __pyx_t_2 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_4, __pyx_callargs+__pyx_t_5, (2-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
           __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
           __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 981, __pyx_L1_error)
+          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 991, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
         }
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -13564,7 +13853,7 @@ static void __pyx_f_2AS_2AS_showRoute(struct __pyx_obj_2AS_AS *__pyx_v_self, PyO
     #endif
   }
 
-  /* "AS.pyx":982
+  /* "AS.pyx":992
  * 
  *     cpdef void showRoute(self, prefix):
  *         routeTables[self.ASN].showRoute(prefix.encode("utf-8"))             # <<<<<<<<<<<<<<
@@ -13578,14 +13867,14 @@ static void __pyx_f_2AS_2AS_showRoute(struct __pyx_obj_2AS_AS *__pyx_v_self, PyO
     PyObject *__pyx_callargs[2] = {__pyx_t_2, __pyx_mstate_global->__pyx_kp_u_utf_8};
     __pyx_t_1 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_encode, __pyx_callargs+__pyx_t_5, (2-__pyx_t_5) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 982, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 992, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_6 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_t_1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 982, __pyx_L1_error)
+  __pyx_t_6 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_t_1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 992, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   (__pyx_v_2AS_routeTables[__pyx_v_self->ASN])->showRoute(__pyx_t_6);
 
-  /* "AS.pyx":981
+  /* "AS.pyx":991
  *             locks[ASN].unlock()
  * 
  *     cpdef void showRoute(self, prefix):             # <<<<<<<<<<<<<<
@@ -13644,32 +13933,32 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   {
     PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_prefix,0};
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
-    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 981, __pyx_L3_error)
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 991, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
         case  1:
         values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 981, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 991, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "showRoute", 0) < (0)) __PYX_ERR(0, 981, __pyx_L3_error)
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "showRoute", 0) < (0)) __PYX_ERR(0, 991, __pyx_L3_error)
       for (Py_ssize_t i = __pyx_nargs; i < 1; i++) {
-        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("showRoute", 1, 1, 1, i); __PYX_ERR(0, 981, __pyx_L3_error) }
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("showRoute", 1, 1, 1, i); __PYX_ERR(0, 991, __pyx_L3_error) }
       }
     } else if (unlikely(__pyx_nargs != 1)) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 981, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 991, __pyx_L3_error)
     }
     __pyx_v_prefix = values[0];
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("showRoute", 1, 1, 1, __pyx_nargs); __PYX_ERR(0, 981, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("showRoute", 1, 1, 1, __pyx_nargs); __PYX_ERR(0, 991, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -13699,8 +13988,8 @@ static PyObject *__pyx_pf_2AS_2AS_16showRoute(struct __pyx_obj_2AS_AS *__pyx_v_s
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("showRoute", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_f_2AS_2AS_showRoute(__pyx_v_self, __pyx_v_prefix, 1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 981, __pyx_L1_error)
-  __pyx_t_1 = __Pyx_void_to_None(NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 981, __pyx_L1_error)
+  __pyx_f_2AS_2AS_showRoute(__pyx_v_self, __pyx_v_prefix, 1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 991, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_void_to_None(NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 991, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -13717,7 +14006,7 @@ static PyObject *__pyx_pf_2AS_2AS_16showRoute(struct __pyx_obj_2AS_AS *__pyx_v_s
   return __pyx_r;
 }
 
-/* "AS.pyx":984
+/* "AS.pyx":994
  *         routeTables[self.ASN].showRoute(prefix.encode("utf-8"))
  * 
  *     cpdef void showRouteInDB(self, prefix):             # <<<<<<<<<<<<<<
@@ -13760,7 +14049,7 @@ static void __pyx_f_2AS_2AS_showRouteInDB(struct __pyx_obj_2AS_AS *__pyx_v_self,
     if (unlikely(!__Pyx_object_dict_version_matches(((PyObject *)__pyx_v_self), __pyx_tp_dict_version, __pyx_obj_dict_version))) {
       PY_UINT64_T __pyx_typedict_guard = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
       #endif
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_mstate_global->__pyx_n_u_showRouteInDB); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 984, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_mstate_global->__pyx_n_u_showRouteInDB); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 994, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       if (!__Pyx_IsSameCFunction(__pyx_t_1, (void(*)(void)) __pyx_pw_2AS_2AS_19showRouteInDB)) {
         __pyx_t_3 = NULL;
@@ -13783,7 +14072,7 @@ static void __pyx_f_2AS_2AS_showRouteInDB(struct __pyx_obj_2AS_AS *__pyx_v_self,
           __pyx_t_2 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_4, __pyx_callargs+__pyx_t_5, (2-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
           __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
           __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 984, __pyx_L1_error)
+          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 994, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
         }
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -13803,7 +14092,7 @@ static void __pyx_f_2AS_2AS_showRouteInDB(struct __pyx_obj_2AS_AS *__pyx_v_self,
     #endif
   }
 
-  /* "AS.pyx":985
+  /* "AS.pyx":995
  * 
  *     cpdef void showRouteInDB(self, prefix):
  *         routeTables[self.ASN].showRouteInDB(prefix.encode("utf-8"))             # <<<<<<<<<<<<<<
@@ -13817,14 +14106,14 @@ static void __pyx_f_2AS_2AS_showRouteInDB(struct __pyx_obj_2AS_AS *__pyx_v_self,
     PyObject *__pyx_callargs[2] = {__pyx_t_2, __pyx_mstate_global->__pyx_kp_u_utf_8};
     __pyx_t_1 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_encode, __pyx_callargs+__pyx_t_5, (2-__pyx_t_5) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 985, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 995, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_6 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_t_1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 985, __pyx_L1_error)
+  __pyx_t_6 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_t_1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 995, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   (__pyx_v_2AS_routeTables[__pyx_v_self->ASN])->showRouteInDB(__pyx_t_6);
 
-  /* "AS.pyx":984
+  /* "AS.pyx":994
  *         routeTables[self.ASN].showRoute(prefix.encode("utf-8"))
  * 
  *     cpdef void showRouteInDB(self, prefix):             # <<<<<<<<<<<<<<
@@ -13883,32 +14172,32 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   {
     PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_prefix,0};
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
-    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 984, __pyx_L3_error)
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 994, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
         case  1:
         values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 984, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 994, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "showRouteInDB", 0) < (0)) __PYX_ERR(0, 984, __pyx_L3_error)
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "showRouteInDB", 0) < (0)) __PYX_ERR(0, 994, __pyx_L3_error)
       for (Py_ssize_t i = __pyx_nargs; i < 1; i++) {
-        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("showRouteInDB", 1, 1, 1, i); __PYX_ERR(0, 984, __pyx_L3_error) }
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("showRouteInDB", 1, 1, 1, i); __PYX_ERR(0, 994, __pyx_L3_error) }
       }
     } else if (unlikely(__pyx_nargs != 1)) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 984, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 994, __pyx_L3_error)
     }
     __pyx_v_prefix = values[0];
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("showRouteInDB", 1, 1, 1, __pyx_nargs); __PYX_ERR(0, 984, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("showRouteInDB", 1, 1, 1, __pyx_nargs); __PYX_ERR(0, 994, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -13938,8 +14227,8 @@ static PyObject *__pyx_pf_2AS_2AS_18showRouteInDB(struct __pyx_obj_2AS_AS *__pyx
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("showRouteInDB", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_f_2AS_2AS_showRouteInDB(__pyx_v_self, __pyx_v_prefix, 1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 984, __pyx_L1_error)
-  __pyx_t_1 = __Pyx_void_to_None(NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 984, __pyx_L1_error)
+  __pyx_f_2AS_2AS_showRouteInDB(__pyx_v_self, __pyx_v_prefix, 1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 994, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_void_to_None(NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 994, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -13956,7 +14245,7 @@ static PyObject *__pyx_pf_2AS_2AS_18showRouteInDB(struct __pyx_obj_2AS_AS *__pyx
   return __pyx_r;
 }
 
-/* "AS.pyx":987
+/* "AS.pyx":997
  *         routeTables[self.ASN].showRouteInDB(prefix.encode("utf-8"))
  * 
  *     cpdef void showBestRoute(self, prefix):             # <<<<<<<<<<<<<<
@@ -13999,7 +14288,7 @@ static void __pyx_f_2AS_2AS_showBestRoute(struct __pyx_obj_2AS_AS *__pyx_v_self,
     if (unlikely(!__Pyx_object_dict_version_matches(((PyObject *)__pyx_v_self), __pyx_tp_dict_version, __pyx_obj_dict_version))) {
       PY_UINT64_T __pyx_typedict_guard = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
       #endif
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_mstate_global->__pyx_n_u_showBestRoute); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 987, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_mstate_global->__pyx_n_u_showBestRoute); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 997, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       if (!__Pyx_IsSameCFunction(__pyx_t_1, (void(*)(void)) __pyx_pw_2AS_2AS_21showBestRoute)) {
         __pyx_t_3 = NULL;
@@ -14022,7 +14311,7 @@ static void __pyx_f_2AS_2AS_showBestRoute(struct __pyx_obj_2AS_AS *__pyx_v_self,
           __pyx_t_2 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_4, __pyx_callargs+__pyx_t_5, (2-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
           __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
           __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 987, __pyx_L1_error)
+          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 997, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
         }
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -14042,7 +14331,7 @@ static void __pyx_f_2AS_2AS_showBestRoute(struct __pyx_obj_2AS_AS *__pyx_v_self,
     #endif
   }
 
-  /* "AS.pyx":988
+  /* "AS.pyx":998
  * 
  *     cpdef void showBestRoute(self, prefix):
  *         routeTables[self.ASN].showBestRoute(prefix.encode("utf-8"))             # <<<<<<<<<<<<<<
@@ -14056,14 +14345,14 @@ static void __pyx_f_2AS_2AS_showBestRoute(struct __pyx_obj_2AS_AS *__pyx_v_self,
     PyObject *__pyx_callargs[2] = {__pyx_t_2, __pyx_mstate_global->__pyx_kp_u_utf_8};
     __pyx_t_1 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_encode, __pyx_callargs+__pyx_t_5, (2-__pyx_t_5) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 988, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 998, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_6 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_t_1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 988, __pyx_L1_error)
+  __pyx_t_6 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_t_1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 998, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   (__pyx_v_2AS_routeTables[__pyx_v_self->ASN])->showBestRoute(__pyx_t_6);
 
-  /* "AS.pyx":987
+  /* "AS.pyx":997
  *         routeTables[self.ASN].showRouteInDB(prefix.encode("utf-8"))
  * 
  *     cpdef void showBestRoute(self, prefix):             # <<<<<<<<<<<<<<
@@ -14122,32 +14411,32 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   {
     PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_prefix,0};
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
-    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 987, __pyx_L3_error)
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 997, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
         case  1:
         values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 987, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 997, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "showBestRoute", 0) < (0)) __PYX_ERR(0, 987, __pyx_L3_error)
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "showBestRoute", 0) < (0)) __PYX_ERR(0, 997, __pyx_L3_error)
       for (Py_ssize_t i = __pyx_nargs; i < 1; i++) {
-        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("showBestRoute", 1, 1, 1, i); __PYX_ERR(0, 987, __pyx_L3_error) }
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("showBestRoute", 1, 1, 1, i); __PYX_ERR(0, 997, __pyx_L3_error) }
       }
     } else if (unlikely(__pyx_nargs != 1)) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 987, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 997, __pyx_L3_error)
     }
     __pyx_v_prefix = values[0];
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("showBestRoute", 1, 1, 1, __pyx_nargs); __PYX_ERR(0, 987, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("showBestRoute", 1, 1, 1, __pyx_nargs); __PYX_ERR(0, 997, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -14177,8 +14466,8 @@ static PyObject *__pyx_pf_2AS_2AS_20showBestRoute(struct __pyx_obj_2AS_AS *__pyx
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("showBestRoute", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_f_2AS_2AS_showBestRoute(__pyx_v_self, __pyx_v_prefix, 1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 987, __pyx_L1_error)
-  __pyx_t_1 = __Pyx_void_to_None(NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 987, __pyx_L1_error)
+  __pyx_f_2AS_2AS_showBestRoute(__pyx_v_self, __pyx_v_prefix, 1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 997, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_void_to_None(NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 997, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -14195,7 +14484,7 @@ static PyObject *__pyx_pf_2AS_2AS_20showBestRoute(struct __pyx_obj_2AS_AS *__pyx
   return __pyx_r;
 }
 
-/* "AS.pyx":990
+/* "AS.pyx":1000
  *         routeTables[self.ASN].showBestRoute(prefix.encode("utf-8"))
  * 
  *     cpdef void deleteRouteByPeerAS(self, peerAS):             # <<<<<<<<<<<<<<
@@ -14238,7 +14527,7 @@ static void __pyx_f_2AS_2AS_deleteRouteByPeerAS(struct __pyx_obj_2AS_AS *__pyx_v
     if (unlikely(!__Pyx_object_dict_version_matches(((PyObject *)__pyx_v_self), __pyx_tp_dict_version, __pyx_obj_dict_version))) {
       PY_UINT64_T __pyx_typedict_guard = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
       #endif
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_mstate_global->__pyx_n_u_deleteRouteByPeerAS); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 990, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_mstate_global->__pyx_n_u_deleteRouteByPeerAS); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1000, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       if (!__Pyx_IsSameCFunction(__pyx_t_1, (void(*)(void)) __pyx_pw_2AS_2AS_23deleteRouteByPeerAS)) {
         __pyx_t_3 = NULL;
@@ -14261,7 +14550,7 @@ static void __pyx_f_2AS_2AS_deleteRouteByPeerAS(struct __pyx_obj_2AS_AS *__pyx_v
           __pyx_t_2 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_4, __pyx_callargs+__pyx_t_5, (2-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
           __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
           __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 990, __pyx_L1_error)
+          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1000, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
         }
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -14281,7 +14570,7 @@ static void __pyx_f_2AS_2AS_deleteRouteByPeerAS(struct __pyx_obj_2AS_AS *__pyx_v
     #endif
   }
 
-  /* "AS.pyx":991
+  /* "AS.pyx":1001
  * 
  *     cpdef void deleteRouteByPeerAS(self, peerAS):
  *         routeTables[self.ASN].deleteRouteByPeerAS(peerAS.encode("utf-8"))             # <<<<<<<<<<<<<<
@@ -14295,14 +14584,14 @@ static void __pyx_f_2AS_2AS_deleteRouteByPeerAS(struct __pyx_obj_2AS_AS *__pyx_v
     PyObject *__pyx_callargs[2] = {__pyx_t_2, __pyx_mstate_global->__pyx_kp_u_utf_8};
     __pyx_t_1 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_encode, __pyx_callargs+__pyx_t_5, (2-__pyx_t_5) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 991, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1001, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_6 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_t_1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 991, __pyx_L1_error)
+  __pyx_t_6 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_t_1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1001, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   (__pyx_v_2AS_routeTables[__pyx_v_self->ASN])->deleteRouteByPeerAS(__pyx_t_6);
 
-  /* "AS.pyx":990
+  /* "AS.pyx":1000
  *         routeTables[self.ASN].showBestRoute(prefix.encode("utf-8"))
  * 
  *     cpdef void deleteRouteByPeerAS(self, peerAS):             # <<<<<<<<<<<<<<
@@ -14361,32 +14650,32 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   {
     PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_peerAS,0};
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
-    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 990, __pyx_L3_error)
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 1000, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
         case  1:
         values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 990, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 1000, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "deleteRouteByPeerAS", 0) < (0)) __PYX_ERR(0, 990, __pyx_L3_error)
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "deleteRouteByPeerAS", 0) < (0)) __PYX_ERR(0, 1000, __pyx_L3_error)
       for (Py_ssize_t i = __pyx_nargs; i < 1; i++) {
-        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("deleteRouteByPeerAS", 1, 1, 1, i); __PYX_ERR(0, 990, __pyx_L3_error) }
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("deleteRouteByPeerAS", 1, 1, 1, i); __PYX_ERR(0, 1000, __pyx_L3_error) }
       }
     } else if (unlikely(__pyx_nargs != 1)) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 990, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 1000, __pyx_L3_error)
     }
     __pyx_v_peerAS = values[0];
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("deleteRouteByPeerAS", 1, 1, 1, __pyx_nargs); __PYX_ERR(0, 990, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("deleteRouteByPeerAS", 1, 1, 1, __pyx_nargs); __PYX_ERR(0, 1000, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -14416,8 +14705,8 @@ static PyObject *__pyx_pf_2AS_2AS_22deleteRouteByPeerAS(struct __pyx_obj_2AS_AS 
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("deleteRouteByPeerAS", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_f_2AS_2AS_deleteRouteByPeerAS(__pyx_v_self, __pyx_v_peerAS, 1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 990, __pyx_L1_error)
-  __pyx_t_1 = __Pyx_void_to_None(NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 990, __pyx_L1_error)
+  __pyx_f_2AS_2AS_deleteRouteByPeerAS(__pyx_v_self, __pyx_v_peerAS, 1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1000, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_void_to_None(NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1000, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -14434,7 +14723,7 @@ static PyObject *__pyx_pf_2AS_2AS_22deleteRouteByPeerAS(struct __pyx_obj_2AS_AS 
   return __pyx_r;
 }
 
-/* "AS.pyx":993
+/* "AS.pyx":1003
  *         routeTables[self.ASN].deleteRouteByPeerAS(peerAS.encode("utf-8"))
  * 
  *     def countRoute(self):             # <<<<<<<<<<<<<<
@@ -14493,7 +14782,7 @@ static PyObject *__pyx_pf_2AS_2AS_24countRoute(struct __pyx_obj_2AS_AS *__pyx_v_
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("countRoute", 0);
 
-  /* "AS.pyx":994
+  /* "AS.pyx":1004
  * 
  *     def countRoute(self):
  *         return routeTables[self.ASN].countRoute()             # <<<<<<<<<<<<<<
@@ -14501,13 +14790,13 @@ static PyObject *__pyx_pf_2AS_2AS_24countRoute(struct __pyx_obj_2AS_AS *__pyx_v_
  *     def getOriginAS(self, prefix):
 */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyLong_From_unsigned_PY_LONG_LONG((__pyx_v_2AS_routeTables[__pyx_v_self->ASN])->countRoute()); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 994, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyLong_From_unsigned_PY_LONG_LONG((__pyx_v_2AS_routeTables[__pyx_v_self->ASN])->countRoute()); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1004, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "AS.pyx":993
+  /* "AS.pyx":1003
  *         routeTables[self.ASN].deleteRouteByPeerAS(peerAS.encode("utf-8"))
  * 
  *     def countRoute(self):             # <<<<<<<<<<<<<<
@@ -14526,11 +14815,12 @@ static PyObject *__pyx_pf_2AS_2AS_24countRoute(struct __pyx_obj_2AS_AS *__pyx_v_
   return __pyx_r;
 }
 
-/* "AS.pyx":996
+/* "AS.pyx":1006
  *         return routeTables[self.ASN].countRoute()
  * 
  *     def getOriginAS(self, prefix):             # <<<<<<<<<<<<<<
  *         return routeTables[self.ASN].getOriginAS(prefix.encode("utf-8"))
+ *     def get_BGP_UPDATE_COUNTER(self):
 */
 
 /* Python wrapper */
@@ -14572,32 +14862,32 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   {
     PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_prefix,0};
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
-    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 996, __pyx_L3_error)
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 1006, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
         case  1:
         values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 996, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 1006, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "getOriginAS", 0) < (0)) __PYX_ERR(0, 996, __pyx_L3_error)
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "getOriginAS", 0) < (0)) __PYX_ERR(0, 1006, __pyx_L3_error)
       for (Py_ssize_t i = __pyx_nargs; i < 1; i++) {
-        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("getOriginAS", 1, 1, 1, i); __PYX_ERR(0, 996, __pyx_L3_error) }
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("getOriginAS", 1, 1, 1, i); __PYX_ERR(0, 1006, __pyx_L3_error) }
       }
     } else if (unlikely(__pyx_nargs != 1)) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 996, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 1006, __pyx_L3_error)
     }
     __pyx_v_prefix = values[0];
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("getOriginAS", 1, 1, 1, __pyx_nargs); __PYX_ERR(0, 996, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("getOriginAS", 1, 1, 1, __pyx_nargs); __PYX_ERR(0, 1006, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -14630,10 +14920,12 @@ static PyObject *__pyx_pf_2AS_2AS_26getOriginAS(struct __pyx_obj_2AS_AS *__pyx_v
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("getOriginAS", 0);
 
-  /* "AS.pyx":997
+  /* "AS.pyx":1007
  * 
  *     def getOriginAS(self, prefix):
  *         return routeTables[self.ASN].getOriginAS(prefix.encode("utf-8"))             # <<<<<<<<<<<<<<
+ *     def get_BGP_UPDATE_COUNTER(self):
+ *         return BGP_UPDATE_COUNTER
 */
   __Pyx_XDECREF(__pyx_r);
   __pyx_t_2 = __pyx_v_prefix;
@@ -14643,22 +14935,23 @@ static PyObject *__pyx_pf_2AS_2AS_26getOriginAS(struct __pyx_obj_2AS_AS *__pyx_v
     PyObject *__pyx_callargs[2] = {__pyx_t_2, __pyx_mstate_global->__pyx_kp_u_utf_8};
     __pyx_t_1 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_encode, __pyx_callargs+__pyx_t_3, (2-__pyx_t_3) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 997, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1007, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
-  __pyx_t_4 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_t_1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 997, __pyx_L1_error)
+  __pyx_t_4 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_t_1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1007, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyLong_From_int((__pyx_v_2AS_routeTables[__pyx_v_self->ASN])->getOriginAS(__pyx_t_4)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 997, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyLong_From_int((__pyx_v_2AS_routeTables[__pyx_v_self->ASN])->getOriginAS(__pyx_t_4)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1007, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "AS.pyx":996
+  /* "AS.pyx":1006
  *         return routeTables[self.ASN].countRoute()
  * 
  *     def getOriginAS(self, prefix):             # <<<<<<<<<<<<<<
  *         return routeTables[self.ASN].getOriginAS(prefix.encode("utf-8"))
+ *     def get_BGP_UPDATE_COUNTER(self):
 */
 
   /* function exit code */
@@ -14673,6 +14966,94 @@ static PyObject *__pyx_pf_2AS_2AS_26getOriginAS(struct __pyx_obj_2AS_AS *__pyx_v
   return __pyx_r;
 }
 
+/* "AS.pyx":1008
+ *     def getOriginAS(self, prefix):
+ *         return routeTables[self.ASN].getOriginAS(prefix.encode("utf-8"))
+ *     def get_BGP_UPDATE_COUNTER(self):             # <<<<<<<<<<<<<<
+ *         return BGP_UPDATE_COUNTER
+*/
+
+/* Python wrapper */
+static PyObject *__pyx_pw_2AS_2AS_29get_BGP_UPDATE_COUNTER(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+); /*proto*/
+static PyMethodDef __pyx_mdef_2AS_2AS_29get_BGP_UPDATE_COUNTER = {"get_BGP_UPDATE_COUNTER", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_2AS_2AS_29get_BGP_UPDATE_COUNTER, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_2AS_2AS_29get_BGP_UPDATE_COUNTER(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+) {
+  #if !CYTHON_METH_FASTCALL
+  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
+  #endif
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("get_BGP_UPDATE_COUNTER (wrapper)", 0);
+  #if !CYTHON_METH_FASTCALL
+  #if CYTHON_ASSUME_SAFE_SIZE
+  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
+  #else
+  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs < 0)) return NULL;
+  #endif
+  #endif
+  __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
+  if (unlikely(__pyx_nargs > 0)) { __Pyx_RaiseArgtupleInvalid("get_BGP_UPDATE_COUNTER", 1, 0, 0, __pyx_nargs); return NULL; }
+  const Py_ssize_t __pyx_kwds_len = unlikely(__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
+  if (unlikely(__pyx_kwds_len < 0)) return NULL;
+  if (unlikely(__pyx_kwds_len > 0)) {__Pyx_RejectKeywords("get_BGP_UPDATE_COUNTER", __pyx_kwds); return NULL;}
+  __pyx_r = __pyx_pf_2AS_2AS_28get_BGP_UPDATE_COUNTER(((struct __pyx_obj_2AS_AS *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_2AS_2AS_28get_BGP_UPDATE_COUNTER(CYTHON_UNUSED struct __pyx_obj_2AS_AS *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("get_BGP_UPDATE_COUNTER", 0);
+
+  /* "AS.pyx":1009
+ *         return routeTables[self.ASN].getOriginAS(prefix.encode("utf-8"))
+ *     def get_BGP_UPDATE_COUNTER(self):
+ *         return BGP_UPDATE_COUNTER             # <<<<<<<<<<<<<<
+*/
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = __Pyx_PyLong_From_long(BGP_UPDATE_COUNTER); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1009, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* "AS.pyx":1008
+ *     def getOriginAS(self, prefix):
+ *         return routeTables[self.ASN].getOriginAS(prefix.encode("utf-8"))
+ *     def get_BGP_UPDATE_COUNTER(self):             # <<<<<<<<<<<<<<
+ *         return BGP_UPDATE_COUNTER
+*/
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("AS.AS.get_BGP_UPDATE_COUNTER", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
 /* "(tree fragment)":1
  * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
  *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
@@ -14680,15 +15061,15 @@ static PyObject *__pyx_pf_2AS_2AS_26getOriginAS(struct __pyx_obj_2AS_AS *__pyx_v
 */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_2AS_2AS_29__reduce_cython__(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_2AS_2AS_31__reduce_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_2AS_2AS_29__reduce_cython__ = {"__reduce_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_2AS_2AS_29__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_2AS_2AS_29__reduce_cython__(PyObject *__pyx_v_self, 
+static PyMethodDef __pyx_mdef_2AS_2AS_31__reduce_cython__ = {"__reduce_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_2AS_2AS_31__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_2AS_2AS_31__reduce_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -14714,14 +15095,14 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   const Py_ssize_t __pyx_kwds_len = unlikely(__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
   if (unlikely(__pyx_kwds_len < 0)) return NULL;
   if (unlikely(__pyx_kwds_len > 0)) {__Pyx_RejectKeywords("__reduce_cython__", __pyx_kwds); return NULL;}
-  __pyx_r = __pyx_pf_2AS_2AS_28__reduce_cython__(((struct __pyx_obj_2AS_AS *)__pyx_v_self));
+  __pyx_r = __pyx_pf_2AS_2AS_30__reduce_cython__(((struct __pyx_obj_2AS_AS *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_2AS_2AS_28__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_2AS_AS *__pyx_v_self) {
+static PyObject *__pyx_pf_2AS_2AS_30__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_2AS_AS *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   int __pyx_lineno = 0;
@@ -14761,15 +15142,15 @@ static PyObject *__pyx_pf_2AS_2AS_28__reduce_cython__(CYTHON_UNUSED struct __pyx
 */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_2AS_2AS_31__setstate_cython__(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_2AS_2AS_33__setstate_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_2AS_2AS_31__setstate_cython__ = {"__setstate_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_2AS_2AS_31__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_2AS_2AS_31__setstate_cython__(PyObject *__pyx_v_self, 
+static PyMethodDef __pyx_mdef_2AS_2AS_33__setstate_cython__ = {"__setstate_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_2AS_2AS_33__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_2AS_2AS_33__setstate_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -14835,7 +15216,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_2AS_2AS_30__setstate_cython__(((struct __pyx_obj_2AS_AS *)__pyx_v_self), __pyx_v___pyx_state);
+  __pyx_r = __pyx_pf_2AS_2AS_32__setstate_cython__(((struct __pyx_obj_2AS_AS *)__pyx_v_self), __pyx_v___pyx_state);
 
   /* function exit code */
   for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
@@ -14845,7 +15226,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_2AS_2AS_30__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_2AS_AS *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_pf_2AS_2AS_32__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_2AS_AS *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   int __pyx_lineno = 0;
@@ -14922,8 +15303,9 @@ static PyMethodDef __pyx_methods_2AS_AS[] = {
   {"removeFilter", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_2AS_2AS_11removeFilter, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
   {"countRoute", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_2AS_2AS_25countRoute, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
   {"getOriginAS", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_2AS_2AS_27getOriginAS, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
-  {"__reduce_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_2AS_2AS_29__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
-  {"__setstate_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_2AS_2AS_31__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
+  {"get_BGP_UPDATE_COUNTER", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_2AS_2AS_29get_BGP_UPDATE_COUNTER, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
+  {"__reduce_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_2AS_2AS_31__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
+  {"__setstate_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_2AS_2AS_33__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
   {0, 0, 0, 0}
 };
 #if CYTHON_USE_TYPE_SPECS
@@ -15123,15 +15505,15 @@ static int __Pyx_modinit_type_init_code(__pyx_mstatetype *__pyx_mstate) {
   __pyx_vtable_2AS_AS.showBestRoute = (void (*)(struct __pyx_obj_2AS_AS *, PyObject *, int __pyx_skip_dispatch))__pyx_f_2AS_2AS_showBestRoute;
   __pyx_vtable_2AS_AS.deleteRouteByPeerAS = (void (*)(struct __pyx_obj_2AS_AS *, PyObject *, int __pyx_skip_dispatch))__pyx_f_2AS_2AS_deleteRouteByPeerAS;
   #if CYTHON_USE_TYPE_SPECS
-  __pyx_mstate->__pyx_ptype_2AS_AS = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_2AS_AS_spec, NULL); if (unlikely(!__pyx_mstate->__pyx_ptype_2AS_AS)) __PYX_ERR(0, 3, __pyx_L1_error)
-  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_2AS_AS_spec, __pyx_mstate->__pyx_ptype_2AS_AS) < (0)) __PYX_ERR(0, 3, __pyx_L1_error)
+  __pyx_mstate->__pyx_ptype_2AS_AS = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_2AS_AS_spec, NULL); if (unlikely(!__pyx_mstate->__pyx_ptype_2AS_AS)) __PYX_ERR(0, 9, __pyx_L1_error)
+  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_2AS_AS_spec, __pyx_mstate->__pyx_ptype_2AS_AS) < (0)) __PYX_ERR(0, 9, __pyx_L1_error)
   #else
   __pyx_mstate->__pyx_ptype_2AS_AS = &__pyx_type_2AS_AS;
   #endif
   #if !CYTHON_COMPILING_IN_LIMITED_API
   #endif
   #if !CYTHON_USE_TYPE_SPECS
-  if (__Pyx_PyType_Ready(__pyx_mstate->__pyx_ptype_2AS_AS) < (0)) __PYX_ERR(0, 3, __pyx_L1_error)
+  if (__Pyx_PyType_Ready(__pyx_mstate->__pyx_ptype_2AS_AS) < (0)) __PYX_ERR(0, 9, __pyx_L1_error)
   #endif
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount((PyObject*)__pyx_mstate->__pyx_ptype_2AS_AS);
@@ -15141,10 +15523,10 @@ static int __Pyx_modinit_type_init_code(__pyx_mstatetype *__pyx_mstate) {
     __pyx_mstate->__pyx_ptype_2AS_AS->tp_getattro = PyObject_GenericGetAttr;
   }
   #endif
-  if (__Pyx_SetVtable(__pyx_mstate->__pyx_ptype_2AS_AS, __pyx_vtabptr_2AS_AS) < (0)) __PYX_ERR(0, 3, __pyx_L1_error)
-  if (__Pyx_MergeVtables(__pyx_mstate->__pyx_ptype_2AS_AS) < (0)) __PYX_ERR(0, 3, __pyx_L1_error)
-  if (PyObject_SetAttr(__pyx_m, __pyx_mstate_global->__pyx_n_u_AS, (PyObject *) __pyx_mstate->__pyx_ptype_2AS_AS) < (0)) __PYX_ERR(0, 3, __pyx_L1_error)
-  if (__Pyx_setup_reduce((PyObject *) __pyx_mstate->__pyx_ptype_2AS_AS) < (0)) __PYX_ERR(0, 3, __pyx_L1_error)
+  if (__Pyx_SetVtable(__pyx_mstate->__pyx_ptype_2AS_AS, __pyx_vtabptr_2AS_AS) < (0)) __PYX_ERR(0, 9, __pyx_L1_error)
+  if (__Pyx_MergeVtables(__pyx_mstate->__pyx_ptype_2AS_AS) < (0)) __PYX_ERR(0, 9, __pyx_L1_error)
+  if (PyObject_SetAttr(__pyx_m, __pyx_mstate_global->__pyx_n_u_AS, (PyObject *) __pyx_mstate->__pyx_ptype_2AS_AS) < (0)) __PYX_ERR(0, 9, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject *) __pyx_mstate->__pyx_ptype_2AS_AS) < (0)) __PYX_ERR(0, 9, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -15525,8 +15907,8 @@ __Pyx_RefNannySetupContext("PyInit_AS", 0);
 
   /* "AS.pyx":1
  * import json             # <<<<<<<<<<<<<<
+ * cdef public long BGP_UPDATE_COUNTER = 0
  * 
- * cdef class AS:
 */
   __pyx_t_1 = __Pyx_Import(__pyx_mstate_global->__pyx_n_u_json, 0, 0, NULL, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_t_2 = __pyx_t_1;
@@ -15534,22 +15916,61 @@ __Pyx_RefNannySetupContext("PyInit_AS", 0);
   if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_json, __pyx_t_2) < (0)) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "AS.pyx":10
- *         locks[ASN] = new mutex()
+  /* "AS.pyx":2
+ * import json
+ * cdef public long BGP_UPDATE_COUNTER = 0             # <<<<<<<<<<<<<<
  * 
- *     @staticmethod             # <<<<<<<<<<<<<<
- *     def loadASSet(filePath):
- *         cdef set[int] ASMembers
+ * def get_BGP_UPDATE_COUNTER():
 */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_2AS_2AS_3loadASSet, __Pyx_CYFUNCTION_STATICMETHOD | __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_AS_loadASSet, NULL, __pyx_mstate_global->__pyx_n_u_AS, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[0])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 10, __pyx_L1_error)
+  BGP_UPDATE_COUNTER = 0;
+
+  /* "AS.pyx":4
+ * cdef public long BGP_UPDATE_COUNTER = 0
+ * 
+ * def get_BGP_UPDATE_COUNTER():             # <<<<<<<<<<<<<<
+ *     return BGP_UPDATE_COUNTER
+ * def reset_BGP_UPDATE_COUNTER(value = 0):
+*/
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_2AS_1get_BGP_UPDATE_COUNTER, 0, __pyx_mstate_global->__pyx_n_u_get_BGP_UPDATE_COUNTER, NULL, __pyx_mstate_global->__pyx_n_u_AS, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[0])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 4, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
   #endif
-  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_2AS_AS, __pyx_mstate_global->__pyx_n_u_loadASSet, __pyx_t_2) < (0)) __PYX_ERR(0, 10, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_get_BGP_UPDATE_COUNTER, __pyx_t_2) < (0)) __PYX_ERR(0, 4, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "AS.pyx":6
+ * def get_BGP_UPDATE_COUNTER():
+ *     return BGP_UPDATE_COUNTER
+ * def reset_BGP_UPDATE_COUNTER(value = 0):             # <<<<<<<<<<<<<<
+ *     global BGP_UPDATE_COUNTER
+ *     BGP_UPDATE_COUNTER = value
+*/
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_2AS_3reset_BGP_UPDATE_COUNTER, 0, __pyx_mstate_global->__pyx_n_u_reset_BGP_UPDATE_COUNTER, NULL, __pyx_mstate_global->__pyx_n_u_AS, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[1])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 6, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
+  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
+  #endif
+  __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_2, __pyx_mstate_global->__pyx_tuple[1]);
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_reset_BGP_UPDATE_COUNTER, __pyx_t_2) < (0)) __PYX_ERR(0, 6, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "AS.pyx":15
+ *         routeTables[ASN] = new RouteTable(ASN)
+ *         locks[ASN] = new mutex()
+ *     @staticmethod             # <<<<<<<<<<<<<<
+ *     def loadASSet(filePath):
+ *         cdef set[int] ASMembers
+*/
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_2AS_2AS_3loadASSet, __Pyx_CYFUNCTION_STATICMETHOD | __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_AS_loadASSet, NULL, __pyx_mstate_global->__pyx_n_u_AS, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[2])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 15, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
+  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
+  #endif
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_2AS_AS, __pyx_mstate_global->__pyx_n_u_loadASSet, __pyx_t_2) < (0)) __PYX_ERR(0, 15, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_3 = NULL;
-  __Pyx_GetNameInClass(__pyx_t_4, (PyObject*)__pyx_mstate_global->__pyx_ptype_2AS_AS, __pyx_mstate_global->__pyx_n_u_loadASSet); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 10, __pyx_L1_error)
+  __Pyx_GetNameInClass(__pyx_t_4, (PyObject*)__pyx_mstate_global->__pyx_ptype_2AS_AS, __pyx_mstate_global->__pyx_n_u_loadASSet); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 15, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __pyx_t_5 = 1;
   {
@@ -15557,174 +15978,189 @@ __Pyx_RefNannySetupContext("PyInit_AS", 0);
     __pyx_t_2 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_staticmethod, __pyx_callargs+__pyx_t_5, (2-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 10, __pyx_L1_error)
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 15, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
   }
-  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_2AS_AS, __pyx_mstate_global->__pyx_n_u_loadASSet, __pyx_t_2) < (0)) __PYX_ERR(0, 10, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_2AS_AS, __pyx_mstate_global->__pyx_n_u_loadASSet, __pyx_t_2) < (0)) __PYX_ERR(0, 15, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "AS.pyx":25
+  /* "AS.pyx":30
  *         print(f"Loaded {ASSet.size()} AS-SETs")
  * 
  *     cpdef void addPeer(self, peer):             # <<<<<<<<<<<<<<
  *         cdef pair[int, char] p
  * 
 */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_2AS_2AS_5addPeer, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_AS_addPeer, NULL, __pyx_mstate_global->__pyx_n_u_AS, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[1])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 25, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_2AS_2AS_5addPeer, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_AS_addPeer, NULL, __pyx_mstate_global->__pyx_n_u_AS, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[3])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 30, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
   #endif
-  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_2AS_AS, __pyx_mstate_global->__pyx_n_u_addPeer, __pyx_t_2) < (0)) __PYX_ERR(0, 25, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_2AS_AS, __pyx_mstate_global->__pyx_n_u_addPeer, __pyx_t_2) < (0)) __PYX_ERR(0, 30, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "AS.pyx":35
+  /* "AS.pyx":40
  *         peerType[(self.ASN, p.first)] = p.second
  * 
  *     def getPeers(self):             # <<<<<<<<<<<<<<
  *         return peers[self.ASN]
  * 
 */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_2AS_2AS_7getPeers, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_AS_getPeers, NULL, __pyx_mstate_global->__pyx_n_u_AS, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[2])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 35, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_2AS_2AS_7getPeers, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_AS_getPeers, NULL, __pyx_mstate_global->__pyx_n_u_AS, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[4])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 40, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
   #endif
-  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_2AS_AS, __pyx_mstate_global->__pyx_n_u_getPeers, __pyx_t_2) < (0)) __PYX_ERR(0, 35, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_2AS_AS, __pyx_mstate_global->__pyx_n_u_getPeers, __pyx_t_2) < (0)) __PYX_ERR(0, 40, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "AS.pyx":38
+  /* "AS.pyx":43
  *         return peers[self.ASN]
  * 
  *     def getFilter(self, peerASN, filterType):             # <<<<<<<<<<<<<<
  *         cdef:
  *             pair[int, int] p
 */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_2AS_2AS_9getFilter, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_AS_getFilter, NULL, __pyx_mstate_global->__pyx_n_u_AS, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[3])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 38, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_2AS_2AS_9getFilter, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_AS_getFilter, NULL, __pyx_mstate_global->__pyx_n_u_AS, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[5])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 43, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
   #endif
-  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_2AS_AS, __pyx_mstate_global->__pyx_n_u_getFilter, __pyx_t_2) < (0)) __PYX_ERR(0, 38, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_2AS_AS, __pyx_mstate_global->__pyx_n_u_getFilter, __pyx_t_2) < (0)) __PYX_ERR(0, 43, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "AS.pyx":172
+  /* "AS.pyx":177
  *         return filter
  * 
  *     def removeFilter(self, peerASN, filterType, index):             # <<<<<<<<<<<<<<
  *         cdef:
  *             pair[int, int] p
 */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_2AS_2AS_11removeFilter, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_AS_removeFilter, NULL, __pyx_mstate_global->__pyx_n_u_AS, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[4])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 172, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_2AS_2AS_11removeFilter, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_AS_removeFilter, NULL, __pyx_mstate_global->__pyx_n_u_AS, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[6])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 177, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
   #endif
-  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_2AS_AS, __pyx_mstate_global->__pyx_n_u_removeFilter, __pyx_t_2) < (0)) __PYX_ERR(0, 172, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_2AS_AS, __pyx_mstate_global->__pyx_n_u_removeFilter, __pyx_t_2) < (0)) __PYX_ERR(0, 177, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "AS.pyx":221
+  /* "AS.pyx":226
  *         return False
  * 
  *     cpdef void addFilter(self, peerASN, filterType, match, action):             # <<<<<<<<<<<<<<
  *         cdef:
  *             pair[int, int] p
 */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_2AS_2AS_13addFilter, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_AS_addFilter, NULL, __pyx_mstate_global->__pyx_n_u_AS, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[5])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 221, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_2AS_2AS_13addFilter, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_AS_addFilter, NULL, __pyx_mstate_global->__pyx_n_u_AS, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[7])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 226, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
   #endif
-  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_2AS_AS, __pyx_mstate_global->__pyx_n_u_addFilter, __pyx_t_2) < (0)) __PYX_ERR(0, 221, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_2AS_AS, __pyx_mstate_global->__pyx_n_u_addFilter, __pyx_t_2) < (0)) __PYX_ERR(0, 226, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "AS.pyx":981
+  /* "AS.pyx":991
  *             locks[ASN].unlock()
  * 
  *     cpdef void showRoute(self, prefix):             # <<<<<<<<<<<<<<
  *         routeTables[self.ASN].showRoute(prefix.encode("utf-8"))
  * 
 */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_2AS_2AS_17showRoute, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_AS_showRoute, NULL, __pyx_mstate_global->__pyx_n_u_AS, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[6])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 981, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_2AS_2AS_17showRoute, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_AS_showRoute, NULL, __pyx_mstate_global->__pyx_n_u_AS, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[8])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 991, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
   #endif
-  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_2AS_AS, __pyx_mstate_global->__pyx_n_u_showRoute, __pyx_t_2) < (0)) __PYX_ERR(0, 981, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_2AS_AS, __pyx_mstate_global->__pyx_n_u_showRoute, __pyx_t_2) < (0)) __PYX_ERR(0, 991, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "AS.pyx":984
+  /* "AS.pyx":994
  *         routeTables[self.ASN].showRoute(prefix.encode("utf-8"))
  * 
  *     cpdef void showRouteInDB(self, prefix):             # <<<<<<<<<<<<<<
  *         routeTables[self.ASN].showRouteInDB(prefix.encode("utf-8"))
  * 
 */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_2AS_2AS_19showRouteInDB, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_AS_showRouteInDB, NULL, __pyx_mstate_global->__pyx_n_u_AS, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[7])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 984, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_2AS_2AS_19showRouteInDB, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_AS_showRouteInDB, NULL, __pyx_mstate_global->__pyx_n_u_AS, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[9])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 994, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
   #endif
-  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_2AS_AS, __pyx_mstate_global->__pyx_n_u_showRouteInDB, __pyx_t_2) < (0)) __PYX_ERR(0, 984, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_2AS_AS, __pyx_mstate_global->__pyx_n_u_showRouteInDB, __pyx_t_2) < (0)) __PYX_ERR(0, 994, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "AS.pyx":987
+  /* "AS.pyx":997
  *         routeTables[self.ASN].showRouteInDB(prefix.encode("utf-8"))
  * 
  *     cpdef void showBestRoute(self, prefix):             # <<<<<<<<<<<<<<
  *         routeTables[self.ASN].showBestRoute(prefix.encode("utf-8"))
  * 
 */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_2AS_2AS_21showBestRoute, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_AS_showBestRoute, NULL, __pyx_mstate_global->__pyx_n_u_AS, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[8])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 987, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_2AS_2AS_21showBestRoute, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_AS_showBestRoute, NULL, __pyx_mstate_global->__pyx_n_u_AS, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[10])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 997, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
   #endif
-  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_2AS_AS, __pyx_mstate_global->__pyx_n_u_showBestRoute, __pyx_t_2) < (0)) __PYX_ERR(0, 987, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_2AS_AS, __pyx_mstate_global->__pyx_n_u_showBestRoute, __pyx_t_2) < (0)) __PYX_ERR(0, 997, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "AS.pyx":990
+  /* "AS.pyx":1000
  *         routeTables[self.ASN].showBestRoute(prefix.encode("utf-8"))
  * 
  *     cpdef void deleteRouteByPeerAS(self, peerAS):             # <<<<<<<<<<<<<<
  *         routeTables[self.ASN].deleteRouteByPeerAS(peerAS.encode("utf-8"))
  * 
 */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_2AS_2AS_23deleteRouteByPeerAS, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_AS_deleteRouteByPeerAS, NULL, __pyx_mstate_global->__pyx_n_u_AS, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[9])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 990, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_2AS_2AS_23deleteRouteByPeerAS, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_AS_deleteRouteByPeerAS, NULL, __pyx_mstate_global->__pyx_n_u_AS, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[11])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1000, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
   #endif
-  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_2AS_AS, __pyx_mstate_global->__pyx_n_u_deleteRouteByPeerAS, __pyx_t_2) < (0)) __PYX_ERR(0, 990, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_2AS_AS, __pyx_mstate_global->__pyx_n_u_deleteRouteByPeerAS, __pyx_t_2) < (0)) __PYX_ERR(0, 1000, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "AS.pyx":993
+  /* "AS.pyx":1003
  *         routeTables[self.ASN].deleteRouteByPeerAS(peerAS.encode("utf-8"))
  * 
  *     def countRoute(self):             # <<<<<<<<<<<<<<
  *         return routeTables[self.ASN].countRoute()
  * 
 */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_2AS_2AS_25countRoute, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_AS_countRoute, NULL, __pyx_mstate_global->__pyx_n_u_AS, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[10])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 993, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_2AS_2AS_25countRoute, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_AS_countRoute, NULL, __pyx_mstate_global->__pyx_n_u_AS, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[12])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1003, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
   #endif
-  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_2AS_AS, __pyx_mstate_global->__pyx_n_u_countRoute, __pyx_t_2) < (0)) __PYX_ERR(0, 993, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_2AS_AS, __pyx_mstate_global->__pyx_n_u_countRoute, __pyx_t_2) < (0)) __PYX_ERR(0, 1003, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "AS.pyx":996
+  /* "AS.pyx":1006
  *         return routeTables[self.ASN].countRoute()
  * 
  *     def getOriginAS(self, prefix):             # <<<<<<<<<<<<<<
  *         return routeTables[self.ASN].getOriginAS(prefix.encode("utf-8"))
+ *     def get_BGP_UPDATE_COUNTER(self):
 */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_2AS_2AS_27getOriginAS, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_AS_getOriginAS, NULL, __pyx_mstate_global->__pyx_n_u_AS, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[11])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 996, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_2AS_2AS_27getOriginAS, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_AS_getOriginAS, NULL, __pyx_mstate_global->__pyx_n_u_AS, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[13])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1006, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
   #endif
-  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_2AS_AS, __pyx_mstate_global->__pyx_n_u_getOriginAS, __pyx_t_2) < (0)) __PYX_ERR(0, 996, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_2AS_AS, __pyx_mstate_global->__pyx_n_u_getOriginAS, __pyx_t_2) < (0)) __PYX_ERR(0, 1006, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "AS.pyx":1008
+ *     def getOriginAS(self, prefix):
+ *         return routeTables[self.ASN].getOriginAS(prefix.encode("utf-8"))
+ *     def get_BGP_UPDATE_COUNTER(self):             # <<<<<<<<<<<<<<
+ *         return BGP_UPDATE_COUNTER
+*/
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_2AS_2AS_29get_BGP_UPDATE_COUNTER, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_AS_get_BGP_UPDATE_COUNTER, NULL, __pyx_mstate_global->__pyx_n_u_AS, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[14])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1008, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
+  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
+  #endif
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_2AS_AS, __pyx_mstate_global->__pyx_n_u_get_BGP_UPDATE_COUNTER, __pyx_t_2) < (0)) __PYX_ERR(0, 1008, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "(tree fragment)":1
@@ -15732,7 +16168,7 @@ __Pyx_RefNannySetupContext("PyInit_AS", 0);
  *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
  * def __setstate_cython__(self, __pyx_state):
 */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_2AS_2AS_29__reduce_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_AS___reduce_cython, NULL, __pyx_mstate_global->__pyx_n_u_AS, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[12])); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 1, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_2AS_2AS_31__reduce_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_AS___reduce_cython, NULL, __pyx_mstate_global->__pyx_n_u_AS, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[15])); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
@@ -15746,7 +16182,7 @@ __Pyx_RefNannySetupContext("PyInit_AS", 0);
  * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
  *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
 */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_2AS_2AS_31__setstate_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_AS___setstate_cython, NULL, __pyx_mstate_global->__pyx_n_u_AS, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[13])); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 3, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_2AS_2AS_33__setstate_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_AS___setstate_cython, NULL, __pyx_mstate_global->__pyx_n_u_AS, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[16])); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 3, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
@@ -15756,8 +16192,8 @@ __Pyx_RefNannySetupContext("PyInit_AS", 0);
 
   /* "AS.pyx":1
  * import json             # <<<<<<<<<<<<<<
+ * cdef public long BGP_UPDATE_COUNTER = 0
  * 
- * cdef class AS:
 */
   __pyx_t_2 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
@@ -15802,9 +16238,9 @@ __Pyx_RefNannySetupContext("PyInit_AS", 0);
 
 static int __Pyx_InitCachedBuiltins(__pyx_mstatetype *__pyx_mstate) {
   CYTHON_UNUSED_VAR(__pyx_mstate);
-  __pyx_builtin_staticmethod = __Pyx_GetBuiltinName(__pyx_mstate->__pyx_n_u_staticmethod); if (!__pyx_builtin_staticmethod) __PYX_ERR(0, 10, __pyx_L1_error)
-  __pyx_builtin_open = __Pyx_GetBuiltinName(__pyx_mstate->__pyx_n_u_open); if (!__pyx_builtin_open) __PYX_ERR(0, 14, __pyx_L1_error)
-  __pyx_builtin_print = __Pyx_GetBuiltinName(__pyx_mstate->__pyx_n_u_print); if (!__pyx_builtin_print) __PYX_ERR(0, 23, __pyx_L1_error)
+  __pyx_builtin_staticmethod = __Pyx_GetBuiltinName(__pyx_mstate->__pyx_n_u_staticmethod); if (!__pyx_builtin_staticmethod) __PYX_ERR(0, 15, __pyx_L1_error)
+  __pyx_builtin_open = __Pyx_GetBuiltinName(__pyx_mstate->__pyx_n_u_open); if (!__pyx_builtin_open) __PYX_ERR(0, 19, __pyx_L1_error)
+  __pyx_builtin_print = __Pyx_GetBuiltinName(__pyx_mstate->__pyx_n_u_print); if (!__pyx_builtin_print) __PYX_ERR(0, 28, __pyx_L1_error)
 
   /* Cached unbound methods */
   __pyx_mstate->__pyx_umethod_PyDict_Type_items.type = (PyObject*)&PyDict_Type;
@@ -15824,31 +16260,42 @@ static int __Pyx_InitCachedConstants(__pyx_mstatetype *__pyx_mstate) {
   CYTHON_UNUSED_VAR(__pyx_mstate);
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "AS.pyx":14
+  /* "AS.pyx":19
  *         cdef set[int] ASMembers
  * 
  *         with open(filePath, "r") as f:             # <<<<<<<<<<<<<<
  *             data = json.load(f)
  *             for i in data:
 */
-  __pyx_mstate_global->__pyx_tuple[0] = PyTuple_Pack(3, Py_None, Py_None, Py_None); if (unlikely(!__pyx_mstate_global->__pyx_tuple[0])) __PYX_ERR(0, 14, __pyx_L1_error)
+  __pyx_mstate_global->__pyx_tuple[0] = PyTuple_Pack(3, Py_None, Py_None, Py_None); if (unlikely(!__pyx_mstate_global->__pyx_tuple[0])) __PYX_ERR(0, 19, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_mstate_global->__pyx_tuple[0]);
   __Pyx_GIVEREF(__pyx_mstate_global->__pyx_tuple[0]);
 
-  /* "AS.pyx":105
+  /* "AS.pyx":110
  * 
  * 
  *                 filter.append((match, action[:-1]))             # <<<<<<<<<<<<<<
  * 
  *                 ptr = ptr.nextFt
 */
-  __pyx_mstate_global->__pyx_slice[0] = PySlice_New(Py_None, __pyx_mstate_global->__pyx_int_neg_1, Py_None); if (unlikely(!__pyx_mstate_global->__pyx_slice[0])) __PYX_ERR(0, 105, __pyx_L1_error)
+  __pyx_mstate_global->__pyx_slice[0] = PySlice_New(Py_None, __pyx_mstate_global->__pyx_int_neg_1, Py_None); if (unlikely(!__pyx_mstate_global->__pyx_slice[0])) __PYX_ERR(0, 110, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_mstate_global->__pyx_slice[0]);
   __Pyx_GIVEREF(__pyx_mstate_global->__pyx_slice[0]);
+
+  /* "AS.pyx":6
+ * def get_BGP_UPDATE_COUNTER():
+ *     return BGP_UPDATE_COUNTER
+ * def reset_BGP_UPDATE_COUNTER(value = 0):             # <<<<<<<<<<<<<<
+ *     global BGP_UPDATE_COUNTER
+ *     BGP_UPDATE_COUNTER = value
+*/
+  __pyx_mstate_global->__pyx_tuple[1] = PyTuple_Pack(1, ((PyObject*)__pyx_mstate_global->__pyx_int_0)); if (unlikely(!__pyx_mstate_global->__pyx_tuple[1])) __PYX_ERR(0, 6, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_mstate_global->__pyx_tuple[1]);
+  __Pyx_GIVEREF(__pyx_mstate_global->__pyx_tuple[1]);
   #if CYTHON_IMMORTAL_CONSTANTS
   {
     PyObject **table = __pyx_mstate->__pyx_tuple;
-    for (Py_ssize_t i=0; i<1; ++i) {
+    for (Py_ssize_t i=0; i<2; ++i) {
       #if CYTHON_COMPILING_IN_CPYTHON_FREETHREADING
       #if PY_VERSION_HEX < 0x030E0000
       if (_Py_IsOwnedByCurrentThread(table[i]) && Py_REFCNT(table[i]) == 1)
@@ -15894,31 +16341,31 @@ static int __Pyx_InitCachedConstants(__pyx_mstatetype *__pyx_mstate) {
 static int __Pyx_InitConstants(__pyx_mstatetype *__pyx_mstate) {
   CYTHON_UNUSED_VAR(__pyx_mstate);
   {
-    const struct { const unsigned int length: 10; } index[] = {{0},{7},{8},{7},{1},{1},{1},{14},{19},{17},{16},{13},{5},{7},{6},{9},{2},{9},{11},{50},{5},{8},{10},{10},{8},{14},{5},{2},{9},{3},{20},{22},{12},{10},{13},{22},{12},{14},{11},{12},{15},{16},{12},{16},{20},{6},{9},{7},{3},{18},{17},{18},{10},{4},{19},{8},{6},{9},{8},{1},{8},{6},{10},{8},{9},{11},{8},{12},{1},{5},{13},{5},{1},{4},{7},{4},{9},{8},{5},{10},{8},{4},{1},{4},{6},{7},{3},{6},{5},{3},{12},{11},{14},{12},{1},{10},{17},{13},{12},{4},{12},{10},{12},{19},{13},{9},{13},{12},{9},{8},{6},{245},{23},{24},{23},{17},{25},{100},{841},{285},{58},{13},{9},{354},{100}};
-    #if (CYTHON_COMPRESS_STRINGS) == 2 /* compression: bz2 (1713 bytes) */
-const char* const cstring = "BZh91AY&SY\304\017\212\237\000\001}\377\377\377\377\377\377\177\377\276\337\277\377\377\373\377\377\377\374@@@@@@@@@@@@@\000@\000`\006}\365\007X\330\310\215V\322\331\270\032\316\350J\024\324\211\24042=F\2314\300\321\350\247\247\222\206#'\265\t\2041\006\010\321\246M\007\352jfF\240z\203\001\240J%\036\223\324i\246\206\230\243\324\324\375\t\222\036\200\200\032\003F\236\240\003@\000\000\000\000\006\200\004\032bbb`&\002`\000\000\000\023\000\000L\000\002`\000\000\000&\201)\242\010$M\251\232MG\262\2462OQ\351\2414z\001\251\220\000\r\014\020\310\310\003M\003\020\302<Sj\031\006\230\230\230\230\t\200\230\000\000\000\004\300\000\023\000\000\230\000\000\000\t\240I&\232\232\231&\310M\n~\212?F\241\265OD\323A\342\201\246jh\000\000\000\000\000\017SLA\2434\217S{\\\254\t\313\301\035\211\365\177O\307\365xwp\222Mr?\317\354\331\332\333$\036#jr(T0K\213\212\032d\037\353\216\227\032'\005)a\001y\034i2f\025k\000g0\355yL\215\243\202\204\213-d\222a\"-d$\303\204&\022\020\014\231\223\"Z\314\312a]\267\254\331T4\252\"\253\256\304N\006 \251\301\337\0108\373X\001\340V'D\"\320.\0310\2069\010(\314\016\007$\250\230\257\305\260L4\025\223\270-/\227\301P(\024?\340t\271`Vb(\"\002\n\013H\013\306\023\214\232C1\315&z@mqu\035t\306^\257\361\312\355F\335o\327\321\177\260\337\274\374\336ew\212\364\305\233\036\250d\026\256\304\204\344\211\222\tO`w\0064D\032\203D/\tE\243\213\247\221\247AL\341n\260\225Vf(|\324\306u\271X\031Y\"V\005\306\036\014&B\010\0321\271 c\200\351\022\034 R\0341\014K\337\3370\035F\003<\253b\332\362\226\203$\267\203\270\352_\206\373P\216x\236\2064E\232\\\371J\335B\2051\272\277\343\262S\026O\226\277\025\223\304r^\253\301\217<4_`g\r\371\"\030\354n\0130\221Czi\026\220\004\020`2M\2116\355\370xq^\356\362)i\226YH\022\004e!\246Qy\347\244Z\317\224A\204\313\350\254U\256\220W\260+Q\306x\375a\264\221\207\021\"\351\310$c\021\226\361b\325\264b\347\223VV\257\237 #C\001\303\213Q9q\200\300}\032\206\224j\225\006\017\314\374\234*\236c\204&\034'\352X\234(Q\372a1\340\352\016uF&\347X\331\021\227\237 2r\217\301\322\324""\237]\210nv\215\274w\315-\231\274W^\"\347-\177\277/\233:J\301\347\226\327P\035\222gC\303\357\306D\323\003\211\210TO\234\177F\215ij\214\034\\\256i\272\335URV\254\327\345\207\205\263\361nn5\365eb\215c\254\274s{-V\242\333e\214\347m\206qw;\343\247_\341\006M\255.\300\251MN\333>\265h\245\333\244S\202/L\330\216\256`\236c\212\243v\274~e\003\030cGx\021\203\267\306\200\254\220_\204\016\214-uW>\346\240\026[tYc\"\311s\374E\263\237o_o\022 D\220C\211\363h\370\322$\351,\305Za\002v;\013H\265!&Dq\350N\032\3305l\333\233<n\361^*\322\2154 BL\240\007\0345S\335s\234Aa\342`di\014\234\251\233(H\2252\260lz\271S\271\332\234\027\241\231\303\206\236\235\373\344I\222\325r\303@\2765\306\2630\257\022N\214D`\215\200\232v\357e\222\301\014\207\320\025\222F\237\222p'\235e\345\245V\032\370\000\326\024\261\316\244Q\232\267e\323\315\320\263\033\205\270[[,\306\2217\352\344\003B\300\307\362\245\300\304!G\236[\321XY\034S\004y\321\200\254Jz\241)\007\226\036\336\315\224\020\343\263\241L{\262Y~\275\n\260@W\030\340J`\244M\334l\030\366'a\331e\207s\024\202\216\212\214\263\273n\312\0010\216h\032\252\212TJ\202T\200H\302\254F\027G\n\307\025\252\231vhi\352R\246\270$\206\252\333d\367\363W\001\232\034\230\211\316cHS\034\r\354\206L\241\247'\001\323\"\333ZFz\200\220\023V\230\303\036)\274\035\"\264\354\251x\204\260\334x&Y\357\345\3035\341\304\237\220\322k\266Y\010-%\232\n8\275\207=\342\212DRSe\241\240\n\253\300\252\203V\204\003f\316}\373\201\216\217\223[A\232\031\002\003y\247\016\226\261\2415IF\275\365\220\316\230\tZ\314\204B\032\205\000\251\201\315F \253\230\2119a;\245{=\353\341\271\277y\030\003\265\032b\271\2557s\006\260\033kC\002\177^Gu\257\256d\323\205^\027\211\212\242G-o\032t&b\252\242\261^\272\017\311\2222Mq\220\203r\001\320\030F$1\014(\224:f=\276\352\3529\231z:\351\252\202\306jk\022\315\204=\374\345AR\202\224B9N\007ll\246\250*\023jk\202\242\241R\225\031\206kF~l\030d\340`jc\037\371\266\331d\200r\022\034\217T]\363hK\217^y\266\21728\206\324!\024Q\377\225\3523\220#*\235\302`\\{\005\331.\217\331\000\242\212^}/)d(\371I""\217\342\204\315\313\324|\376\233\246x\363\244+.\336\264(\320c\213\376\025\035\274hN\242C\n\023\211\335\344{.\000\235T\231|j=\030\362@J\022\234\270\240/\222\334A\375\247\342\030\232\003't\367V\221\022\231\032\354\272.\310\255\267I\340S\240b\231\366\2703\033^1\234\034\315\350q\010\341\343\350\235\021h\3313\231\327G0\2165\331\314o\207\036n\340\3017(y\222\323\241h@I\315L@\355d\311\360\230\347dS\032\251\213$~|D\363\260K\343\253H,\362\217\3611\3606\311\212\031\352\206\"\340@o\315#\030\224\2468x\244W!!+\021\220\234\203\2158\227\310\315\023\021)h5IL\300\336\032\246\340\372\222i\331I\330\222\026\330\212\337\"'\234\"N\224N\0050r\004AB\263g\254\336\n\310\222'D\234\205\n\205&Ri\306\212\210\002@\345D\020\"\204\213\345\203\221B\321=\267;x\305\334\221N\024$1\003\342\247\300";
-    PyObject *data = __Pyx_DecompressString(cstring, 1713, 2);
+    const struct { const unsigned int length: 10; } index[] = {{0},{7},{8},{7},{1},{1},{1},{14},{19},{17},{16},{13},{5},{7},{6},{9},{2},{9},{11},{50},{5},{8},{10},{10},{8},{14},{5},{2},{9},{3},{20},{22},{12},{10},{13},{22},{12},{14},{11},{25},{12},{15},{16},{12},{16},{20},{6},{9},{7},{3},{18},{17},{18},{10},{4},{19},{8},{6},{9},{8},{1},{8},{6},{10},{8},{9},{11},{8},{22},{12},{1},{5},{13},{5},{1},{4},{7},{4},{9},{8},{5},{10},{8},{4},{1},{4},{6},{7},{3},{6},{5},{3},{12},{11},{14},{12},{1},{10},{17},{13},{12},{24},{4},{12},{10},{12},{19},{13},{9},{13},{12},{9},{8},{5},{6},{7},{245},{23},{24},{23},{17},{25},{100},{841},{285},{58},{7},{13},{13},{9},{354},{100},{1},{1},{1}};
+    #if (CYTHON_COMPRESS_STRINGS) == 2 /* compression: bz2 (1767 bytes) */
+const char* const cstring = "BZh91AY&SY\000%\311\337\000\001\204\377\377\377\377\377\377\177\377\276\337\277\377\377\373\377\377\377\374@@@@@@@@@@@@@\000@\000`\006\235\365\000\256FDml4[\200p\022I\022\200h\000\3654?I\352\232=\031\251\243d\240\003\315SG\250\003\324\r\000h\r\007\250\364b\200z\207\250\036\325\006EO\021F\217M\252\237\223P\365 \375S\362\243L\3216\221\246\200h\000\003C\00440\004\000\000\000\001\006\230\230\230\230\t\200\230\000\000\000\004\300\000\023\000\000\230\000\000\000\t\240Ji\0052h\232&\232h\323\010\321\241\220\320\0004\000\000\320\320\006\203C@\320h\0004\365\032\004\032bbb`&\002`\000\000\000\023\000\000L\000\002`\000\000\000&\201$\206\246\204\032\023\032#T\375L\233Q\246\231 b2\006\232h\003@\000\000\006\200\0314\304\311\223j4\302\255f\302r\240F\216d\362\375\231\331\357\007w\010\244\325#\367\240~m\376\210\206\211l\224J\n\006\010pp;Hs\375\010\221K?y\017AM7\007\n\221\336C0\311\220\325\332\3404\314;X'\202\326l)\221(\245\222I\204\210R\310Hg\0102\031\206\001\2232dC32\220U~\252\366T\313\264\017E\226a\035\330a\312\"\021\216\000\211\035\253\301\027\025j(t_\002\301\223\010cm\004\331\202 j($+\217}\311\006\341Q+\002\371p\270\na0\231\336\014\222K\216\005f\"\221\024\003\224\212\360\025\030M$\222\031\262\266\370\347\252\006\317w\253\025\324\031{\035\215\\\017\304\252=\256-\316\343u\345\350\361\352\244\253\030\266qZ\030\305n\210\n$\t\020\010KA\030\203\034\321\016\207\021\266)9I\303?\007=\3269\003m@\265\233^\014\035\2063S\242\330\006v\005\n\253\013\014\034\354\0061\307\031\361D\2001\3169\344\010\203\212\004C \211tvP\036\362\002\3615\223\267\245\263&f\264\204\0104\274\332\255q\014\221<\313\364B\214<\234\370\327\327\223'\200\352\307\253\253T\246,.\345\031T\312\364\332=e\230\253\354p\263\206\230yI@5\022\"\215eO\000\330\207&m\032\211\252\311\001\"G\234\330\0248\206\237I\231\rm\365\231\"UV\0105\215\320\266&/1\225\2044Z\030\016t\351\035\320`\n=F\312\354\032\036\"q\361\031Lr\314\022\003\\d\010\236\022\301\022J\024\355\030\241\003(\216\226\315D..\372\301\214\021\203J\262\265t\351!\035\373\001\323\317""\254\304L\006\342\202\260\260\273\230\275<\347\356\255UT\030:c\354H*~! \220m\033\305\325\020\2318\365\002D\\\352\221?\221\211D\353\026\010\327Z\311\271\321\335L\226]\323v)f\227\341\022[lkx6$\226\206\013\302\215\334!S\225\337\321s\304\224\343@\362\264\327\023\007d\231\320\360}`\310\222`q1\0054\367\247\334\301\255:T,nl\361\013V\253)\306\225\245|\200\314\255\313\301\300\305\305]B{N\262\363N^z/\242\375\370b<\r\300\333\026\3570\212\212\355\216c\331\273\334\024\347\2236\325\265\"vr\207\237=\351\221\260\375}!-'v\203\223V/Ja\2101#\302\007\275\243\022\002\242\001q\320E\030\032\312,\217\033 \025\337\261\353\255\221\\<\217\035\260\265x\227\330\227L@DPA\304\367s{\364\210\272J\345V\235\320\022\241\330Xe)\t2!\261\231(501h\267&xi/*\025i\315\244\204\010I\224\000q\322lU^\274\344c\212\353\036\303#\014\007tP]\306\t\021\224\354\331\310\337\\J\247.\264\256\021ok\026\325UBCKR\024\215\036\301Pu\300\333a\207\300v\345IP[v'\322\376]\271p\226e; \311\231\215\275\203S\343\246\341Q6\303>\310\033\303KC\314\215\tAs\023\260oa\332\250\027\0178\027\223\216P\237\365\270\273\r\001\341k\356\357*R,\0279(\221\3514\"\220i\224^\000\235\251\305\010\3041\003\235\241D\3048\354\350R\036\276\005\025n&M\004Bz\010\001)\002\201(\304k\330\266%Y\3762\301\306\303\000\234QA\236Vq+\230\022\007\337\003+&+U\212\273\302\310\027u\215\332rX\3315\261\327\307\305\036\207\265:\233V[.\266\210m\360\233}\265\033\341\266\357)Hh\nD@\345c1\347\rhD\010\246E\373\355\003j\200 \004\225\363\020b\303(\333A\346\025\2512\246\241\322\303\200\361J\231\221}\033\017\021\265\251JR:\021\250\004P\33121\003E8X\256\0142\210\020o\355\333\001\021:\027\220\355\033\343\354r.\\\331\ru\r;\331\322\212``3j\214\031\242\267\214\360j%\036M\311\310Pd\004\252I\206\"\206\2310(`\211\221\207(\336D\"VJ\310S\303\246\340n\362\351E\340\340}aX5\363\223\244-\003\212\267\030\024}\310\033\372\372\344\261\310\343r\372\316`0\005\026\217\000C\000\235Q\020\242\243\250\002\274\324\205\233\004_\220\333\360Qd\306\035\255]\216D\206]u\177|\263VT]\327\333\310\3366\026sxsM\231\351""\033\301Ra\225\306/\007\272\223\340\377\277Qz\001\221Wi\244\014\231\030/]\250Zu\263\351\267p\345\373p;\3428\303\235\0178\234\017\242s\351\354\r\244i\213'\265\240_O9>PR1 \303\024\364i\247>\203\332b!3C\201\337\032\341D\372\221\2140\305/U+\274\366\".\270\300\301R\3754\321\037s\t\240=:s9\256\371\244N\216\310\337\201\223\377\243\271[L\222DV+p\223\335X\302\266\"\245SE\357`\362\214\313\025\374\311c*\254\221\021\\\212Q\306p\016Y\247\213VJe\271;(\242e\022\357\360\226\000\277l\317!\310\261\001\221)\010<A\324\376\210\2755r\270\250\320!!U\340\0212\376@p\302h7\307\034\275o\246\240\306\200\214\237is\003{\320\237\310,\230\343\034\331\214\371\344V%,\033\2633\024\332\201\265\264~Ls\346q\025\235\224\033\000\262P\014c\236yfb\322\242\222\202f\002\302\302\371\220\260~\211\351\351\026\331\220\346\236qi\214;E\246\360y'h\346\035\223^\323\007C\032\323\000\314Q\004\324e\213\344\030\224\031\242\361\031\302\004F\"PM\324&\360\2119\022a\350f\200\351\324\311\310\234\224Fz\007\002\001\022\201\307\0212\005\322\341\021\346X4*\256\013\377\027rE8P\220\000%\311\337";
+    PyObject *data = __Pyx_DecompressString(cstring, 1767, 2);
     if (unlikely(!data)) __PYX_ERR(0, 1, __pyx_L1_error)
     const char* const bytes = __Pyx_PyBytes_AsString(data);
     #if !CYTHON_ASSUME_SAFE_MACROS
     if (likely(bytes)); else { Py_DECREF(data); __PYX_ERR(0, 1, __pyx_L1_error) }
     #endif
-    #elif (CYTHON_COMPRESS_STRINGS) != 0 /* compression: zlib (1500 bytes) */
-const char* const cstring = "x\332\355V\315s\323F\024\267\241\220\217\206\022\005\223\017\002\214LJ\371hB\307\220\016\235\020\322Q\022 \241|\304\261ih2Dl\244u,\260\365\271Jl\350\201\243\217{\334\243\216:\352\350\243\217>\372\250\243\377\204\374\t}+\005c\22300\235\351\255\366Hz\373\366\275}\277\367\261oW\312]\227r\317\356\213Rn&\367 \357<1\220\212U\361\336\215\337\025\243\\vu\215TE\244\252\342\247\221b\350\004i\272\323\305\262q\331\330\303]\014\207\330\232yO\251\222\242\241\377\"\345n\231\325\212\212\365\352=Us\320N\tc\235\277\013Z\211`[\324\364]Esb\226Z2\024T\2321m\\\020uCTq\001\271%\"\312\262\215UW\301\262,\252.\026\211\001\223\372\014\330\330\323P\tf\025\r\254\312\262\211HQ\234\026M\214m\347>_C\253\300\352\342G\312\341\224\211uU\234\347\370\364]\307pm\005/\270\2440\363\233\224\223rOqy\007T!\034\000\271c3\366B\226#\236\203\211C\020\351\341Bx\036F\256\304\364\032\216(\305pu\262n\270\004\303@\305%Lp4Z\254\306\002\300\335\305\244\243\010\364s[\333\325\364\2173\\\n\240\334*AB\244\\\016\023\240\3438wt\234\242\261\277\210\235\216\025>>B\257\352\313\213\262\274V\255\300\263\254)D~\206+d\035\002\253\020\315\320;\330\017\201#\275\212\234\252\256h\0068`\203\276\246c\007\002\\B\216#\003*\215\3402\037\002[\326t\231\330H\301;Hy\373\311[\025\021t\214\273\262\254r\3432\326\025C\305\374\013Fe\370\341\nO]\001\212\001\257A\376\342\242\210\337\371\252\t\222\005WWd\271\023\253\256@}\214R4\033\247E\3264]\305\025Ys\344\016~\216\331y\363\3061t\360\202\254\021\233\207\264\023VY.C5\3637Q\212\3601T\267\20490\035\225\341k@\301\230\274\242\314\310\215\370\375\3144\314\270\252L\250#b\022\360\004J\\V\220\251qUN\037\342\341\344\036\341\265\315',\027\225\342u\355O5}\244\322:\014pD\356\316\271\203K\205\250\006\017\301\001u\270E\272*S>\246J{*\245S\032=5\302\0254\245\214AAu\334\035)*\017Y\006)X|\017\225\\\354|\220\016\206\022\003\002=I3T\n\373\007j\023\364G\2128q\201f\332\375\337\327\346\350:\265\332C\303\264\237\235bY\246x\347\274\025\1779H\206\303c\234?J\021\2550\313K\206C#\364:K\263\333,\333\036:Gg\251\303\322\355\341\024}""\310\246X6LM\2629/\347'\303\3248K\362Q\246=<\301\204p\370\002K\207\303\243Ta\302\301\351\304\031\201\016\260\363\0141\307\233\362\376\362\325 \335e\245\352%=\201[\271\3012l\221\241\177g\245\335\177\266f}\000O\317\201\303\313\340\322\266\237\361\037\006\327\352B=\335\305n]\312\004B\360S\275\257n5\222\335\342\233\236\345\237\366w\203l\2008\373l\355=\370<\313\\\357\017\337\352e<\t\222\301h\260_Gu\2308\350O\3740B\005z\223\255xR\030!w\231\004\220!\260\247h6\004\230\243\314\n\301\223\007,\005aFa\352\022\333\360$/\357\013~\332\277\033\244\003\360\345<\315B \366!@\177\373\220\2343\265lM\243\026\240z\341\001\370\203\301\304\300`O\376\302~\201\n\337\220\304\3432\307#\310\203\307\243\273D\337CB\262\355\324E&\265G'\330\244\267\344Y0j]\274\035\\\t\226\202\367\215kM\241\231\356\236bO\375\021\377\216\377\266>\326H6\204o\234Y\361\026=\305\237\014\036\3253u\211\033~\n@%\236\315\001o\314?\t>\217\247\275qP\317\264/Lyw\375)?\3139\227};\230\250_k\2145\223\315\211\326z\276\225\177\331z\271\331\332\334\352\226j\2459\326\325\372F\343Q3\323\\m\275\330hml\265\266^\265^m\367\212\315\006\213\001\352e\375\032\254\007\325F_c\277\211\232\325h\351\355\326\366\353\326\353\0361o\322_\3645H\370n#\333\320\232v+\373\"2\362\022\n[\030\243\273l\235\355{\005\177\311\267\332_/\370\343\252\374\377\214\374\327\0319l\016\274#~\276\221\3706\335\210v,\354\251\321h\017Z\355\376\241\332c\272\303\222\307\354\254(]\220\332\002D+\"G\2405m\372V\320\027X\320\014\204Q\272\t]\263\317\263x_*\302j\266\027%v\231\235d\231\220\247\025\320\275\363\2056t\261;\254\010I\020\302\361\313\260\276\020\246\306\350;O\200E\216VO\324\356\330U\266\347E-E`W\330c\357\r4\242\261z\362\210U\r\310\023^\272\313\352%\360`\307\033\364\323_\264\n\3019\335\t\016\265\342\360\314B\017J\306\355H\245W\271\030\254\n\021;\001B\005pd\313O\372B\334\034]*\321<\023>$\303\357\006k?\323\254C\324\2719W7l\025\303\371\010\007\2669\017\207\357tt\202\345\371\t+\336\\\020\023_\220\212\330e\220\254|Uj\017+\304\260\347#\332D\232\035\315(Ed/\210\374\177\234n\257,<\013""\342t|dO\257\001w\0059EP\374VMn\253[\357Kj\361-6\006\rG\376|\244\r\362v'\"N\002.\324o\235Dt%N\304\267\252U\375\220x\356\222h\202_\263\022\321]\3503C\2355\023\307L\364\002\357\302\003\016ta_\177\376',\234\320t\270Bh*\220\377\000l\220\342'";
-    PyObject *data = __Pyx_DecompressString(cstring, 1500, 1);
+    #elif (CYTHON_COMPRESS_STRINGS) != 0 /* compression: zlib (1550 bytes) */
+const char* const cstring = "x\332\355VKs\023G\020\226\302\303\017L\360\032\343\007\006j\205Cx\304NJ\340\024)c\234Z\331\006\233\200m=\034\023\273\360\260\336\035Y\013\322\276\327\226 \007\216:\316q\216{\334\343\036u\324QG\035\367\250\237\340\237\220\236]#$,\n*U\271\305.\315\366\364tOw\177\335\3233B\366\216\220]\177\314\013\331\331\354J\316z\256\2112\226\371Gw\177\227\264R\311Q\025\273\302\213\262\314\177\232I\232j\213\212ju\260L\\\322\016q\007\303\262ME\177$U\354\202\246\376\"d\177\326+e\031\253\225G\262b\211\373E\214U6\346\225\242\215M^Q\017$\305\212XrQ\223\304\342\254n\342<\257j\274\214\363\242S\264y\204L,;\022F\210\227\035\314\333\032,\252\263`\343P\021\213\260*)`\025!]\264\013\374\014\257clZ\217\331\036J\031v\347?R\026\243t\254\312\374\002\363O=\2604\307\224\360\242c\347g\177\023\262B\366\005.\355\203*\300\001.\267mFQ \024\362,l[\266hwq\001\236'a(\021\275\211CJ\322\034\325\316h\216\215a\"\343\"\266q8KU\"\001\340\036`\273\255\010\364\206\251\034(\352\307\025&eE$J=\335D[\233\313Bn\005-ml\255\347V2\260P\204L\t\331,\266\201\216\022\320\336\314*hG)l\265\315\263\371)zM]N!\264Y)\303oY\221l\264\216\313v\006\020\227lES\333A\235D$\252\025\321\252\250\222\242Ad&\350+*\266\000\371\242hY\010|Tl\\bS`#EE\266)Jx_\224\336~\202A\026m\261\007\016\010\311\3148\302\252\244\311\230}\301(\202?\\f9\315C\225\340MHlT-\321\230\253\350 \231wT\t\2416\210\035\010~\204\2577v\241N\224E\244(\252\214\313H\261P;*\026\211\365\346\215\245\251\020\233\275i\233\014\3506\330\010\225\240\370\331hK\005\370h\262S\304\314]U,\301W\203\372\322Y\001\352ap\321\270\256kzT\204:\224\235\255\333\020\037\234\010$\211\272\302T\031}\342\017#\017mv\024\330\202\341\210\305h_\363\323\0218U\230m\006\004\202:+\301\304VO\000,\\\314\207\245|\3424P''\255\243\300Q\217b\357\252\253v!uU\024SP\244\022\006\005\331r\366\205\260\230\020\002)\330\374P,:8\034\254\017\361\340\354\205j\362\203p<\024\033\340\310\031\222$B\320?P\235$?\020\221\021WI\262\325\177\241:O2\304h\r\r\223~z\216\246\251\344^vW\275e?\036\014\2173\376\030\021I\231\032n<\030\032!wh\202\336\247""\351\326\320e2G,\232h\r\217\222't\232\246\203\321):\357f\275x0:A\343l\226l\rOR.\030\276J\023\301\360\030\221(w|>v\221#\003\364\n\025\251\345N\273\177y\262\237\350\260Rq\343.\307\254\334\245I\232\242\342\277\263\322\352\277T5>@\244\227!\340e\010i\317KzO\374\3335\256\226\350`7\257'}\316\377\261\326W3\352\361N\361\035\327\360\316{\007~\332\027\031\373R\365=\304<G\035\367\017\317\350f<\367\343\376\230\177T\023k\260p\334\037\373~\204p\344\036]u\205 \364\334\241\002\270\014\300\236#\351\000\334\034\243F\000\221\254\320Q\200Y\014F\257\323mWps\036\347%\274\207~\302\207X\256\2204\000q\004\000\375\355Ar.V\323U\205\030\340\325\226\013\316\037\017\306\006\006\273\362\027\364s\204\373\206$\366\312\034C\220\201\307\320]\"\357!!\351\326\3505*\264\306&\351\224\273\344\0320k^\273\357\337\364\227\374\367\365\333\r\256\221\350\\\242/\274\021\357\201\367\2666^\217\327\271o\\YuS\256\344M\371Ok\311\232\300\014\277\000G\005\226\315\001w\334;\0031O$\334\tPO\266\256N\273\017\275i/\31587<\323\237\254\335\256\2177\342\215\311f&\327\314\275l\276\334i\356\354vJ5\023\314\327\265\332v\375i#\331Xknm7\267w\233\273\257\232\257\366\272\305\346\374\224/v\263~\3653~\245\336W?j\210\215J\270\365^s\357u\363u\227\230;\345\245<\005\022~PO\327\225\206\331Lo\205F^Bas\343\344\200f\350\221\233\367\226<\243\365\365\202\357U\345\377g\344\277\316\310Is`\035\361\363\203\304\216\351vxb\341L\215\205g\320h\365\017U\237\221}\032\357q\262\302tAj\363\200VH\216@k\332\361\014\277\3177\240\031pcd\007\272f\237k\260\276T\200\335L7L\3542=C\223\001K+x\367\316\343Z\320\305\036\320\002$\201\013&n\300\376\\0:N\336\271\034lr\272z\302vGo\321C7l)\034\275I\237\271o\240\021\215\327\342\247\254*@~\347&:\254^\207\010\366\335A/\361E\253\000\316\37168\304\210\340\231\203\036\024\217\332\221Ln11\330\025\020\373\016\204\362\020\310\256\027\367\270\2509\236\364H\207\010$G\271f\014,\006g\317\005g\301Wv!\rV\177\"i\313\226\347\347\035U3e\014\367*\\\364\372\002\\\3323\341\r\227c73\177o\221\217}A*d\227@\262\374U\251C,\331\232\271\020\322\272\250""\230\341\212T\020\315E\236\375\367\322\355\226\205\337\"?\023]\3653\233\300]\025\255\002(~\253&\263\325\251\367%\265\350\261\0349\rO\202\205P\033\344\3156\"V\014\336\355o\255X\370\362\216Eo\2645\365\204\330p\354p\201=\332b\341\033\3523C\355=c=\026\272\035\357\360\007\002\350\360=\263\361'l\034STx](2{\024om\377\003Nl\005O";
+    PyObject *data = __Pyx_DecompressString(cstring, 1550, 1);
     if (unlikely(!data)) __PYX_ERR(0, 1, __pyx_L1_error)
     const char* const bytes = __Pyx_PyBytes_AsString(data);
     #if !CYTHON_ASSUME_SAFE_MACROS
     if (likely(bytes)); else { Py_DECREF(data); __PYX_ERR(0, 1, __pyx_L1_error) }
     #endif
-    #else /* compression: none (3184 bytes) */
-const char* const bytes = "AS(ASN= AS-SETsLoaded ;)?community add community contains community remove community strip;cython/AS.pyxdeny;disableenablefilter ingcisenabledlocal-pref no default __reduce__ due to non-trivial __cinit__path , peers=prefix in prefix is prepend <stringsource>utf-8ASASMembersASNAS.__reduce_cython__AS.__setstate_cython__AS.addFilterAS.addPeerAS.countRouteAS.deleteRouteByPeerASAS.getFilterAS.getOriginASAS.getPeersAS.loadASSetAS.removeFilterAS.showBestRouteAS.showRouteAS.showRouteInDB__Pyx_PyDict_NextRefactionaddFilteraddPeeranyasyncio.coroutines__class_getitem__cline_in_tracebackcountRoutedatadeleteRouteByPeerAS__dict__encode__enter____exit__ffilePathfilterfilterType__func__getFiltergetOriginASgetPeers__getstate__iindex_is_coroutineitemsjjsonlastPtrloadloadASSet__main__match__module____name__openppeerpeerASpeerASNpopprefixprintptr__pyx_capi____pyx_state__pyx_vtable____qualname__r__reduce____reduce_cython____reduce_ex__removeFilterself__set_name__setdefault__setstate____setstate_cython__showBestRouteshowRouteshowRouteInDBstaticmethodsubAction__test__values\200A\360\014\000\t\021\220\003\2201\220A\330\010\t\210\031\220$\220a\330\010\t\210\032\2201\340\010\013\210:\220R\220q\340\014\020\220\010\230\005\230Q\230c\240\023\240H\250D\260\001\330\020\027\220q\340\014\026\220a\220x\230q\240\001\330\014\022\220(\230!\2302\230Q\340\014\023\2204\220s\230!\340\020\024\220F\230#\230Q\330\024\033\230:\240S\250\001\330\024\030\230\001\330\024\033\2301\340\020\031\230\021\330\020\032\230!\330\020\026\220c\230\021\360\006\000\r\021\220\t\230\025\230a\230s\240#\240Y\250d\260!\330\020\027\220q\340\014\026\220a\220y\240\001\240\021\330\014\022\220)\2301\230B\230a\340\014\023\2204\220s\230!\340\020\024\220F\230#\230Q\330\024\033\230:\240S\250\001\330\024\030\230\001\330\024\033\2301\340\020\031\230\021\330\020\032\230!\330\020\026\220c\230\021\340\010\017\210q\200A\330\010\023\2201\220D\230\005\230^\2501\250F\260'\270\021\270!\200A\330\010\023\2201\220D\230\005\320\0351\260\021\260&\270\007""\270q\300\001\200A\330\010\023\2201\220D\230\005\230Z\240q\250\006\250g\260Q\260a\200A\330\010\017\210{\230!\2304\230u\240K\250q\200A\330\010\017\210{\230!\2304\230u\240L\260\001\260\026\260w\270a\270q\200A\360\010\000\016\022\220\021\220*\230H\240A\330\014\023\2204\220u\230A\230Q\330\014\020\220\005\220Q\330\020\031\230\026\230q\330\020\024\220E\230\024\230Q\230a\330\024\035\230W\240A\240T\250\021\250!\2507\260!\2601\340\020\025\220Q\220a\220w\230a\230|\2501\340\010\r\210Q\210i\220q\230\005\230U\240!\200A\360\n\000\t\n\210\031\220$\220a\330\010\t\210\032\2201\330\010\021\220\021\340\010\013\210:\220R\220q\340\014\020\220\010\230\005\230Q\230c\240\023\240H\250D\260\001\330\020\027\220q\340\014\022\220(\230!\2302\230Q\340\014\023\2204\220s\230!\340\020\030\230\001\330\020\031\230\021\340\020\024\220C\220{\240#\240Q\340\024\034\230A\340\026\031\230\033\240C\240q\340\024\034\320\0342\260\"\260C\260{\300'\310\021\310!\340\026\031\230\033\240C\240q\340\024\034\230M\250\022\2503\250k\270\027\300\001\300\021\340\026\031\230\033\240C\240q\340\024\034\230M\250\022\2503\250k\270\027\300\001\300\021\340\026\031\230\033\240C\240q\340\024\034\230H\240B\240c\250\033\260G\2701\270A\340\020\024\220M\240\023\240A\330\024\030\230\t\240\027\250\003\2501\340\030!\240\030\250\022\2501\340\032#\2407\250#\250Q\340\030!\240\036\250r\260\031\270'\300\027\310\001\310\031\320RT\320TX\320XZ\320Z[\340\032#\2407\250#\250Q\340\030!\320!2\260\"\260I\270W\300G\3101\310I\320UW\320W[\320[]\320]^\340\032#\2407\250#\250Q\340\030!\320!4\260B\260a\340\032#\2407\250#\250Q\340\030!\320!5\260R\260y\300\007\300w\310a\310y\320XZ\320Z^\320^`\320`a\340\032#\2407\250#\250Q\340\030!\240\033\250B\250i\260w\270g\300Q\300i\310r\320QU\320UW\320WX\360\006\000\021\027\220g\230R\230w\240f\250C\250q\340\020\026\220c\230\021\360\006\000\r\021\220\t\230\025\230a\230s\240#\240Y\250d\260!\330\020\027\220q\340\014\022\220)\2301\230B\230a\340\014\023\2204\220s\230!\340\020\030\230\001\330\020\031\230\021\340\020\024\220C\220{""\240#\240Q\340\024\034\230A\340\026\031\230\033\240C\240q\340\024\034\320\0342\260\"\260C\260{\300'\310\021\310!\340\026\031\230\033\240C\240q\340\024\034\230M\250\022\2503\250k\270\027\300\001\300\021\340\026\031\230\033\240C\240q\340\024\034\230M\250\022\2503\250k\270\027\300\001\300\021\340\026\031\230\033\240C\240q\340\024\034\230H\240B\240c\250\033\260G\2701\270A\340\020\024\220M\240\023\240A\330\024\030\230\t\240\027\250\003\2501\340\030!\240\030\250\022\2501\340\032#\2407\250#\250Q\340\030!\240\036\250r\260\031\270'\300\027\310\001\310\031\320RT\320TX\320XZ\320Z[\340\032#\2407\250#\250Q\340\030!\320!2\260\"\260I\270W\300G\3101\310I\320UW\320W[\320[]\320]^\340\032#\2407\250#\250Q\340\030!\320!4\260B\260a\340\032#\2407\250#\250Q\340\030!\320!5\260R\260y\300\007\300w\310a\310y\320XZ\320Z^\320^`\320`a\340\032#\2407\250#\250Q\340\030!\240\033\250B\250i\260w\270g\300Q\300i\310r\320QU\320UW\320WX\360\006\000\021\027\220g\230R\230w\240f\250C\250q\340\020\026\220c\230\021\340\010\017\210q\200A\360\014\000\t\n\210\031\220$\220a\330\010\t\210\032\2201\330\010\020\220\005\220W\230A\230Q\330\010\021\220\026\220w\230a\230q\340\010\014\210J\220b\230\001\340\014\020\220\010\230\005\230Q\230c\240\023\240H\250D\260\001\340\020\030\230\001\230\025\230f\240A\330\020\030\230\001\230\022\230:\240Z\250q\260\007\260q\360\010\000\021\026\220Z\230q\240\007\240q\330\020\026\220h\230a\230r\240\021\340\020\024\220D\230\003\2301\330\024\034\230A\230R\230z\250\021\340\024\033\2303\230h\240c\250\021\330\030\036\230c\240\021\330\024\027\220z\240\021\360\010\000\r\021\220\t\230\025\230a\230s\240#\240Y\250d\260!\340\020\031\230\021\230%\230v\240Q\330\020\031\230\021\230\"\230J\240j\260\001\260\027\270\001\360\010\000\021\026\220Z\230q\240\007\240q\330\020\026\220i\230q\240\002\240!\340\020\024\220D\230\003\2301\330\024\035\230Q\230b\240\n\250!\340\024\033\2303\230h\240c\250\021\330\030\036\230c\240\021\330\024\027\220z\240\021\200A\360\006\000\t\n\210\031\220$\220a\220q\330\010\t\210\032\2204""\220q\230\001\340\010\r\210Q\210d\220%\220z\240\021\240!\340\010\020\220\002\220$\220f\230A\230[\250\001\250\021\200A\330\010\017\210u\220A\220T\230\021\200\001\330\004\n\210+\220Qstd::unordered_map<int,RouteTable *> \000std::unordered_map<int,std::mutex *> \000std::unordered_map<int,std::vector<std::pair<int,char> > > \000std::unordered_map<std::pair<int,int> ,Filter,PairHash> \000\000std::unordered_map<std::pair<int,int> ,char,PairHash> \000std::unordered_map<std::string,std::set<int> > \000routeTables\000locks\000peers\000filterIn\000filterOut\000peerType\000ASSetstd::unordered_set<int> \000std::unordered_set<std::pair<int,std::string> ,PairHash> \000ROVSet\000invalidSet";
+    #else /* compression: none (3290 bytes) */
+const char* const bytes = "AS(ASN= AS-SETsLoaded ;)?community add community contains community remove community strip;cython/AS.pyxdeny;disableenablefilter ingcisenabledlocal-pref no default __reduce__ due to non-trivial __cinit__path , peers=prefix in prefix is prepend <stringsource>utf-8ASASMembersASNAS.__reduce_cython__AS.__setstate_cython__AS.addFilterAS.addPeerAS.countRouteAS.deleteRouteByPeerASAS.getFilterAS.getOriginASAS.getPeersAS.get_BGP_UPDATE_COUNTERAS.loadASSetAS.removeFilterAS.showBestRouteAS.showRouteAS.showRouteInDB__Pyx_PyDict_NextRefactionaddFilteraddPeeranyasyncio.coroutines__class_getitem__cline_in_tracebackcountRoutedatadeleteRouteByPeerAS__dict__encode__enter____exit__ffilePathfilterfilterType__func__getFiltergetOriginASgetPeersget_BGP_UPDATE_COUNTER__getstate__iindex_is_coroutineitemsjjsonlastPtrloadloadASSet__main__match__module____name__openppeerpeerASpeerASNpopprefixprintptr__pyx_capi____pyx_state__pyx_vtable____qualname__r__reduce____reduce_cython____reduce_ex__removeFilterreset_BGP_UPDATE_COUNTERself__set_name__setdefault__setstate____setstate_cython__showBestRouteshowRouteshowRouteInDBstaticmethodsubAction__test__valuevalues\200\001\330\004\013\2101\200A\360\014\000\t\021\220\003\2201\220A\330\010\t\210\031\220$\220a\330\010\t\210\032\2201\340\010\013\210:\220R\220q\340\014\020\220\010\230\005\230Q\230c\240\023\240H\250D\260\001\330\020\027\220q\340\014\026\220a\220x\230q\240\001\330\014\022\220(\230!\2302\230Q\340\014\023\2204\220s\230!\340\020\024\220F\230#\230Q\330\024\033\230:\240S\250\001\330\024\030\230\001\330\024\033\2301\340\020\031\230\021\330\020\032\230!\330\020\026\220c\230\021\360\006\000\r\021\220\t\230\025\230a\230s\240#\240Y\250d\260!\330\020\027\220q\340\014\026\220a\220y\240\001\240\021\330\014\022\220)\2301\230B\230a\340\014\023\2204\220s\230!\340\020\024\220F\230#\230Q\330\024\033\230:\240S\250\001\330\024\030\230\001\330\024\033\2301\340\020\031\230\021\330\020\032\230!\330\020\026\220c\230\021\340\010\017\210q\200A\330\010\023\2201\220D\230""\005\230^\2501\250F\260'\270\021\270!\200A\330\010\023\2201\220D\230\005\320\0351\260\021\260&\270\007\270q\300\001\200A\330\010\023\2201\220D\230\005\230Z\240q\250\006\250g\260Q\260a\200A\330\010\017\210{\230!\2304\230u\240K\250q\200A\330\010\017\210{\230!\2304\230u\240L\260\001\260\026\260w\270a\270q\200A\360\010\000\016\022\220\021\220*\230H\240A\330\014\023\2204\220u\230A\230Q\330\014\020\220\005\220Q\330\020\031\230\026\230q\330\020\024\220E\230\024\230Q\230a\330\024\035\230W\240A\240T\250\021\250!\2507\260!\2601\340\020\025\220Q\220a\220w\230a\230|\2501\340\010\r\210Q\210i\220q\230\005\230U\240!\200A\360\n\000\t\n\210\031\220$\220a\330\010\t\210\032\2201\330\010\021\220\021\340\010\013\210:\220R\220q\340\014\020\220\010\230\005\230Q\230c\240\023\240H\250D\260\001\330\020\027\220q\340\014\022\220(\230!\2302\230Q\340\014\023\2204\220s\230!\340\020\030\230\001\330\020\031\230\021\340\020\024\220C\220{\240#\240Q\340\024\034\230A\340\026\031\230\033\240C\240q\340\024\034\320\0342\260\"\260C\260{\300'\310\021\310!\340\026\031\230\033\240C\240q\340\024\034\230M\250\022\2503\250k\270\027\300\001\300\021\340\026\031\230\033\240C\240q\340\024\034\230M\250\022\2503\250k\270\027\300\001\300\021\340\026\031\230\033\240C\240q\340\024\034\230H\240B\240c\250\033\260G\2701\270A\340\020\024\220M\240\023\240A\330\024\030\230\t\240\027\250\003\2501\340\030!\240\030\250\022\2501\340\032#\2407\250#\250Q\340\030!\240\036\250r\260\031\270'\300\027\310\001\310\031\320RT\320TX\320XZ\320Z[\340\032#\2407\250#\250Q\340\030!\320!2\260\"\260I\270W\300G\3101\310I\320UW\320W[\320[]\320]^\340\032#\2407\250#\250Q\340\030!\320!4\260B\260a\340\032#\2407\250#\250Q\340\030!\320!5\260R\260y\300\007\300w\310a\310y\320XZ\320Z^\320^`\320`a\340\032#\2407\250#\250Q\340\030!\240\033\250B\250i\260w\270g\300Q\300i\310r\320QU\320UW\320WX\360\006\000\021\027\220g\230R\230w\240f\250C\250q\340\020\026\220c\230\021\360\006\000\r\021\220\t\230\025\230a\230s\240#\240Y\250d\260!\330\020\027\220q\340\014\022\220)""\2301\230B\230a\340\014\023\2204\220s\230!\340\020\030\230\001\330\020\031\230\021\340\020\024\220C\220{\240#\240Q\340\024\034\230A\340\026\031\230\033\240C\240q\340\024\034\320\0342\260\"\260C\260{\300'\310\021\310!\340\026\031\230\033\240C\240q\340\024\034\230M\250\022\2503\250k\270\027\300\001\300\021\340\026\031\230\033\240C\240q\340\024\034\230M\250\022\2503\250k\270\027\300\001\300\021\340\026\031\230\033\240C\240q\340\024\034\230H\240B\240c\250\033\260G\2701\270A\340\020\024\220M\240\023\240A\330\024\030\230\t\240\027\250\003\2501\340\030!\240\030\250\022\2501\340\032#\2407\250#\250Q\340\030!\240\036\250r\260\031\270'\300\027\310\001\310\031\320RT\320TX\320XZ\320Z[\340\032#\2407\250#\250Q\340\030!\320!2\260\"\260I\270W\300G\3101\310I\320UW\320W[\320[]\320]^\340\032#\2407\250#\250Q\340\030!\320!4\260B\260a\340\032#\2407\250#\250Q\340\030!\320!5\260R\260y\300\007\300w\310a\310y\320XZ\320Z^\320^`\320`a\340\032#\2407\250#\250Q\340\030!\240\033\250B\250i\260w\270g\300Q\300i\310r\320QU\320UW\320WX\360\006\000\021\027\220g\230R\230w\240f\250C\250q\340\020\026\220c\230\021\340\010\017\210q\200A\360\014\000\t\n\210\031\220$\220a\330\010\t\210\032\2201\330\010\020\220\005\220W\230A\230Q\330\010\021\220\026\220w\230a\230q\340\010\014\210J\220b\230\001\340\014\020\220\010\230\005\230Q\230c\240\023\240H\250D\260\001\340\020\030\230\001\230\025\230f\240A\330\020\030\230\001\230\022\230:\240Z\250q\260\007\260q\360\010\000\021\026\220Z\230q\240\007\240q\330\020\026\220h\230a\230r\240\021\340\020\024\220D\230\003\2301\330\024\034\230A\230R\230z\250\021\340\024\033\2303\230h\240c\250\021\330\030\036\230c\240\021\330\024\027\220z\240\021\360\010\000\r\021\220\t\230\025\230a\230s\240#\240Y\250d\260!\340\020\031\230\021\230%\230v\240Q\330\020\031\230\021\230\"\230J\240j\260\001\260\027\270\001\360\010\000\021\026\220Z\230q\240\007\240q\330\020\026\220i\230q\240\002\240!\340\020\024\220D\230\003\2301\330\024\035\230Q\230b\240\n\250!\340\024\033\2303\230h\240c\250\021\330\030\036""\230c\240\021\330\024\027\220z\240\021\200A\360\006\000\t\n\210\031\220$\220a\220q\330\010\t\210\032\2204\220q\230\001\340\010\r\210Q\210d\220%\220z\240\021\240!\340\010\020\220\002\220$\220f\230A\230[\250\001\250\021\200A\330\010\017\210q\200A\330\010\017\210u\220A\220T\230\021\320\000\035\230Q\330\004\005\330\004\031\230\021\200\001\330\004\n\210+\220Qstd::unordered_map<int,RouteTable *> \000std::unordered_map<int,std::mutex *> \000std::unordered_map<int,std::vector<std::pair<int,char> > > \000std::unordered_map<std::pair<int,int> ,Filter,PairHash> \000\000std::unordered_map<std::pair<int,int> ,char,PairHash> \000std::unordered_map<std::string,std::set<int> > \000routeTables\000locks\000peers\000filterIn\000filterOut\000peerType\000ASSetstd::unordered_set<int> \000std::unordered_set<std::pair<int,std::string> ,PairHash> \000ROVSet\000invalidSetAUW";
     PyObject *data = NULL;
     CYTHON_UNUSED_VAR(__Pyx_DecompressString);
     #endif
     PyObject **stringtab = __pyx_mstate->__pyx_string_tab;
     Py_ssize_t pos = 0;
-    for (int i = 0; i < 111; i++) {
+    for (int i = 0; i < 115; i++) {
       Py_ssize_t bytes_length = index[i].length;
       PyObject *string = PyUnicode_DecodeUTF8(bytes + pos, bytes_length, NULL);
       if (likely(string) && i >= 27) PyUnicode_InternInPlace(&string);
@@ -15929,7 +16376,7 @@ const char* const bytes = "AS(ASN= AS-SETsLoaded ;)?community add community cont
       stringtab[i] = string;
       pos += bytes_length;
     }
-    for (int i = 111; i < 125; i++) {
+    for (int i = 115; i < 135; i++) {
       Py_ssize_t bytes_length = index[i].length;
       PyObject *string = PyBytes_FromStringAndSize(bytes + pos, bytes_length);
       stringtab[i] = string;
@@ -15940,15 +16387,15 @@ const char* const bytes = "AS(ASN= AS-SETsLoaded ;)?community add community cont
       }
     }
     Py_XDECREF(data);
-    for (Py_ssize_t i = 0; i < 125; i++) {
+    for (Py_ssize_t i = 0; i < 135; i++) {
       if (unlikely(PyObject_Hash(stringtab[i]) == -1)) {
         __PYX_ERR(0, 1, __pyx_L1_error)
       }
     }
     #if CYTHON_IMMORTAL_CONSTANTS
     {
-      PyObject **table = stringtab + 111;
-      for (Py_ssize_t i=0; i<14; ++i) {
+      PyObject **table = stringtab + 115;
+      for (Py_ssize_t i=0; i<20; ++i) {
         #if CYTHON_COMPILING_IN_CPYTHON_FREETHREADING
         #if PY_VERSION_HEX < 0x030E0000
         if (_Py_IsOwnedByCurrentThread(table[i]) && Py_REFCNT(table[i]) == 1)
@@ -16020,74 +16467,89 @@ static int __Pyx_CreateCodeObjects(__pyx_mstatetype *__pyx_mstate) {
   PyObject* tuple_dedup_map = PyDict_New();
   if (unlikely(!tuple_dedup_map)) return -1;
   {
-    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 6, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 10};
+    const __Pyx_PyCode_New_function_description descr = {0, 0, 0, 0, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 4};
+    PyObject* const varnames[] = {0};
+    __pyx_mstate_global->__pyx_codeobj_tab[0] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_cython_AS_pyx, __pyx_mstate->__pyx_n_u_get_BGP_UPDATE_COUNTER, __pyx_mstate->__pyx_kp_b_iso88591_1, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[0])) goto bad;
+  }
+  {
+    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 6};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_value};
+    __pyx_mstate_global->__pyx_codeobj_tab[1] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_cython_AS_pyx, __pyx_mstate->__pyx_n_u_reset_BGP_UPDATE_COUNTER, __pyx_mstate->__pyx_kp_b_iso88591_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[1])) goto bad;
+  }
+  {
+    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 6, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 15};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_filePath, __pyx_mstate->__pyx_n_u_ASMembers, __pyx_mstate->__pyx_n_u_f, __pyx_mstate->__pyx_n_u_data, __pyx_mstate->__pyx_n_u_i, __pyx_mstate->__pyx_n_u_j};
-    __pyx_mstate_global->__pyx_codeobj_tab[0] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_cython_AS_pyx, __pyx_mstate->__pyx_n_u_loadASSet, __pyx_mstate->__pyx_kp_b_iso88591_A_HA_4uAQ_Q_q_E_Qa_WAT_7_1_Qawa, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[0])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[2] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_cython_AS_pyx, __pyx_mstate->__pyx_n_u_loadASSet, __pyx_mstate->__pyx_kp_b_iso88591_A_HA_4uAQ_Q_q_E_Qa_WAT_7_1_Qawa, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[2])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 2, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 25};
+    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 2, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 30};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_peer};
-    __pyx_mstate_global->__pyx_codeobj_tab[1] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_cython_AS_pyx, __pyx_mstate->__pyx_n_u_addPeer, __pyx_mstate->__pyx_kp_b_iso88591_A_aq_4q_Qd_z_fA, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[1])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[3] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_cython_AS_pyx, __pyx_mstate->__pyx_n_u_addPeer, __pyx_mstate->__pyx_kp_b_iso88591_A_aq_4q_Qd_z_fA, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[3])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 35};
+    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 40};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self};
-    __pyx_mstate_global->__pyx_codeobj_tab[2] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_cython_AS_pyx, __pyx_mstate->__pyx_n_u_getPeers, __pyx_mstate->__pyx_kp_b_iso88591_A_uAT, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[2])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[4] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_cython_AS_pyx, __pyx_mstate->__pyx_n_u_getPeers, __pyx_mstate->__pyx_kp_b_iso88591_A_uAT, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[4])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {3, 0, 0, 9, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 38};
+    const __Pyx_PyCode_New_function_description descr = {3, 0, 0, 9, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 43};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_peerASN, __pyx_mstate->__pyx_n_u_filterType, __pyx_mstate->__pyx_n_u_p, __pyx_mstate->__pyx_n_u_ptr, __pyx_mstate->__pyx_n_u_filter, __pyx_mstate->__pyx_n_u_match, __pyx_mstate->__pyx_n_u_action, __pyx_mstate->__pyx_n_u_subAction};
-    __pyx_mstate_global->__pyx_codeobj_tab[3] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_cython_AS_pyx, __pyx_mstate->__pyx_n_u_getFilter, __pyx_mstate->__pyx_kp_b_iso88591_A_a_1_Rq_Qc_HD_q_2Q_4s_C_Q_A_Cq, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[3])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[5] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_cython_AS_pyx, __pyx_mstate->__pyx_n_u_getFilter, __pyx_mstate->__pyx_kp_b_iso88591_A_a_1_Rq_Qc_HD_q_2Q_4s_C_Q_A_Cq, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[5])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {4, 0, 0, 7, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 172};
+    const __Pyx_PyCode_New_function_description descr = {4, 0, 0, 7, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 177};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_peerASN, __pyx_mstate->__pyx_n_u_filterType, __pyx_mstate->__pyx_n_u_index, __pyx_mstate->__pyx_n_u_p, __pyx_mstate->__pyx_n_u_ptr, __pyx_mstate->__pyx_n_u_lastPtr};
-    __pyx_mstate_global->__pyx_codeobj_tab[4] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_cython_AS_pyx, __pyx_mstate->__pyx_n_u_removeFilter, __pyx_mstate->__pyx_kp_b_iso88591_A_1A_a_1_Rq_Qc_HD_q_axq_2Q_4s_F, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[4])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[6] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_cython_AS_pyx, __pyx_mstate->__pyx_n_u_removeFilter, __pyx_mstate->__pyx_kp_b_iso88591_A_1A_a_1_Rq_Qc_HD_q_axq_2Q_4s_F, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[6])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {5, 0, 0, 5, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 221};
+    const __Pyx_PyCode_New_function_description descr = {5, 0, 0, 5, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 226};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_peerASN, __pyx_mstate->__pyx_n_u_filterType, __pyx_mstate->__pyx_n_u_match, __pyx_mstate->__pyx_n_u_action};
-    __pyx_mstate_global->__pyx_codeobj_tab[5] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_cython_AS_pyx, __pyx_mstate->__pyx_n_u_addFilter, __pyx_mstate->__pyx_kp_b_iso88591_A_a_1_WAQ_waq_Jb_Qc_HD_fA_Zq_q_Z, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[5])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[7] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_cython_AS_pyx, __pyx_mstate->__pyx_n_u_addFilter, __pyx_mstate->__pyx_kp_b_iso88591_A_a_1_WAQ_waq_Jb_Qc_HD_fA_Zq_q_Z, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[7])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 2, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 981};
+    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 2, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 991};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_prefix};
-    __pyx_mstate_global->__pyx_codeobj_tab[6] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_cython_AS_pyx, __pyx_mstate->__pyx_n_u_showRoute, __pyx_mstate->__pyx_kp_b_iso88591_A_1D_Zq_gQa, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[6])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[8] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_cython_AS_pyx, __pyx_mstate->__pyx_n_u_showRoute, __pyx_mstate->__pyx_kp_b_iso88591_A_1D_Zq_gQa, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[8])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 2, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 984};
+    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 2, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 994};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_prefix};
-    __pyx_mstate_global->__pyx_codeobj_tab[7] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_cython_AS_pyx, __pyx_mstate->__pyx_n_u_showRouteInDB, __pyx_mstate->__pyx_kp_b_iso88591_A_1D_1F, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[7])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[9] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_cython_AS_pyx, __pyx_mstate->__pyx_n_u_showRouteInDB, __pyx_mstate->__pyx_kp_b_iso88591_A_1D_1F, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[9])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 2, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 987};
+    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 2, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 997};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_prefix};
-    __pyx_mstate_global->__pyx_codeobj_tab[8] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_cython_AS_pyx, __pyx_mstate->__pyx_n_u_showBestRoute, __pyx_mstate->__pyx_kp_b_iso88591_A_1D_1F, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[8])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[10] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_cython_AS_pyx, __pyx_mstate->__pyx_n_u_showBestRoute, __pyx_mstate->__pyx_kp_b_iso88591_A_1D_1F, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[10])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 2, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 990};
+    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 2, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 1000};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_peerAS};
-    __pyx_mstate_global->__pyx_codeobj_tab[9] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_cython_AS_pyx, __pyx_mstate->__pyx_n_u_deleteRouteByPeerAS, __pyx_mstate->__pyx_kp_b_iso88591_A_1D_1_q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[9])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[11] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_cython_AS_pyx, __pyx_mstate->__pyx_n_u_deleteRouteByPeerAS, __pyx_mstate->__pyx_kp_b_iso88591_A_1D_1_q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[11])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 993};
+    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 1003};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self};
-    __pyx_mstate_global->__pyx_codeobj_tab[10] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_cython_AS_pyx, __pyx_mstate->__pyx_n_u_countRoute, __pyx_mstate->__pyx_kp_b_iso88591_A_4uKq, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[10])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[12] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_cython_AS_pyx, __pyx_mstate->__pyx_n_u_countRoute, __pyx_mstate->__pyx_kp_b_iso88591_A_4uKq, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[12])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 2, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 996};
+    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 2, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 1006};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_prefix};
-    __pyx_mstate_global->__pyx_codeobj_tab[11] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_cython_AS_pyx, __pyx_mstate->__pyx_n_u_getOriginAS, __pyx_mstate->__pyx_kp_b_iso88591_A_4uL_waq, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[11])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[13] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_cython_AS_pyx, __pyx_mstate->__pyx_n_u_getOriginAS, __pyx_mstate->__pyx_kp_b_iso88591_A_4uL_waq, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[13])) goto bad;
+  }
+  {
+    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 1008};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self};
+    __pyx_mstate_global->__pyx_codeobj_tab[14] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_cython_AS_pyx, __pyx_mstate->__pyx_n_u_get_BGP_UPDATE_COUNTER, __pyx_mstate->__pyx_kp_b_iso88591_A_q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[14])) goto bad;
   }
   {
     const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 1};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self};
-    __pyx_mstate_global->__pyx_codeobj_tab[12] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_reduce_cython, __pyx_mstate->__pyx_kp_b_iso88591_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[12])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[15] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_reduce_cython, __pyx_mstate->__pyx_kp_b_iso88591_Q_2, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[15])) goto bad;
   }
   {
     const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 2, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 3};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_pyx_state};
-    __pyx_mstate_global->__pyx_codeobj_tab[13] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_setstate_cython, __pyx_mstate->__pyx_kp_b_iso88591_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[13])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[16] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_setstate_cython, __pyx_mstate->__pyx_kp_b_iso88591_Q_2, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[16])) goto bad;
   }
   Py_DECREF(tuple_dedup_map);
   return 0;
@@ -18608,6 +19070,44 @@ static void __Pyx_WriteUnraisable(const char *name, int clineno,
     }
     if (nogil)
         PyGILState_Release(state);
+}
+
+/* SetStringIndexingError (used by GetItemIntBytes) */
+static void __Pyx_SetStringIndexingError(const char* message, int has_gil) {
+    if (!has_gil) {
+        PyGILState_STATE gil_state = PyGILState_Ensure();
+        PyErr_SetString(PyExc_IndexError, message);
+        PyGILState_Release(gil_state);
+    } else
+        PyErr_SetString(PyExc_IndexError, message);
+}
+
+/* GetItemIntBytes */
+static CYTHON_INLINE int __Pyx_GetItemInt_Bytes_Fast(PyObject* bytes, Py_ssize_t index,
+                                                     int wraparound, int boundscheck, int has_gil) {
+    const unsigned char *c_string;
+    if (wraparound && index < 0) {
+        Py_ssize_t size = __Pyx_PyBytes_GET_SIZE(bytes);
+        #if !CYTHON_ASSUME_SAFE_SIZE
+        if (unlikely(size < 0)) return -1;
+        #endif
+        index += size;
+    }
+    if (boundscheck) {
+        Py_ssize_t size = __Pyx_PyBytes_GET_SIZE(bytes);
+        #if !CYTHON_ASSUME_SAFE_SIZE
+        if (unlikely(size < 0)) return -1;
+        #endif
+        if (unlikely(!__Pyx_is_valid_index(index, size))) {
+            __Pyx_SetStringIndexingError("string index out of range", has_gil);
+            return -1;
+        }
+    }
+    c_string = __Pyx_PyBytes_AsUString(bytes);
+    #if !CYTHON_ASSUME_SAFE_MACROS
+    if (unlikely(!c_string)) return -1;
+    #endif
+    return (int) c_string[index];
 }
 
 /* RaiseException */
@@ -21467,6 +21967,357 @@ bad:
         return (target_type) value;\
     }
 
+/* PyObjectVectorCallKwBuilder (used by CIntToPy) */
+#if CYTHON_VECTORCALL
+static int __Pyx_VectorcallBuilder_AddArg(PyObject *key, PyObject *value, PyObject *builder, PyObject **args, int n) {
+    (void)__Pyx_PyObject_FastCallDict;
+    if (__Pyx_PyTuple_SET_ITEM(builder, n, key) != (0)) return -1;
+    Py_INCREF(key);
+    args[n] = value;
+    return 0;
+}
+CYTHON_UNUSED static int __Pyx_VectorcallBuilder_AddArg_Check(PyObject *key, PyObject *value, PyObject *builder, PyObject **args, int n) {
+    (void)__Pyx_VectorcallBuilder_AddArgStr;
+    if (unlikely(!PyUnicode_Check(key))) {
+        PyErr_SetString(PyExc_TypeError, "keywords must be strings");
+        return -1;
+    }
+    return __Pyx_VectorcallBuilder_AddArg(key, value, builder, args, n);
+}
+static int __Pyx_VectorcallBuilder_AddArgStr(const char *key, PyObject *value, PyObject *builder, PyObject **args, int n) {
+    PyObject *pyKey = PyUnicode_FromString(key);
+    if (!pyKey) return -1;
+    return __Pyx_VectorcallBuilder_AddArg(pyKey, value, builder, args, n);
+}
+#else // CYTHON_VECTORCALL
+CYTHON_UNUSED static int __Pyx_VectorcallBuilder_AddArg_Check(PyObject *key, PyObject *value, PyObject *builder, CYTHON_UNUSED PyObject **args, CYTHON_UNUSED int n) {
+    if (unlikely(!PyUnicode_Check(key))) {
+        PyErr_SetString(PyExc_TypeError, "keywords must be strings");
+        return -1;
+    }
+    return PyDict_SetItem(builder, key, value);
+}
+#endif
+
+/* CIntToPy */
+static CYTHON_INLINE PyObject* __Pyx_PyLong_From_long(long value) {
+#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wconversion"
+#endif
+    const long neg_one = (long) -1, const_zero = (long) 0;
+#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
+#pragma GCC diagnostic pop
+#endif
+    const int is_unsigned = neg_one > const_zero;
+    if (is_unsigned) {
+        if (sizeof(long) < sizeof(long)) {
+            return PyLong_FromLong((long) value);
+        } else if (sizeof(long) <= sizeof(unsigned long)) {
+            return PyLong_FromUnsignedLong((unsigned long) value);
+#if !CYTHON_COMPILING_IN_PYPY
+        } else if (sizeof(long) <= sizeof(unsigned PY_LONG_LONG)) {
+            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
+#endif
+        }
+    } else {
+        if (sizeof(long) <= sizeof(long)) {
+            return PyLong_FromLong((long) value);
+        } else if (sizeof(long) <= sizeof(PY_LONG_LONG)) {
+            return PyLong_FromLongLong((PY_LONG_LONG) value);
+        }
+    }
+    {
+        unsigned char *bytes = (unsigned char *)&value;
+#if !CYTHON_COMPILING_IN_LIMITED_API && PY_VERSION_HEX >= 0x030d00A4
+        if (is_unsigned) {
+            return PyLong_FromUnsignedNativeBytes(bytes, sizeof(value), -1);
+        } else {
+            return PyLong_FromNativeBytes(bytes, sizeof(value), -1);
+        }
+#elif !CYTHON_COMPILING_IN_LIMITED_API && PY_VERSION_HEX < 0x030d0000
+        int one = 1; int little = (int)*(unsigned char *)&one;
+        return _PyLong_FromByteArray(bytes, sizeof(long),
+                                     little, !is_unsigned);
+#else
+        int one = 1; int little = (int)*(unsigned char *)&one;
+        PyObject *from_bytes, *result = NULL, *kwds = NULL;
+        PyObject *py_bytes = NULL, *order_str = NULL;
+        from_bytes = PyObject_GetAttrString((PyObject*)&PyLong_Type, "from_bytes");
+        if (!from_bytes) return NULL;
+        py_bytes = PyBytes_FromStringAndSize((char*)bytes, sizeof(long));
+        if (!py_bytes) goto limited_bad;
+        order_str = PyUnicode_FromString(little ? "little" : "big");
+        if (!order_str) goto limited_bad;
+        {
+            PyObject *args[3+(CYTHON_VECTORCALL ? 1 : 0)] = { NULL, py_bytes, order_str };
+            if (!is_unsigned) {
+                kwds = __Pyx_MakeVectorcallBuilderKwds(1);
+                if (!kwds) goto limited_bad;
+                if (__Pyx_VectorcallBuilder_AddArgStr("signed", __Pyx_NewRef(Py_True), kwds, args+3, 0) < 0) goto limited_bad;
+            }
+            result = __Pyx_Object_Vectorcall_CallFromBuilder(from_bytes, args+1, 2 | __Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET, kwds);
+        }
+        limited_bad:
+        Py_XDECREF(kwds);
+        Py_XDECREF(order_str);
+        Py_XDECREF(py_bytes);
+        Py_XDECREF(from_bytes);
+        return result;
+#endif
+    }
+}
+
+/* CIntFromPy */
+static CYTHON_INLINE long __Pyx_PyLong_As_long(PyObject *x) {
+#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wconversion"
+#endif
+    const long neg_one = (long) -1, const_zero = (long) 0;
+#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
+#pragma GCC diagnostic pop
+#endif
+    const int is_unsigned = neg_one > const_zero;
+    if (unlikely(!PyLong_Check(x))) {
+        long val;
+        PyObject *tmp = __Pyx_PyNumber_Long(x);
+        if (!tmp) return (long) -1;
+        val = __Pyx_PyLong_As_long(tmp);
+        Py_DECREF(tmp);
+        return val;
+    }
+    if (is_unsigned) {
+#if CYTHON_USE_PYLONG_INTERNALS
+        if (unlikely(__Pyx_PyLong_IsNeg(x))) {
+            goto raise_neg_overflow;
+        } else if (__Pyx_PyLong_IsCompact(x)) {
+            __PYX_VERIFY_RETURN_INT(long, __Pyx_compact_upylong, __Pyx_PyLong_CompactValueUnsigned(x))
+        } else {
+            const digit* digits = __Pyx_PyLong_Digits(x);
+            assert(__Pyx_PyLong_DigitCount(x) > 1);
+            switch (__Pyx_PyLong_DigitCount(x)) {
+                case 2:
+                    if ((8 * sizeof(long) > 1 * PyLong_SHIFT)) {
+                        if ((8 * sizeof(unsigned long) > 2 * PyLong_SHIFT)) {
+                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if ((8 * sizeof(long) >= 2 * PyLong_SHIFT)) {
+                            return (long) (((((long)digits[1]) << PyLong_SHIFT) | (long)digits[0]));
+                        }
+                    }
+                    break;
+                case 3:
+                    if ((8 * sizeof(long) > 2 * PyLong_SHIFT)) {
+                        if ((8 * sizeof(unsigned long) > 3 * PyLong_SHIFT)) {
+                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if ((8 * sizeof(long) >= 3 * PyLong_SHIFT)) {
+                            return (long) (((((((long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0]));
+                        }
+                    }
+                    break;
+                case 4:
+                    if ((8 * sizeof(long) > 3 * PyLong_SHIFT)) {
+                        if ((8 * sizeof(unsigned long) > 4 * PyLong_SHIFT)) {
+                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if ((8 * sizeof(long) >= 4 * PyLong_SHIFT)) {
+                            return (long) (((((((((long)digits[3]) << PyLong_SHIFT) | (long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0]));
+                        }
+                    }
+                    break;
+            }
+        }
+#endif
+#if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX < 0x030C00A7
+        if (unlikely(Py_SIZE(x) < 0)) {
+            goto raise_neg_overflow;
+        }
+#else
+        {
+            int result = PyObject_RichCompareBool(x, Py_False, Py_LT);
+            if (unlikely(result < 0))
+                return (long) -1;
+            if (unlikely(result == 1))
+                goto raise_neg_overflow;
+        }
+#endif
+        if ((sizeof(long) <= sizeof(unsigned long))) {
+            __PYX_VERIFY_RETURN_INT_EXC(long, unsigned long, PyLong_AsUnsignedLong(x))
+        } else if ((sizeof(long) <= sizeof(unsigned PY_LONG_LONG))) {
+            __PYX_VERIFY_RETURN_INT_EXC(long, unsigned PY_LONG_LONG, PyLong_AsUnsignedLongLong(x))
+        }
+    } else {
+#if CYTHON_USE_PYLONG_INTERNALS
+        if (__Pyx_PyLong_IsCompact(x)) {
+            __PYX_VERIFY_RETURN_INT(long, __Pyx_compact_pylong, __Pyx_PyLong_CompactValue(x))
+        } else {
+            const digit* digits = __Pyx_PyLong_Digits(x);
+            assert(__Pyx_PyLong_DigitCount(x) > 1);
+            switch (__Pyx_PyLong_SignedDigitCount(x)) {
+                case -2:
+                    if ((8 * sizeof(long) - 1 > 1 * PyLong_SHIFT)) {
+                        if ((8 * sizeof(unsigned long) > 2 * PyLong_SHIFT)) {
+                            __PYX_VERIFY_RETURN_INT(long, long, -(long) (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if ((8 * sizeof(long) - 1 > 2 * PyLong_SHIFT)) {
+                            return (long) (((long)-1)*(((((long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
+                        }
+                    }
+                    break;
+                case 2:
+                    if ((8 * sizeof(long) > 1 * PyLong_SHIFT)) {
+                        if ((8 * sizeof(unsigned long) > 2 * PyLong_SHIFT)) {
+                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if ((8 * sizeof(long) - 1 > 2 * PyLong_SHIFT)) {
+                            return (long) ((((((long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
+                        }
+                    }
+                    break;
+                case -3:
+                    if ((8 * sizeof(long) - 1 > 2 * PyLong_SHIFT)) {
+                        if ((8 * sizeof(unsigned long) > 3 * PyLong_SHIFT)) {
+                            __PYX_VERIFY_RETURN_INT(long, long, -(long) (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if ((8 * sizeof(long) - 1 > 3 * PyLong_SHIFT)) {
+                            return (long) (((long)-1)*(((((((long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
+                        }
+                    }
+                    break;
+                case 3:
+                    if ((8 * sizeof(long) > 2 * PyLong_SHIFT)) {
+                        if ((8 * sizeof(unsigned long) > 3 * PyLong_SHIFT)) {
+                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if ((8 * sizeof(long) - 1 > 3 * PyLong_SHIFT)) {
+                            return (long) ((((((((long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
+                        }
+                    }
+                    break;
+                case -4:
+                    if ((8 * sizeof(long) - 1 > 3 * PyLong_SHIFT)) {
+                        if ((8 * sizeof(unsigned long) > 4 * PyLong_SHIFT)) {
+                            __PYX_VERIFY_RETURN_INT(long, long, -(long) (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if ((8 * sizeof(long) - 1 > 4 * PyLong_SHIFT)) {
+                            return (long) (((long)-1)*(((((((((long)digits[3]) << PyLong_SHIFT) | (long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
+                        }
+                    }
+                    break;
+                case 4:
+                    if ((8 * sizeof(long) > 3 * PyLong_SHIFT)) {
+                        if ((8 * sizeof(unsigned long) > 4 * PyLong_SHIFT)) {
+                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if ((8 * sizeof(long) - 1 > 4 * PyLong_SHIFT)) {
+                            return (long) ((((((((((long)digits[3]) << PyLong_SHIFT) | (long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
+                        }
+                    }
+                    break;
+            }
+        }
+#endif
+        if ((sizeof(long) <= sizeof(long))) {
+            __PYX_VERIFY_RETURN_INT_EXC(long, long, PyLong_AsLong(x))
+        } else if ((sizeof(long) <= sizeof(PY_LONG_LONG))) {
+            __PYX_VERIFY_RETURN_INT_EXC(long, PY_LONG_LONG, PyLong_AsLongLong(x))
+        }
+    }
+    {
+        long val;
+        int ret = -1;
+#if PY_VERSION_HEX >= 0x030d00A6 && !CYTHON_COMPILING_IN_LIMITED_API
+        Py_ssize_t bytes_copied = PyLong_AsNativeBytes(
+            x, &val, sizeof(val), Py_ASNATIVEBYTES_NATIVE_ENDIAN | (is_unsigned ? Py_ASNATIVEBYTES_UNSIGNED_BUFFER | Py_ASNATIVEBYTES_REJECT_NEGATIVE : 0));
+        if (unlikely(bytes_copied == -1)) {
+        } else if (unlikely(bytes_copied > (Py_ssize_t) sizeof(val))) {
+            goto raise_overflow;
+        } else {
+            ret = 0;
+        }
+#elif PY_VERSION_HEX < 0x030d0000 && !(CYTHON_COMPILING_IN_PYPY || CYTHON_COMPILING_IN_LIMITED_API) || defined(_PyLong_AsByteArray)
+        int one = 1; int is_little = (int)*(unsigned char *)&one;
+        unsigned char *bytes = (unsigned char *)&val;
+        ret = _PyLong_AsByteArray((PyLongObject *)x,
+                                    bytes, sizeof(val),
+                                    is_little, !is_unsigned);
+#else
+        PyObject *v;
+        PyObject *stepval = NULL, *mask = NULL, *shift = NULL;
+        int bits, remaining_bits, is_negative = 0;
+        int chunk_size = (sizeof(long) < 8) ? 30 : 62;
+        if (likely(PyLong_CheckExact(x))) {
+            v = __Pyx_NewRef(x);
+        } else {
+            v = PyNumber_Long(x);
+            if (unlikely(!v)) return (long) -1;
+            assert(PyLong_CheckExact(v));
+        }
+        {
+            int result = PyObject_RichCompareBool(v, Py_False, Py_LT);
+            if (unlikely(result < 0)) {
+                Py_DECREF(v);
+                return (long) -1;
+            }
+            is_negative = result == 1;
+        }
+        if (is_unsigned && unlikely(is_negative)) {
+            Py_DECREF(v);
+            goto raise_neg_overflow;
+        } else if (is_negative) {
+            stepval = PyNumber_Invert(v);
+            Py_DECREF(v);
+            if (unlikely(!stepval))
+                return (long) -1;
+        } else {
+            stepval = v;
+        }
+        v = NULL;
+        val = (long) 0;
+        mask = PyLong_FromLong((1L << chunk_size) - 1); if (unlikely(!mask)) goto done;
+        shift = PyLong_FromLong(chunk_size); if (unlikely(!shift)) goto done;
+        for (bits = 0; bits < (int) sizeof(long) * 8 - chunk_size; bits += chunk_size) {
+            PyObject *tmp, *digit;
+            long idigit;
+            digit = PyNumber_And(stepval, mask);
+            if (unlikely(!digit)) goto done;
+            idigit = PyLong_AsLong(digit);
+            Py_DECREF(digit);
+            if (unlikely(idigit < 0)) goto done;
+            val |= ((long) idigit) << bits;
+            tmp = PyNumber_Rshift(stepval, shift);
+            if (unlikely(!tmp)) goto done;
+            Py_DECREF(stepval); stepval = tmp;
+        }
+        Py_DECREF(shift); shift = NULL;
+        Py_DECREF(mask); mask = NULL;
+        {
+            long idigit = PyLong_AsLong(stepval);
+            if (unlikely(idigit < 0)) goto done;
+            remaining_bits = ((int) sizeof(long) * 8) - bits - (is_unsigned ? 0 : 1);
+            if (unlikely(idigit >= (1L << remaining_bits)))
+                goto raise_overflow;
+            val |= ((long) idigit) << bits;
+        }
+        if (!is_unsigned) {
+            if (unlikely(val & (((long) 1) << (sizeof(long) * 8 - 1))))
+                goto raise_overflow;
+            if (is_negative)
+                val = ~val;
+        }
+        ret = 0;
+    done:
+        Py_XDECREF(shift);
+        Py_XDECREF(mask);
+        Py_XDECREF(stepval);
+#endif
+        if (unlikely(ret))
+            return (long) -1;
+        return val;
+    }
+raise_overflow:
+    PyErr_SetString(PyExc_OverflowError,
+        "value too large to convert to long");
+    return (long) -1;
+raise_neg_overflow:
+    PyErr_SetString(PyExc_OverflowError,
+        "can't convert negative value to long");
+    return (long) -1;
+}
+
 /* CIntFromPy */
 static CYTHON_INLINE int __Pyx_PyLong_As_int(PyObject *x) {
 #ifdef __Pyx_HAS_GCC_DIAGNOSTIC
@@ -21967,107 +22818,6 @@ raise_neg_overflow:
     return (char) -1;
 }
 
-/* PyObjectVectorCallKwBuilder (used by CIntToPy) */
-#if CYTHON_VECTORCALL
-static int __Pyx_VectorcallBuilder_AddArg(PyObject *key, PyObject *value, PyObject *builder, PyObject **args, int n) {
-    (void)__Pyx_PyObject_FastCallDict;
-    if (__Pyx_PyTuple_SET_ITEM(builder, n, key) != (0)) return -1;
-    Py_INCREF(key);
-    args[n] = value;
-    return 0;
-}
-CYTHON_UNUSED static int __Pyx_VectorcallBuilder_AddArg_Check(PyObject *key, PyObject *value, PyObject *builder, PyObject **args, int n) {
-    (void)__Pyx_VectorcallBuilder_AddArgStr;
-    if (unlikely(!PyUnicode_Check(key))) {
-        PyErr_SetString(PyExc_TypeError, "keywords must be strings");
-        return -1;
-    }
-    return __Pyx_VectorcallBuilder_AddArg(key, value, builder, args, n);
-}
-static int __Pyx_VectorcallBuilder_AddArgStr(const char *key, PyObject *value, PyObject *builder, PyObject **args, int n) {
-    PyObject *pyKey = PyUnicode_FromString(key);
-    if (!pyKey) return -1;
-    return __Pyx_VectorcallBuilder_AddArg(pyKey, value, builder, args, n);
-}
-#else // CYTHON_VECTORCALL
-CYTHON_UNUSED static int __Pyx_VectorcallBuilder_AddArg_Check(PyObject *key, PyObject *value, PyObject *builder, CYTHON_UNUSED PyObject **args, CYTHON_UNUSED int n) {
-    if (unlikely(!PyUnicode_Check(key))) {
-        PyErr_SetString(PyExc_TypeError, "keywords must be strings");
-        return -1;
-    }
-    return PyDict_SetItem(builder, key, value);
-}
-#endif
-
-/* CIntToPy */
-static CYTHON_INLINE PyObject* __Pyx_PyLong_From_long(long value) {
-#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wconversion"
-#endif
-    const long neg_one = (long) -1, const_zero = (long) 0;
-#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
-#pragma GCC diagnostic pop
-#endif
-    const int is_unsigned = neg_one > const_zero;
-    if (is_unsigned) {
-        if (sizeof(long) < sizeof(long)) {
-            return PyLong_FromLong((long) value);
-        } else if (sizeof(long) <= sizeof(unsigned long)) {
-            return PyLong_FromUnsignedLong((unsigned long) value);
-#if !CYTHON_COMPILING_IN_PYPY
-        } else if (sizeof(long) <= sizeof(unsigned PY_LONG_LONG)) {
-            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
-#endif
-        }
-    } else {
-        if (sizeof(long) <= sizeof(long)) {
-            return PyLong_FromLong((long) value);
-        } else if (sizeof(long) <= sizeof(PY_LONG_LONG)) {
-            return PyLong_FromLongLong((PY_LONG_LONG) value);
-        }
-    }
-    {
-        unsigned char *bytes = (unsigned char *)&value;
-#if !CYTHON_COMPILING_IN_LIMITED_API && PY_VERSION_HEX >= 0x030d00A4
-        if (is_unsigned) {
-            return PyLong_FromUnsignedNativeBytes(bytes, sizeof(value), -1);
-        } else {
-            return PyLong_FromNativeBytes(bytes, sizeof(value), -1);
-        }
-#elif !CYTHON_COMPILING_IN_LIMITED_API && PY_VERSION_HEX < 0x030d0000
-        int one = 1; int little = (int)*(unsigned char *)&one;
-        return _PyLong_FromByteArray(bytes, sizeof(long),
-                                     little, !is_unsigned);
-#else
-        int one = 1; int little = (int)*(unsigned char *)&one;
-        PyObject *from_bytes, *result = NULL, *kwds = NULL;
-        PyObject *py_bytes = NULL, *order_str = NULL;
-        from_bytes = PyObject_GetAttrString((PyObject*)&PyLong_Type, "from_bytes");
-        if (!from_bytes) return NULL;
-        py_bytes = PyBytes_FromStringAndSize((char*)bytes, sizeof(long));
-        if (!py_bytes) goto limited_bad;
-        order_str = PyUnicode_FromString(little ? "little" : "big");
-        if (!order_str) goto limited_bad;
-        {
-            PyObject *args[3+(CYTHON_VECTORCALL ? 1 : 0)] = { NULL, py_bytes, order_str };
-            if (!is_unsigned) {
-                kwds = __Pyx_MakeVectorcallBuilderKwds(1);
-                if (!kwds) goto limited_bad;
-                if (__Pyx_VectorcallBuilder_AddArgStr("signed", __Pyx_NewRef(Py_True), kwds, args+3, 0) < 0) goto limited_bad;
-            }
-            result = __Pyx_Object_Vectorcall_CallFromBuilder(from_bytes, args+1, 2 | __Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET, kwds);
-        }
-        limited_bad:
-        Py_XDECREF(kwds);
-        Py_XDECREF(order_str);
-        Py_XDECREF(py_bytes);
-        Py_XDECREF(from_bytes);
-        return result;
-#endif
-    }
-}
-
 /* CIntToPy */
 static CYTHON_INLINE PyObject* __Pyx_PyLong_From_int(int value) {
 #ifdef __Pyx_HAS_GCC_DIAGNOSTIC
@@ -22204,256 +22954,6 @@ static CYTHON_INLINE PyObject* __Pyx_PyLong_From_char(char value) {
         return result;
 #endif
     }
-}
-
-/* CIntFromPy */
-static CYTHON_INLINE long __Pyx_PyLong_As_long(PyObject *x) {
-#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wconversion"
-#endif
-    const long neg_one = (long) -1, const_zero = (long) 0;
-#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
-#pragma GCC diagnostic pop
-#endif
-    const int is_unsigned = neg_one > const_zero;
-    if (unlikely(!PyLong_Check(x))) {
-        long val;
-        PyObject *tmp = __Pyx_PyNumber_Long(x);
-        if (!tmp) return (long) -1;
-        val = __Pyx_PyLong_As_long(tmp);
-        Py_DECREF(tmp);
-        return val;
-    }
-    if (is_unsigned) {
-#if CYTHON_USE_PYLONG_INTERNALS
-        if (unlikely(__Pyx_PyLong_IsNeg(x))) {
-            goto raise_neg_overflow;
-        } else if (__Pyx_PyLong_IsCompact(x)) {
-            __PYX_VERIFY_RETURN_INT(long, __Pyx_compact_upylong, __Pyx_PyLong_CompactValueUnsigned(x))
-        } else {
-            const digit* digits = __Pyx_PyLong_Digits(x);
-            assert(__Pyx_PyLong_DigitCount(x) > 1);
-            switch (__Pyx_PyLong_DigitCount(x)) {
-                case 2:
-                    if ((8 * sizeof(long) > 1 * PyLong_SHIFT)) {
-                        if ((8 * sizeof(unsigned long) > 2 * PyLong_SHIFT)) {
-                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if ((8 * sizeof(long) >= 2 * PyLong_SHIFT)) {
-                            return (long) (((((long)digits[1]) << PyLong_SHIFT) | (long)digits[0]));
-                        }
-                    }
-                    break;
-                case 3:
-                    if ((8 * sizeof(long) > 2 * PyLong_SHIFT)) {
-                        if ((8 * sizeof(unsigned long) > 3 * PyLong_SHIFT)) {
-                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if ((8 * sizeof(long) >= 3 * PyLong_SHIFT)) {
-                            return (long) (((((((long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0]));
-                        }
-                    }
-                    break;
-                case 4:
-                    if ((8 * sizeof(long) > 3 * PyLong_SHIFT)) {
-                        if ((8 * sizeof(unsigned long) > 4 * PyLong_SHIFT)) {
-                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if ((8 * sizeof(long) >= 4 * PyLong_SHIFT)) {
-                            return (long) (((((((((long)digits[3]) << PyLong_SHIFT) | (long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0]));
-                        }
-                    }
-                    break;
-            }
-        }
-#endif
-#if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX < 0x030C00A7
-        if (unlikely(Py_SIZE(x) < 0)) {
-            goto raise_neg_overflow;
-        }
-#else
-        {
-            int result = PyObject_RichCompareBool(x, Py_False, Py_LT);
-            if (unlikely(result < 0))
-                return (long) -1;
-            if (unlikely(result == 1))
-                goto raise_neg_overflow;
-        }
-#endif
-        if ((sizeof(long) <= sizeof(unsigned long))) {
-            __PYX_VERIFY_RETURN_INT_EXC(long, unsigned long, PyLong_AsUnsignedLong(x))
-        } else if ((sizeof(long) <= sizeof(unsigned PY_LONG_LONG))) {
-            __PYX_VERIFY_RETURN_INT_EXC(long, unsigned PY_LONG_LONG, PyLong_AsUnsignedLongLong(x))
-        }
-    } else {
-#if CYTHON_USE_PYLONG_INTERNALS
-        if (__Pyx_PyLong_IsCompact(x)) {
-            __PYX_VERIFY_RETURN_INT(long, __Pyx_compact_pylong, __Pyx_PyLong_CompactValue(x))
-        } else {
-            const digit* digits = __Pyx_PyLong_Digits(x);
-            assert(__Pyx_PyLong_DigitCount(x) > 1);
-            switch (__Pyx_PyLong_SignedDigitCount(x)) {
-                case -2:
-                    if ((8 * sizeof(long) - 1 > 1 * PyLong_SHIFT)) {
-                        if ((8 * sizeof(unsigned long) > 2 * PyLong_SHIFT)) {
-                            __PYX_VERIFY_RETURN_INT(long, long, -(long) (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if ((8 * sizeof(long) - 1 > 2 * PyLong_SHIFT)) {
-                            return (long) (((long)-1)*(((((long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
-                        }
-                    }
-                    break;
-                case 2:
-                    if ((8 * sizeof(long) > 1 * PyLong_SHIFT)) {
-                        if ((8 * sizeof(unsigned long) > 2 * PyLong_SHIFT)) {
-                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if ((8 * sizeof(long) - 1 > 2 * PyLong_SHIFT)) {
-                            return (long) ((((((long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
-                        }
-                    }
-                    break;
-                case -3:
-                    if ((8 * sizeof(long) - 1 > 2 * PyLong_SHIFT)) {
-                        if ((8 * sizeof(unsigned long) > 3 * PyLong_SHIFT)) {
-                            __PYX_VERIFY_RETURN_INT(long, long, -(long) (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if ((8 * sizeof(long) - 1 > 3 * PyLong_SHIFT)) {
-                            return (long) (((long)-1)*(((((((long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
-                        }
-                    }
-                    break;
-                case 3:
-                    if ((8 * sizeof(long) > 2 * PyLong_SHIFT)) {
-                        if ((8 * sizeof(unsigned long) > 3 * PyLong_SHIFT)) {
-                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if ((8 * sizeof(long) - 1 > 3 * PyLong_SHIFT)) {
-                            return (long) ((((((((long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
-                        }
-                    }
-                    break;
-                case -4:
-                    if ((8 * sizeof(long) - 1 > 3 * PyLong_SHIFT)) {
-                        if ((8 * sizeof(unsigned long) > 4 * PyLong_SHIFT)) {
-                            __PYX_VERIFY_RETURN_INT(long, long, -(long) (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if ((8 * sizeof(long) - 1 > 4 * PyLong_SHIFT)) {
-                            return (long) (((long)-1)*(((((((((long)digits[3]) << PyLong_SHIFT) | (long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
-                        }
-                    }
-                    break;
-                case 4:
-                    if ((8 * sizeof(long) > 3 * PyLong_SHIFT)) {
-                        if ((8 * sizeof(unsigned long) > 4 * PyLong_SHIFT)) {
-                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if ((8 * sizeof(long) - 1 > 4 * PyLong_SHIFT)) {
-                            return (long) ((((((((((long)digits[3]) << PyLong_SHIFT) | (long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
-                        }
-                    }
-                    break;
-            }
-        }
-#endif
-        if ((sizeof(long) <= sizeof(long))) {
-            __PYX_VERIFY_RETURN_INT_EXC(long, long, PyLong_AsLong(x))
-        } else if ((sizeof(long) <= sizeof(PY_LONG_LONG))) {
-            __PYX_VERIFY_RETURN_INT_EXC(long, PY_LONG_LONG, PyLong_AsLongLong(x))
-        }
-    }
-    {
-        long val;
-        int ret = -1;
-#if PY_VERSION_HEX >= 0x030d00A6 && !CYTHON_COMPILING_IN_LIMITED_API
-        Py_ssize_t bytes_copied = PyLong_AsNativeBytes(
-            x, &val, sizeof(val), Py_ASNATIVEBYTES_NATIVE_ENDIAN | (is_unsigned ? Py_ASNATIVEBYTES_UNSIGNED_BUFFER | Py_ASNATIVEBYTES_REJECT_NEGATIVE : 0));
-        if (unlikely(bytes_copied == -1)) {
-        } else if (unlikely(bytes_copied > (Py_ssize_t) sizeof(val))) {
-            goto raise_overflow;
-        } else {
-            ret = 0;
-        }
-#elif PY_VERSION_HEX < 0x030d0000 && !(CYTHON_COMPILING_IN_PYPY || CYTHON_COMPILING_IN_LIMITED_API) || defined(_PyLong_AsByteArray)
-        int one = 1; int is_little = (int)*(unsigned char *)&one;
-        unsigned char *bytes = (unsigned char *)&val;
-        ret = _PyLong_AsByteArray((PyLongObject *)x,
-                                    bytes, sizeof(val),
-                                    is_little, !is_unsigned);
-#else
-        PyObject *v;
-        PyObject *stepval = NULL, *mask = NULL, *shift = NULL;
-        int bits, remaining_bits, is_negative = 0;
-        int chunk_size = (sizeof(long) < 8) ? 30 : 62;
-        if (likely(PyLong_CheckExact(x))) {
-            v = __Pyx_NewRef(x);
-        } else {
-            v = PyNumber_Long(x);
-            if (unlikely(!v)) return (long) -1;
-            assert(PyLong_CheckExact(v));
-        }
-        {
-            int result = PyObject_RichCompareBool(v, Py_False, Py_LT);
-            if (unlikely(result < 0)) {
-                Py_DECREF(v);
-                return (long) -1;
-            }
-            is_negative = result == 1;
-        }
-        if (is_unsigned && unlikely(is_negative)) {
-            Py_DECREF(v);
-            goto raise_neg_overflow;
-        } else if (is_negative) {
-            stepval = PyNumber_Invert(v);
-            Py_DECREF(v);
-            if (unlikely(!stepval))
-                return (long) -1;
-        } else {
-            stepval = v;
-        }
-        v = NULL;
-        val = (long) 0;
-        mask = PyLong_FromLong((1L << chunk_size) - 1); if (unlikely(!mask)) goto done;
-        shift = PyLong_FromLong(chunk_size); if (unlikely(!shift)) goto done;
-        for (bits = 0; bits < (int) sizeof(long) * 8 - chunk_size; bits += chunk_size) {
-            PyObject *tmp, *digit;
-            long idigit;
-            digit = PyNumber_And(stepval, mask);
-            if (unlikely(!digit)) goto done;
-            idigit = PyLong_AsLong(digit);
-            Py_DECREF(digit);
-            if (unlikely(idigit < 0)) goto done;
-            val |= ((long) idigit) << bits;
-            tmp = PyNumber_Rshift(stepval, shift);
-            if (unlikely(!tmp)) goto done;
-            Py_DECREF(stepval); stepval = tmp;
-        }
-        Py_DECREF(shift); shift = NULL;
-        Py_DECREF(mask); mask = NULL;
-        {
-            long idigit = PyLong_AsLong(stepval);
-            if (unlikely(idigit < 0)) goto done;
-            remaining_bits = ((int) sizeof(long) * 8) - bits - (is_unsigned ? 0 : 1);
-            if (unlikely(idigit >= (1L << remaining_bits)))
-                goto raise_overflow;
-            val |= ((long) idigit) << bits;
-        }
-        if (!is_unsigned) {
-            if (unlikely(val & (((long) 1) << (sizeof(long) * 8 - 1))))
-                goto raise_overflow;
-            if (is_negative)
-                val = ~val;
-        }
-        ret = 0;
-    done:
-        Py_XDECREF(shift);
-        Py_XDECREF(mask);
-        Py_XDECREF(stepval);
-#endif
-        if (unlikely(ret))
-            return (long) -1;
-        return val;
-    }
-raise_overflow:
-    PyErr_SetString(PyExc_OverflowError,
-        "value too large to convert to long");
-    return (long) -1;
-raise_neg_overflow:
-    PyErr_SetString(PyExc_OverflowError,
-        "can't convert negative value to long");
-    return (long) -1;
 }
 
 /* CIntToPy */

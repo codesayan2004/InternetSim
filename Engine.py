@@ -5,8 +5,12 @@ from queue import Queue
 from Topology import Topology
 from Scheduler import Scheduler
 from AS import AS
+# import AS
 from Interpreter import Interpreter
 from Extension import Extension
+import time
+from AS import get_BGP_UPDATE_COUNTER, reset_BGP_UPDATE_COUNTER
+#from AS import BGP_UPDATE_COUNTER
 
 
 class CommandType(Enum):
@@ -35,14 +39,14 @@ class Engine:
         self.prefixInDB = set()
 
         self.command = [
-            ("AS (\d+) announce (.+);", CommandType.ANNOUNCE),
-            ("AS (\d+) withdraw (.+);", CommandType.WITHDRAW),
-            ("Simulate;", CommandType.SIMULATE),
-            ("Change routing policy:", CommandType.CHANGE_ROUTING_POLICY),
-            ("Change non-BGP policy:", CommandType.CHANGE_NON_BGP_POLICY),
-            ("AS (\d+) show peers;", CommandType.SHOW_PEERS),
-            ("AS (\d+) show routes (.+);", CommandType.SHOW_ROUTES),
-            ("Store;", CommandType.STORE)
+            (r"AS (\d+) announce (.+);", CommandType.ANNOUNCE),
+            (r"AS (\d+) withdraw (.+);", CommandType.WITHDRAW),
+            (r"Simulate;", CommandType.SIMULATE),
+            (r"Change routing policy:", CommandType.CHANGE_ROUTING_POLICY),
+            (r"Change non-BGP policy:", CommandType.CHANGE_NON_BGP_POLICY),
+            (r"AS (\d+) show peers;", CommandType.SHOW_PEERS),
+            (r"AS (\d+) show routes (.+);", CommandType.SHOW_ROUTES),
+            (r"Store;", CommandType.STORE)
         ]
 
     def parseDescriptionFile(self, descriptionFilePath, topology):
@@ -179,8 +183,9 @@ class Engine:
 
     def simulate(self, topology, type=None, args=None):
 
+        reset_BGP_UPDATE_COUNTER()
         print("Simulation start")
-        
+        start_time = time.time()
         if (type == "change"):
 
             invalidSet = Extension.getInvalidSet()
@@ -368,8 +373,10 @@ class Engine:
                     self.scheduler.push(self.taskQueue.get())
 
                 self.scheduler.process(self.threadNum)
-
+        end_time = time.time()
         print("Simulation complete")
+        print(f"Convergence time: {end_time - start_time:.6f} seconds")
+        print("BGP updates:", get_BGP_UPDATE_COUNTER())
 
     def run(self, config, topology):
         self.parseDescriptionFile(config["Path"]["descriptionFilePath"], topology)

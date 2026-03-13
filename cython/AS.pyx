@@ -1,12 +1,17 @@
 import json
+cdef public long BGP_UPDATE_COUNTER = 0
 
+def get_BGP_UPDATE_COUNTER():
+    return BGP_UPDATE_COUNTER
+def reset_BGP_UPDATE_COUNTER(value = 0):
+    global BGP_UPDATE_COUNTER
+    BGP_UPDATE_COUNTER = value
 cdef class AS:
     def __cinit__(self, ASN):
         self.ASN = ASN
         peers[ASN] = ()
         routeTables[ASN] = new RouteTable(ASN)
         locks[ASN] = new mutex()
-
     @staticmethod
     def loadASSet(filePath):
         cdef set[int] ASMembers
@@ -812,6 +817,7 @@ cdef class AS:
 
     @staticmethod
     cdef void receive(int ASN, shared_ptr[Message] msg, Processor processor) noexcept nogil:
+        global BGP_UPDATE_COUNTER
         cdef:
             shared_ptr[Route] route 
             bool flag = False
@@ -822,6 +828,10 @@ cdef class AS:
             pair[int, char] p
             pair[int, int] q
         
+        cdef char* t = message.type
+
+        if t[0] == b'A'[0] or t[0] == b'U'[0] or t[0] == b'W'[0]:
+            BGP_UPDATE_COUNTER += 1
         if strcmp(message.type, 'A') == 0:
 
             # Discard loop
@@ -995,3 +1005,5 @@ cdef class AS:
 
     def getOriginAS(self, prefix):
         return routeTables[self.ASN].getOriginAS(prefix.encode("utf-8"))
+    def get_BGP_UPDATE_COUNTER(self):
+        return BGP_UPDATE_COUNTER

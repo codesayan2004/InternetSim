@@ -25,11 +25,15 @@
         ],
         "include_dirs": [
             "cython",
-            "/usr/local/include/mongocxx/v_noabi",
-            "/usr/local/include/bsoncxx/v_noabi",
+            "/opt/homebrew/include",
+            "/opt/homebrew/include/mongocxx/v_noabi",
+            "/opt/homebrew/include/bsoncxx/v_noabi",
             "./parallel_hashmap"
         ],
         "language": "c++",
+        "library_dirs": [
+            "/opt/homebrew/lib"
+        ],
         "name": "Processor",
         "sources": [
             "cython/Processor.pyx",
