@@ -857,6 +857,14 @@ cdef class AS:
             if (route == NULL):
                 locks[ASN].lock()
                 route = routeTables[ASN].getBestRoute(message.prefix)
+
+                if route == NULL:
+                    with gil:
+                        pass
+                        #print(f"[NULL-ROUTE] Interrupted at AS={ASN}, prefix={message.prefix}, lastAS={message.lastAS}")
+                    locks[ASN].unlock()
+                    return
+
                 rt = route.get()
                 routeTables[ASN].deleteRouteByPeerAS(to_string(message.lastAS), message.prefix)
 

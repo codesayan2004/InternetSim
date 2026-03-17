@@ -1,0 +1,29 @@
+Route(prefix=187.156.112.139/23, origin=IGP, localPref=80, ASPath=37721 37008 25818 10099 7545 2764 7474 38622 19905 22356 8167 262907 52866, community=)
+Route(prefix=187.156.112.139/23, origin=IGP, localPref=80, ASPath=35280 7545 2764 7474 38622 19905 22356 8167 262907 52866, community=)
+Route(prefix=187.156.112.139/23, origin=IGP, localPref=80, ASPath=1239 6057 262459 262907 52866, community=)
+Route(prefix=187.156.112.139/23, origin=IGP, localPref=80, ASPath=6939 52320 7738 40850 52866, community=)
+Route(prefix=187.156.112.139/23, origin=IGP, localPref=80, ASPath=61568 14840 1031 40850 52866, community=)
+Route(prefix=187.156.112.139/23, origin=IGP, localPref=80, ASPath=47787 6424 1031 40850 52866, community=)
+Route(prefix=187.156.112.139/23, origin=IGP, localPref=80, ASPath=6057 262459 262907 52866, community=)
+Route(prefix=187.156.112.139/23, origin=IGP, localPref=80, ASPath=22356 8167 262907 52866, community=)
+Route(prefix=187.156.112.139/23, origin=IGP, localPref=80, ASPath=271253 40850 52866, community=)
+Route(prefix=187.156.112.139/23, origin=IGP, localPref=60, ASPath=16735 53013 28220 1031 40850 52866, community=)
+Route(prefix=187.156.112.139/23, origin=IGP, localPref=60, ASPath=6453 1031 40850 52866, community=)
+Route(prefix=187.156.112.139/23, origin=IGP, localPref=60, ASPath=263444 7195 40850 52866, community=)
+Route(prefix=187.156.112.139/23, origin=IGP, localPref=60, ASPath=3356 40850 52866, community=)
+Route(prefix=187.156.112.139/23, origin=IGP, localPref=60, ASPath=174 264409 52866, community=)
+Route(prefix=187.156.112.139/23, origin=IGP, localPref=60, ASPath=267613 52866, community=)
+Loaded 76802 ASes, 495579 links
+Loaded 7680 ROV-SET
+Loaded 1 Invalid-SET
+Simulation start
+Simulation complete
+Convergence time: 1.026022 seconds
+BGP updates: 529289
+Affected ASes: 76382
+Simulation start
+Simulation complete
+Convergence time: 0.002750 seconds
+BGP updates: 823
+Affected ASes: 823
+AS 28158's route to 187.156.112.139/23:

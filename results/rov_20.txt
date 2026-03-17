@@ -1,0 +1,31 @@
+Route(prefix=187.156.112.139/23, origin=IGP, localPref=80, ASPath=37721 328316 60171 37089 25818 10099 7545 2764 7474 38622 19905 22356 8167 262907 52866, community=)
+Route(prefix=187.156.112.139/23, origin=IGP, localPref=80, ASPath=35280 7545 8220 29802 52025 8309, community=)
+Route(prefix=187.156.112.139/23, origin=IGP, localPref=80, ASPath=263237 52925 20473 52025 8309, community=)
+Route(prefix=187.156.112.139/23, origin=IGP, localPref=80, ASPath=60068 136557 34927 52025 8309, community=)
+Route(prefix=187.156.112.139/23, origin=IGP, localPref=80, ASPath=6939 8309, community=)
+Route(prefix=187.156.112.139/23, origin=IGP, localPref=80, ASPath=1239 6057 262459 262907 52866, community=)
+Route(prefix=187.156.112.139/23, origin=IGP, localPref=80, ASPath=61568 14840 1031 40850 52866, community=)
+Route(prefix=187.156.112.139/23, origin=IGP, localPref=80, ASPath=47787 6424 1031 40850 52866, community=)
+Route(prefix=187.156.112.139/23, origin=IGP, localPref=80, ASPath=6057 262459 262907 52866, community=)
+Route(prefix=187.156.112.139/23, origin=IGP, localPref=80, ASPath=22356 8167 262907 52866, community=)
+Route(prefix=187.156.112.139/23, origin=IGP, localPref=80, ASPath=271253 40850 52866, community=)
+Route(prefix=187.156.112.139/23, origin=IGP, localPref=60, ASPath=16735 52925 20473 52025 8309, community=)
+Route(prefix=187.156.112.139/23, origin=IGP, localPref=60, ASPath=263444 6939 8309, community=)
+Route(prefix=187.156.112.139/23, origin=IGP, localPref=60, ASPath=267613 8309, community=)
+Route(prefix=187.156.112.139/23, origin=IGP, localPref=60, ASPath=3356 8309, community=)
+Route(prefix=187.156.112.139/23, origin=IGP, localPref=60, ASPath=174 8309, community=)
+Route(prefix=187.156.112.139/23, origin=IGP, localPref=60, ASPath=6453 1031 40850 52866, community=)
+Loaded 76802 ASes, 495579 links
+Loaded 15360 ROV-SET
+Loaded 1 Invalid-SET
+Simulation start
+Simulation complete
+Convergence time: 0.988598 seconds
+BGP updates: 529289
+Affected ASes: 76382
+Simulation start
+Simulation complete
+Convergence time: 0.415640 seconds
+BGP updates: 193570
+Affected ASes: 65681
+AS 28158's route to 187.156.112.139/23:
