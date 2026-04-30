@@ -30,3 +30,8 @@ Execute the program with the following command:
 ```bash
 python3 Main.py
 ```
+
+Run the Simulator in CLI Mode:
+```bash
+python3 CLI.py
+```
